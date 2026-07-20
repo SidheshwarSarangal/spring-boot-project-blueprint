@@ -6,6 +6,8 @@ For the physical error-reading and rerun procedure, use [Action L](beginner-exec
 
 ## Use this loop
 
+> 📍 Start in the terminal, test, or client where the failure appears. Open only the first application-owned file or configuration named by the error.
+
 | Step | What | Where | Do | Verify | Next |
 |---|---|---|---|---|---|
 | 1 | Small reproducible failure | Terminal/test/request | Remove unrelated actions | Failure repeats reliably | 2 |
@@ -17,6 +19,8 @@ For the physical error-reading and rerun procedure, use [Action L](beginner-exec
 If Step 5 fails, return to Step 1 with the new smallest failure.
 
 ## Fast checks
+
+> 📍 Run these commands in `<project-root>/`, the folder containing `pom.xml` and `mvnw`.
 
 ```bash
 java -version
@@ -46,16 +50,24 @@ On Windows use `mvnw.cmd`. If the project has no Maven wrapper, install Maven an
 
 ## Bean startup failures
 
+> 📍 Read the startup output in the application terminal, then open the deepest application-owned class or configuration named after `Caused by`.
+
 Trace the chain from the top-level bean to the deepest constructor/configuration failure. Common causes are a missing component annotation, a class outside the scanned package, a missing property, or more than one bean matching the same interface.
 
 ## HTTP failures
+
+> 📍 Keep the application terminal visible and compare the client request with the matching controller under `src/main/java/`.
 
 Confirm the application started, then compare the request with the controller: method, class-level path, method-level path, headers, JSON field names, and Java field types. MVC tests are the quickest way to lock a correction.
 
 ## Database failures
 
+> 📍 Check `src/main/resources/application*.yml`, the migration under `src/main/resources/db/migration/`, and the first SQL exception in the application terminal.
+
 Verify which datasource is active and inspect the first SQL exception. Do not delete a shared database to fix a migration. Correct the migration sequence or add a new forward migration.
 
 ## Ask for help with evidence
+
+> 📍 Collect the command and sanitized error in `<project-root>/PROJECT.md` or an issue; never include credentials or tokens.
 
 Provide the command, first meaningful error, relevant class/configuration, expected behavior, actual behavior, Java/Spring versions, and the smallest steps to reproduce. Remove credentials and tokens first.

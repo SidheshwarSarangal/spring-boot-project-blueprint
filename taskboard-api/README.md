@@ -17,6 +17,8 @@ flowchart LR
 
 ## Run
 
+> 📍 Open a terminal in `<blueprint-root>/taskboard-api/`, the folder containing this example’s `pom.xml`.
+
 Prerequisites: Java 17+ and Maven 3.6.3+. Check them with `java -version` and `mvn -version`.
 
 ```bash
@@ -26,6 +28,8 @@ mvn spring-boot:run
 Open `http://localhost:8080/actuator/health`.
 
 ## API
+
+> 📍 Run the calls from a second terminal, or open `taskboard-api/requests.http` in IntelliJ IDEA or a VS Code REST Client.
 
 | Method | Path | Purpose |
 |---|---|---|
@@ -77,6 +81,8 @@ You can also run the prepared calls in [`requests.http`](requests.http) from Int
 
 ## Database
 
+> 📍 Inspect local data under `taskboard-api/data/`; open the H2 console in the browser only while this local example is running.
+
 Data is stored under `taskboard-api/data/` and survives restarts. The local-only H2 console is available at `http://localhost:8080/h2-console` with:
 
 ```text
@@ -88,6 +94,8 @@ Password: [blank]
 The reference uses `ddl-auto: update` because its file-backed database is local and disposable. Use Flyway or Liquibase for shared/production databases.
 
 ## Test
+
+> 📍 Run the test command in `<blueprint-root>/taskboard-api/`.
 
 ```bash
 mvn clean verify

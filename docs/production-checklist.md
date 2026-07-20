@@ -8,6 +8,8 @@ Use the [delivery guide](delivery-guide.md) for the concrete package → CI → 
 
 ## Database
 
+> 📍 Review `pom.xml`, `src/main/resources/db/migration/`, database integration tests under `src/test/java/`, and `<project-root>/docs/database-runbook.md`.
+
 - Use the production database engine in important integration tests, commonly through Testcontainers.
 - Manage schema changes with Flyway or Liquibase; do not use `ddl-auto: update`.
 - Add constraints and indexes that enforce real rules and access patterns.
@@ -15,6 +17,8 @@ Use the [delivery guide](delivery-guide.md) for the concrete package → CI → 
 - Plan backward-compatible schema changes for rolling deployments.
 
 ## Configuration and secrets
+
+> 📍 Review `src/main/resources/application*.yml`, typed configuration under `src/main/java/`, and the deployment platform’s environment/secret settings.
 
 - Keep normal defaults in `application.yml`.
 - Supply environment-specific values through environment variables or the deployment platform.
@@ -34,6 +38,8 @@ spring:
 
 ## Security
 
+> 📍 Review the security configuration and feature services under `src/main/java/`, security tests under `src/test/java/`, and deployed CORS/identity-provider settings.
+
 - Authenticate every non-public entry point and authorize sensitive actions.
 - Validate ownership in the service, not only at the URL layer.
 - Restrict CORS to required origins and methods.
@@ -44,6 +50,8 @@ spring:
 
 ## Reliability
 
+> 📍 Review external adapters, job/listener configuration, `application.yml`, and the deployment platform’s CPU, memory, concurrency, and shutdown settings.
+
 - Set timeouts on database and external network calls.
 - Retry only transient, safe operations with a limit and backoff.
 - Make externally retried write operations idempotent.
@@ -52,6 +60,8 @@ spring:
 
 ## Observability
 
+> 📍 Review Actuator settings in `src/main/resources/application.yml`, application logging/metrics code, and the deployment monitoring platform.
+
 - Add Actuator and expose only the endpoints the platform needs.
 - Provide liveness and readiness checks.
 - Use structured logs with request/trace identifiers and useful context.
@@ -59,6 +69,8 @@ spring:
 - Alert on user-visible symptoms and exhausted resources, not every isolated error.
 
 ## Build and delivery
+
+> 📍 Review the CI workflow, `pom.xml`, deployment files, and runbooks in `<project-root>/docs/`.
 
 The pipeline should:
 
@@ -73,6 +85,8 @@ checkout → compile → test → package → scan → publish artifact → migr
 - Use a rollback or roll-forward plan and verify health after deployment.
 
 ## Required project README
+
+> 📍 Edit `<project-root>/README.md`; link detailed procedures from `<project-root>/docs/` instead of duplicating them.
 
 Document only what an operator or contributor needs:
 
@@ -90,6 +104,8 @@ Known operational limitations
 ```
 
 ## Release gate
+
+> 📍 Run these commands in `<project-root>/`, then verify the deployed application from a terminal that can reach it.
 
 ```bash
 ./mvnw clean verify

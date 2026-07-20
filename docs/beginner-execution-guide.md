@@ -6,9 +6,7 @@ Use this page when a process says “create,” “edit,” “run,” or “ver
 
 ## Action A create the working repository and workbook
 
-**Where:** Your normal projects folder in the file manager or terminal.
-
-**Physically do:**
+> 📍 Open your normal projects folder in the file manager or terminal.
 
 1. Create one folder named after the project, for example `orders-api`.
 2. Open that folder in the editor/IDE.
@@ -25,13 +23,11 @@ cd orders-api
 
 Do not create Java packages before the generated Spring project is extracted into this folder.
 
-**Verify:** The editor shows `<project-root>/PROJECT.md` and it contains one selected application type and one testable feature.
+Before continuing, check: The editor shows `<project-root>/PROJECT.md` and it contains one selected application type and one testable feature.
 
 ## Action B generate the Spring project in the browser
 
-**Where:** Browser at [start.spring.io](https://start.spring.io/).
-
-**Physically do:**
+> 📍 Open [Spring Initializr](https://start.spring.io/) in the browser.
 
 1. Choose **Maven**, **Java**, and **Jar**.
 2. Choose the current stable Spring Boot release, not Snapshot/Milestone, unless the assignment requires one.
@@ -59,13 +55,11 @@ Incorrect:
 orders-api/orders-api/pom.xml
 ```
 
-**Verify:** `<project-root>/pom.xml` and `<project-root>/src/main/java/...Application.java` exist.
+Before continuing, check: `<project-root>/pom.xml` and `<project-root>/src/main/java/...Application.java` exist.
 
 ## Action C open and import the generated Maven project
 
-**Where:** IDE/editor.
-
-**Physically do:**
+> 📍 Open `<project-root>/`, the folder containing `pom.xml`, in the IDE or editor.
 
 1. Open the folder containing `pom.xml`—not only `src/`.
 2. Trust/import it as a Maven project when prompted.
@@ -89,13 +83,11 @@ java -version
 .\mvnw.cmd -version
 ```
 
-**Verify:** Maven reports the intended Java version and the IDE no longer shows unresolved Spring imports after indexing finishes.
+Before continuing, check: Maven reports the intended Java version and the IDE no longer shows unresolved Spring imports after indexing finishes.
 
 ## Action D run a command in the correct terminal
 
-**Where:** Terminal whose working directory is `<project-root>` and contains `pom.xml`.
-
-**Physically do:**
+> 📍 Open a terminal in `<project-root>/`, the folder containing `pom.xml` and `mvnw`.
 
 1. Save edited files.
 2. Stop a currently running application with `Ctrl+C` when the command needs the same output/port.
@@ -111,13 +103,11 @@ java -version
 
 Use `compile` after creating a few main files, a focused test while fixing one behavior, and `clean verify` before commit/delivery.
 
-**Verify:** Command exit is successful and the last Maven result is `BUILD SUCCESS`.
+Before continuing, check: Command exit is successful and the last Maven result is `BUILD SUCCESS`.
 
 ## Action E create a Java package and file
 
-**Where:** `src/main/java` or matching `src/test/java` tree in the IDE.
-
-**Physically do:**
+> 📍 In the IDE, open `src/main/java/` for application code or the matching `src/test/java/` package for test code.
 
 1. Find the generated application class, for example:
 
@@ -148,13 +138,11 @@ DTO example:
 package com.company.project.task.dto;
 ```
 
-**Verify:** File is under the generated base package and `./mvnw compile` does not report package/type-name mismatch.
+Before continuing, check: File is under the generated base package and `./mvnw compile` does not report package/type-name mismatch.
 
 ## Action F put a provided Java code block into a file
 
-**Where:** The exact file named in the process step/action map.
-
-**Physically do:**
+> 📍 Open the exact `.java` file named by the current application or capability step.
 
 1. Open or create the named file.
 2. Keep/add the correct `package` line as the first non-comment line.
@@ -183,13 +171,11 @@ public class TaskService {
 
 Do not paste the Markdown fence lines that appear immediately above and below a displayed snippet into the Java file.
 
-**Verify:** No red unresolved types remain and main-source compilation passes.
+Before continuing, check: No red unresolved types remain and main-source compilation passes.
 
 ## Action G add or change a Maven dependency
 
-**Where:** `<project-root>/pom.xml`, inside `<dependencies>...</dependencies>`.
-
-**Physically do:**
+> 📍 Open `<project-root>/pom.xml` and find its existing `<dependencies>...</dependencies>` section.
 
 1. Prefer selecting the dependency in Initializr during generation.
 2. For an existing project, open `pom.xml` and add the dependency block inside the existing `<dependencies>` element—not inside `<build>` or after `</project>`.
@@ -212,13 +198,11 @@ Structure:
 </dependencies>
 ```
 
-**Verify:** Dependency appears in `dependency:tree`, imports resolve, and compilation passes.
+Before continuing, check: Dependency appears in `dependency:tree`, imports resolve, and compilation passes.
 
 ## Action H edit YAML configuration
 
-**Where:** `src/main/resources/application.yml` or the exact profile file named by the step.
-
-**Physically do:**
+> 📍 Open `src/main/resources/application.yml` or the exact profile file named by the current step.
 
 1. Use spaces, never tabs.
 2. Preserve indentation; child keys are normally two spaces deeper.
@@ -249,13 +233,11 @@ spring:
 
 Save and start the application. A YAML parse/bind error should be fixed before feature work continues.
 
-**Verify:** Application starts and logs show the intended profile/configuration without printing secret values.
+Before continuing, check: Application starts and logs show the intended profile/configuration without printing secret values.
 
 ## Action I create a resource file
 
-**Where:** Exact directory under `src/main/resources`.
-
-**Physically do:**
+> 📍 Open `src/main/resources/` and create the exact child folder and resource file named by the current step.
 
 - SQL migration: create `db/migration/V1__meaningful_name.sql`.
 - GraphQL schema: create `graphql/schema.graphqls`.
@@ -265,13 +247,11 @@ Save and start the application. A YAML parse/bind error should be fixed before f
 
 Create missing folders in the IDE/file manager. Do not place Java files under `resources` or secrets inside packaged resources.
 
-**Verify:** The resource appears at `target/classes/<same-relative-path>` after `./mvnw compile` when it should be packaged.
+Before continuing, check: The resource appears at `target/classes/<same-relative-path>` after `./mvnw compile` when it should be packaged.
 
 ## Action J start the application and call it
 
-**Where:** Terminal 1 at `<project-root>` for the application; Terminal 2 at any directory for `curl`/client calls.
-
-**Physically do:**
+> 📍 Open Terminal 1 in `<project-root>/` for the application and Terminal 2 for `curl` or other client calls.
 
 Terminal 1:
 
@@ -297,13 +277,11 @@ curl -i -X POST http://localhost:8080/api/tasks \
 
 Check status line, headers, body, Terminal 1 logs, and persisted/external result. Stop with `Ctrl+C`.
 
-**Verify:** Actual status/body/state match the current feature contract—not merely “no exception.”
+Before continuing, check: Actual status/body/state match the current feature contract—not merely “no exception.”
 
 ## Action K create and run a test
 
-**Where:** Matching package under `src/test/java`.
-
-**Physically do:**
+> 📍 In the IDE, create the test in the matching feature package under `src/test/java/`.
 
 1. Mirror the main package path.
 2. Name the file `<ClassUnderTest>Test.java` or behavior/integration name.
@@ -324,13 +302,11 @@ Check status line, headers, body, Terminal 1 logs, and persisted/external result
 
 Use the [testing guide](testing-guide.md) for scope-specific code.
 
-**Verify:** The test fails when the protected behavior is intentionally broken and passes when correct.
+Before continuing, check: The test fails when the protected behavior is intentionally broken and passes when correct.
 
 ## Action L fix the first compile or startup error
 
-**Where:** Terminal output and first application-owned file named by the error.
-
-**Physically do:**
+> 📍 Keep the failing terminal visible and open the first application-owned file and line named by the error.
 
 1. Scroll to the first error/`Caused by`.
 2. Copy only its exact class, file, line, and message into notes.
@@ -342,13 +318,11 @@ Use the [testing guide](testing-guide.md) for scope-specific code.
 
 Do not randomly change versions or delete databases/build files before understanding the first cause. Use [Troubleshooting](troubleshooting.md).
 
-**Verify:** Original smallest failure no longer reproduces and no new earlier failure replaces it.
+Before continuing, check: Original smallest failure no longer reproduces and no new earlier failure replaces it.
 
 ## Action M save a clean checkpoint with Git
 
-**Where:** Terminal at `<project-root>`.
-
-**Physically do:**
+> 📍 Open a terminal in `<project-root>/`, the folder containing `.git/`, `pom.xml`, and `mvnw`.
 
 ```bash
 ./mvnw clean verify
@@ -359,4 +333,4 @@ git diff
 
 Review every intended file. Confirm secrets, `target/`, local DBs, logs, and IDE files are absent. Then stage/commit using the project’s approved workflow.
 
-**Verify:** Clean build passes and Git shows only intended source/config/docs/test changes.
+Before continuing, check: Clean build passes and Git shows only intended source/config/docs/test changes.
