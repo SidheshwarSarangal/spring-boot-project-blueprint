@@ -1,6 +1,6 @@
 # Build the core application
 
-[← Start here](../README.md) · [Choose an application type](application-paths.md) · [Working example](../taskboard-api/README.md)
+[← Start here](../README.md) · [Project workbook](project-workbook.md) · [Working example](../taskboard-api/README.md)
 
 Use this guide when the chosen application path needs a database-backed REST API. For an API without persistence, omit the entity and repository and let the service call the required adapter.
 
@@ -252,4 +252,4 @@ Name tests by behavior, arrange the state, perform one action, and assert the ob
 - Growing lists are paginated.
 - The clean build passes.
 
-When all six are true, [choose the next application path](application-paths.md).
+When all six are true, update the [project workbook](project-workbook.md), then add the next required feature/capability or continue to the [production checklist](production-checklist.md).

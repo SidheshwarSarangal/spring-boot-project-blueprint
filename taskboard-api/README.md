@@ -1,6 +1,6 @@
 # Taskboard reference API
 
-[← Start page](../README.md) · [Core guide](../docs/core-guide.md) · [Choose the next application type](../docs/application-paths.md)
+[← Start page](../README.md) · [Core guide](../docs/core-guide.md) · [Project workbook](../docs/project-workbook.md)
 
 This small API is intentionally plain Java. It demonstrates structure and connections without Lombok, authentication, Docker, or a production database obscuring the core flow.
 

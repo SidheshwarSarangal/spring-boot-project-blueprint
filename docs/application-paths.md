@@ -1,8 +1,8 @@
 # Choose your application type
 
-[← Core guide](core-guide.md) · [Production checklist](production-checklist.md) · [Start page](../README.md)
+[← Start page](../README.md) · [Project workbook](project-workbook.md) · [Production checklist](production-checklist.md)
 
-Start here after the generated application builds and starts. Choose one primary application shape, then add only the capabilities required by the feature.
+Use this during Gate 2, before generating the project. Choose one primary application shape, then add only the capabilities required by the feature. Return to the relevant path later when implementing it.
 
 ## Choose in two decisions
 
