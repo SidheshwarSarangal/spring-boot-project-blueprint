@@ -1,6 +1,8 @@
 # Path: Command-line application
 
-[← Choose another type](../README.md) · [Troubleshooting](../docs/troubleshooting.md)
+[← Choose another type](../README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
+
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
 
 Choose this for terminal tools, administrative commands, and small one-off automations that benefit from Spring configuration and dependency injection.
 
@@ -34,12 +36,22 @@ arguments/options → command runner → service → repository/adapter
 → terminal output + exit code
 ```
 
+```text
+src/main/java/com/company/project/command/
+├── ImportCommand.java
+├── ImportOptions.java
+├── ImportService.java
+└── ExitCodeConfiguration.java
+```
+
 1. Parse and validate arguments before side effects.
 2. Keep terminal formatting separate from the service.
 3. Return useful output to stdout and diagnostics to stderr.
 4. Use non-zero exit codes for failure.
 5. Make repeated execution safe or clearly require confirmation.
 6. Avoid starting an embedded web server when it is not required.
+
+Checkpoint: package the JAR, run valid and invalid arguments from a terminal, and confirm stdout/stderr and exit codes before adding side effects.
 
 ## 4. Attach required capabilities
 

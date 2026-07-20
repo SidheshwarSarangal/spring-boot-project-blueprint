@@ -1,6 +1,8 @@
 # Path: Server-rendered web application
 
-[← Choose another type](../README.md) · [Troubleshooting](../docs/troubleshooting.md)
+[← Choose another type](../README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
+
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
 
 Choose this when Spring returns HTML pages and processes browser forms, commonly with Thymeleaf.
 
@@ -39,6 +41,16 @@ form object → @Controller → service → repository/adapter
 → model → Thymeleaf template → browser
 ```
 
+```text
+src/main/java/com/company/project/task/
+├── TaskController.java
+├── TaskService.java
+└── TaskForm.java
+src/main/resources/templates/tasks/
+├── form.html
+└── detail.html
+```
+
 1. Create a form object with validation.
 2. Create a service method containing the business action.
 3. Add a `GET` controller method to render the form.
@@ -48,6 +60,8 @@ form object → @Controller → service → repository/adapter
 7. Keep business rules out of controllers and templates.
 
 Place templates in `src/main/resources/templates/` and static CSS/images in `src/main/resources/static/`.
+
+Checkpoint: compile, start the application, open the form, submit one valid and one invalid request, and confirm the redirect/error display before adding another page.
 
 ## 4. Attach required capabilities
 

@@ -1,6 +1,8 @@
 # Path: Background or scheduled worker
 
-[← Choose another type](../README.md) · [Troubleshooting](../docs/troubleshooting.md)
+[← Choose another type](../README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
+
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
 
 Choose this when work runs on a timer or outside the original HTTP request.
 
@@ -40,12 +42,22 @@ Continue only after the untouched application starts.
 trigger/listener → job service → repository/adapter → recorded outcome
 ```
 
+```text
+src/main/java/com/company/project/job/
+├── CleanupJob.java          scheduled/async trigger
+├── CleanupService.java      complete use case
+├── JobExecutionRecord.java  optional durable status
+└── JobProperties.java       schedule, batch size, limits
+```
+
 1. Keep the trigger thin; pass an identifier to the service.
 2. Make the operation idempotent when repetition is possible.
 3. Configure a bounded executor or consumer concurrency.
 4. Record job status and enough context to diagnose failure.
 5. Apply limited retry only to transient failures.
 6. Ensure multiple application instances cannot accidentally duplicate a scheduled job.
+
+Checkpoint: invoke the service directly in a test, then run the trigger once with a short local schedule. Confirm status/output before enabling repeated execution.
 
 ## 4. Attach required capabilities
 

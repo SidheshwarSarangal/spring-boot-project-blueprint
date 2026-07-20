@@ -25,6 +25,23 @@ These are the primary sources used to design this handbook. Version-specific cla
 - [Testing Spring Boot applications](https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html) — `@SpringBootTest`, `@WebMvcTest`, MockMvc, and `@DataJpaTest`.
 - [Development-time services](https://docs.spring.io/spring-boot/reference/features/dev-services.html) — Docker Compose and Testcontainers integration.
 
+## Application paths
+
+- [Spring for GraphQL](https://docs.spring.io/spring-graphql/reference/index.html) — schema, annotated controllers, execution, security, testing, and transports.
+- [Spring Batch](https://docs.spring.io/spring-batch/reference/) — jobs, steps, readers/processors/writers, restart, retry, scaling, and testing.
+- [Spring Cloud Gateway](https://docs.spring.io/spring-cloud-gateway/reference/) — gateway variants, routes, filters, security, metrics, and resiliency.
+- [Spring WebSocket](https://docs.spring.io/spring-framework/reference/web/websocket.html) — raw WebSocket, SockJS, and STOMP messaging.
+- [Task execution and scheduling](https://docs.spring.io/spring-framework/reference/integration/scheduling.html) — executors, `@Async`, and `@Scheduled`.
+- [Serving web content](https://spring.io/guides/gs/serving-web-content/) — Spring MVC with Thymeleaf.
+
+## Integrations and capabilities
+
+- [Spring REST clients](https://docs.spring.io/spring-framework/reference/integration/rest-clients.html) — `RestClient`, `WebClient`, `RestTemplate`, and HTTP service interfaces.
+- [Spring for Apache Kafka](https://docs.spring.io/spring-kafka/reference/) — sending, receiving, listener behavior, transactions, retries, and monitoring.
+- [Spring AMQP](https://docs.spring.io/spring-amqp/reference/index.html) — RabbitMQ messaging and listener support.
+- [Spring Boot caching](https://docs.spring.io/spring-boot/reference/io/caching.html) — cache abstraction and supported providers.
+- [Uploading files](https://spring.io/guides/gs/uploading-files/) — multipart upload flow and storage service boundary.
+
 ## Security and operations
 
 - [Spring Security servlet architecture](https://docs.spring.io/spring-security/reference/servlet/architecture.html) — filter chain and request security model.

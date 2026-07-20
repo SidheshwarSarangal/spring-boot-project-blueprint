@@ -1,6 +1,8 @@
 # Path: API gateway or proxy
 
-[← Choose another type](../README.md) · [Troubleshooting](../docs/troubleshooting.md)
+[← Choose another type](../README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
+
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
 
 Choose this when the application is the controlled entry point to downstream services. Do not place ordinary business workflows in the gateway.
 
@@ -25,6 +27,14 @@ Continue only after the untouched gateway starts.
 client → gateway filter chain → route/policy → downstream service
 ```
 
+```text
+src/main/resources/application.yml         routes and limits
+src/main/java/com/company/gateway/
+├── GatewayApplication.java
+├── SecurityConfiguration.java             when protected
+└── CorrelationIdFilter.java                application-owned filter
+```
+
 1. Configure an explicit route and allowed methods.
 2. Authenticate and propagate only approved identity/context headers.
 3. Remove untrusted client headers that could impersonate internal context.
@@ -32,6 +42,8 @@ client → gateway filter chain → route/policy → downstream service
 5. Add rate limiting where abuse or capacity requires it.
 6. Retry only safe requests and transient failures.
 7. Keep errors predictable without exposing internal details.
+
+Checkpoint: route to a local stub downstream, verify the rewritten request and stripped headers, then stop the stub and verify the bounded failure response.
 
 ## 4. Attach required capabilities
 

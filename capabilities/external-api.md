@@ -17,6 +17,29 @@ service → application-owned interface → provider adapter
 
 Use your own application types at the interface. Keep provider DTOs, headers, status codes, and error formats inside the adapter.
 
+For a normal synchronous Spring MVC service, begin with `RestClient`; use `WebClient` when the selected application is reactive/streaming. Configure the client once as a bean and inject it into the adapter:
+
+```java
+@Bean
+RestClient providerRestClient(RestClient.Builder builder,
+                              ProviderProperties properties) {
+    return builder.baseUrl(properties.baseUrl().toString()).build();
+}
+```
+
+Configure connection/response timeouts on the underlying request factory/client; a base URL alone is not production-safe.
+
+```text
+src/main/java/com/company/project/provider/
+├── ProviderClient.java          application-owned interface
+├── HttpProviderAdapter.java
+├── ProviderRequest.java        provider-only DTO
+├── ProviderResponse.java       provider-only DTO
+├── ProviderConfiguration.java
+└── ProviderProperties.java
+src/test/java/com/company/project/provider/HttpProviderAdapterTest.java
+```
+
 ## 3. Configure safety
 
 1. Externalize URL, credentials, connection timeout, response timeout, and limits.
@@ -26,6 +49,8 @@ Use your own application types at the interface. Keep provider DTOs, headers, st
 5. Use an idempotency key for retryable side effects where supported.
 6. Respect rate-limit responses; do not retry immediately in a loop.
 7. Map provider errors to stable application errors without leaking provider details.
+
+Checkpoint: call a local stub for one success and one timeout. Do not connect the real provider until the adapter contract tests pass.
 
 ## 4. Observe
 

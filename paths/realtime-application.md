@@ -1,6 +1,8 @@
 # Path: Real-time application
 
-[← Choose another type](../README.md) · [Troubleshooting](../docs/troubleshooting.md)
+[← Choose another type](../README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
+
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
 
 Choose this for chat, live tracking, dashboards, notifications, or streaming updates through WebSocket or Server-Sent Events (SSE).
 
@@ -32,6 +34,15 @@ connect/authenticate → subscribe → service receives state/event
 → publish update → client handles/reconnects
 ```
 
+```text
+src/main/java/com/company/project/live/
+├── LiveMessage.java
+├── LiveController.java       SSE/WebSocket entry point
+├── LiveUpdateService.java
+├── WebSocketConfiguration.java  when WebSocket is selected
+└── LiveSecurityConfiguration.java
+```
+
 1. Define small versioned message DTOs.
 2. Authenticate at connection/subscription boundaries.
 3. Authorize channels/topics per user or role.
@@ -39,6 +50,8 @@ connect/authenticate → subscribe → service receives state/event
 5. Bound message size, rate, buffers, and connection count.
 6. Decide whether missed messages are discarded, replayed, or read through a REST endpoint.
 7. Clean up disconnected/slow clients.
+
+Checkpoint: connect one local client, receive one message, disconnect, and confirm server resources are released before adding fan-out or persistence.
 
 ## 4. Attach required capabilities
 

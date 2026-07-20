@@ -20,8 +20,15 @@ Explicitly out of scope:
 Select one primary shape:
 
 - [ ] REST API
+- [ ] GraphQL API
 - [ ] Server-rendered web application
 - [ ] Background/scheduled worker
+- [ ] Event-driven service
+- [ ] External-system integration service
+- [ ] API gateway/proxy
+- [ ] Batch application
+- [ ] Real-time application
+- [ ] Command-line application
 
 Select required capabilities:
 
@@ -31,6 +38,7 @@ Select required capabilities:
 - [ ] External HTTP provider
 - [ ] Queue or event broker
 - [ ] File/object storage
+- [ ] Caching
 - [ ] Health and metrics
 
 ```text
@@ -105,6 +113,7 @@ Timeout/retry/idempotency rule:
 - [ ] Mapper
 - [ ] Service
 - [ ] Controller/listener/scheduler
+- [ ] Schema/template/route/job configuration
 - [ ] Error handler
 - [ ] Configuration/adapter
 - [ ] Tests

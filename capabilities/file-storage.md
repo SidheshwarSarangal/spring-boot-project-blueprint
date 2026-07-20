@@ -12,6 +12,16 @@ Record allowed content, maximum size, ownership, retention, download authorizati
 
 Use object storage or another durable file service for shared/production use. Do not rely on the application container filesystem. Store file metadata, ownership, state, and storage key in the database—not necessarily the bytes.
 
+For HTTP uploads, Spring Web already provides multipart handling. Set explicit request/file limits in configuration; do not rely on defaults:
+
+```yaml
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+```
+
 ## 3. Implement safely
 
 ```text
@@ -26,6 +36,19 @@ request/job → validate → generate storage key → stream bytes
 5. Scan untrusted content when appropriate.
 6. Use short-lived signed URLs for direct object-storage transfer when useful.
 7. Clean up partial uploads and reconcile bytes/metadata after failure.
+
+Typical files:
+
+```text
+src/main/java/com/company/project/file/
+├── FileStorage.java            application-owned interface
+├── ObjectStorageAdapter.java
+├── StoredFile.java             metadata/ownership entity
+├── FileService.java
+└── FileController.java         only for HTTP upload/download
+```
+
+Checkpoint: store and retrieve one small test file, reject one oversized/invalid file, and prove cross-user access is denied before enabling large uploads.
 
 ## 4. Verify
 

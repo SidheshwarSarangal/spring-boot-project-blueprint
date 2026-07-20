@@ -1,6 +1,8 @@
 # Path: REST API
 
-[← Choose another type](../README.md) · [Working Taskboard example](../taskboard-api/README.md) · [Troubleshooting](../docs/troubleshooting.md)
+[← Choose another type](../README.md) · [Working example](../taskboard-api/README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
+
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
 
 Choose this when clients send HTTP requests and expect JSON responses.
 

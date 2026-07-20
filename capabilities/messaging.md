@@ -24,6 +24,8 @@ Assume duplicates can occur unless the complete system proves otherwise.
 - RabbitMQ fits routed work queues and acknowledgement-based task delivery.
 - Use the broker already operated by the organization when it satisfies the requirement.
 
+Select Spring for Apache Kafka or Spring for RabbitMQ in Initializr. Supply broker addresses and credentials through environment-backed configuration. For local work, run the same broker type used in production and prove connectivity before writing the listener.
+
 ## 3. Implement
 
 ```text
@@ -39,6 +41,19 @@ producer/listener adapter ↔ broker ↔ listener/producer adapter
 5. Retry transient failures with a limit/backoff.
 6. Route permanent failures to a dead-letter/recovery process.
 7. Use an outbox pattern when database state and message publication must stay consistent.
+
+Typical files:
+
+```text
+src/main/java/com/company/project/messaging/
+├── OrderCreatedEvent.java
+├── OrderEventPublisher.java
+├── OrderEventListener.java
+├── MessagingConfiguration.java
+└── DeadLetterHandler.java
+```
+
+Checkpoint: publish and consume one message locally, then repeat the same event ID and force one permanent failure before increasing concurrency.
 
 ## 4. Verify
 

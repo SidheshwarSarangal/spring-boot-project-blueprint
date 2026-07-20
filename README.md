@@ -2,6 +2,8 @@
 
 Choose the result your application must produce. Open only that path; it contains the complete order from project setup to delivery.
 
+> **First Java or Spring Boot project?** Complete the [Java and Spring Boot foundation](docs/java-spring-foundation.md) once, then return here and select a path. Experienced readers can select immediately.
+
 ## Select one primary application type
 
 | I need to build… | Choose this path |
@@ -54,6 +56,10 @@ Do not read or add every capability. Complete the primary path, attach one requi
 ## Shared resources
 
 - [Project workbook](docs/project-workbook.md) — copy into your project to track requirements, features, tests, and delivery.
+- [Java and Spring Boot foundation](docs/java-spring-foundation.md) — prerequisites, Java syntax, generated files, Spring wiring, and the normal development loop.
+- [Testing guide](docs/testing-guide.md) — concrete unit, MVC, persistence, and integration-test patterns.
+- [Configuration guide](docs/configuration-guide.md) — YAML, environment variables, profiles, validated settings, and secrets.
+- [Delivery guide](docs/delivery-guide.md) — package, run, containerize, verify in CI, migrate, deploy, and roll back.
 - [Taskboard reference API](taskboard-api/README.md) — runnable example for the REST + SQL path.
 - [Troubleshooting](docs/troubleshooting.md) — use when a build, startup, HTTP, database, or test step fails.
 - [Production checklist](docs/production-checklist.md) — final gate for every application type.

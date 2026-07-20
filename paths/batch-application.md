@@ -1,6 +1,8 @@
 # Path: Batch application
 
-[← Choose another type](../README.md) · [Troubleshooting](../docs/troubleshooting.md)
+[← Choose another type](../README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
+
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
 
 Choose this for large finite imports, exports, reports, migrations, or processing that must restart safely.
 
@@ -36,6 +38,15 @@ Job → Step → ItemReader → ItemProcessor → ItemWriter
                   ↘ job repository/status ↙
 ```
 
+```text
+src/main/java/com/company/project/importjob/
+├── ImportJobConfiguration.java
+├── ImportItem.java
+├── ImportItemReader.java
+├── ImportItemProcessor.java
+└── ImportItemWriter.java
+```
+
 1. Configure the job repository and input parameters.
 2. Build a reader for the real source.
 3. Put validation/transformation in the processor.
@@ -43,6 +54,8 @@ Job → Step → ItemReader → ItemProcessor → ItemWriter
 5. Choose chunk size from transaction cost and memory behavior.
 6. Define which failures retry, skip, or fail the job.
 7. Produce counts and error records required by operators.
+
+Checkpoint: run a tiny valid input and confirm read/write counts, then rerun with one invalid record and confirm the chosen fail/skip behavior.
 
 ## 4. Attach required capabilities
 

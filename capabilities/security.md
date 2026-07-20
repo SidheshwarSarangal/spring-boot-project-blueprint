@@ -22,7 +22,18 @@ What is public?
 | SPA/mobile/HTTP service | OAuth 2.0/OIDC resource server validating access tokens |
 | Internal service | Organization-approved service identity, often OAuth 2.0 or mTLS |
 
-Use Spring Security and an established identity provider where possible. Do not invent token formats, encryption, or password storage.
+Select Spring Security. For bearer-token APIs also select OAuth2 Resource Server; for browser login use the organization’s OIDC/session approach. Use an established identity provider where possible. Do not invent token formats, encryption, or password storage.
+
+Typical files:
+
+```text
+src/main/java/com/company/project/security/
+├── SecurityConfiguration.java
+├── CurrentUser.java              application identity abstraction
+└── AuthorizationService.java     reusable ownership/permission checks
+src/test/java/com/company/project/security/
+└── SecurityIntegrationTest.java
+```
 
 ## 3. Implement in layers
 
@@ -38,6 +49,8 @@ authentication → route-level authorization → service ownership rule
 5. Return `401` for missing/invalid authentication and `403` for insufficient permission.
 6. Retain CSRF protection for browser session applications.
 7. Restrict CORS to required origins, methods, and headers.
+
+Checkpoint: protect one operation and prove public, unauthenticated, forbidden, allowed, and cross-owner cases before protecting the rest of the application.
 
 ## 4. Protect data
 

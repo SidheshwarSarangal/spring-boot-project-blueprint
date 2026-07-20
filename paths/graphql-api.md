@@ -1,6 +1,8 @@
 # Path: GraphQL API
 
-[← Choose another type](../README.md) · [Troubleshooting](../docs/troubleshooting.md)
+[← Choose another type](../README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
+
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
 
 Choose this when clients query a typed schema and select the fields they need. If fixed HTTP resources are sufficient, use the [REST API path](rest-api.md).
 
@@ -32,12 +34,23 @@ schema → input/output types → @QueryMapping/@MutationMapping
 → service → repository/adapter → GraphQL result
 ```
 
+```text
+src/main/resources/graphql/schema.graphqls
+src/main/java/com/company/project/task/
+├── TaskGraphqlController.java
+├── TaskService.java
+├── TaskInput.java
+└── TaskPayload.java
+```
+
 1. Keep resolvers/controllers thin and business rules in services.
 2. Validate mutation input and return stable application errors.
 3. Authorize operations and field/data ownership.
 4. Batch related data loading to prevent N+1 queries.
 5. Bound query depth, complexity, aliases, and result size.
 6. Evolve the schema with deprecation instead of breaking clients.
+
+Checkpoint: execute one query/mutation through the GraphQL endpoint and verify the response shape and one invalid-input error before adding relationships.
 
 ## 4. Attach required capabilities
 

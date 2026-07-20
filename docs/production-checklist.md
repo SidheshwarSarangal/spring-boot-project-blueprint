@@ -4,6 +4,8 @@
 
 Complete this when the required features work. Production readiness means the same tested artifact can be safely configured and run in each environment.
 
+Use the [delivery guide](delivery-guide.md) for the concrete package → CI → migrate → deploy sequence, then use this page as the release gate.
+
 ## Database
 
 - Use the production database engine in important integration tests, commonly through Testcontainers.

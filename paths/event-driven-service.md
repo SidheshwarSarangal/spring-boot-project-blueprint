@@ -1,6 +1,8 @@
 # Path: Event-driven service
 
-[← Choose another type](../README.md) · [Messaging capability](../capabilities/messaging.md) · [Troubleshooting](../docs/troubleshooting.md)
+[← Choose another type](../README.md) · [Messaging](../capabilities/messaging.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
+
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
 
 Choose this when an event/message starts the main business action or the service primarily publishes events.
 
@@ -36,12 +38,23 @@ message → listener → deserialize/validate → service
 → database/external adapter → acknowledge or retry
 ```
 
+```text
+src/main/java/com/company/project/order/
+├── OrderCreatedEvent.java
+├── OrderEventListener.java
+├── OrderService.java
+├── ProcessedEvent.java      optional idempotency record
+└── MessagingConfiguration.java
+```
+
 1. Keep transport code in the listener/adapter.
 2. Convert provider payloads to application-owned types.
 3. Make processing idempotent using an event/operation ID.
 4. Define when acknowledgement occurs.
 5. Bound concurrency and processing time.
 6. Publish events only after the related business state is safely recorded; use an outbox pattern when database/event consistency is required.
+
+Checkpoint: publish one local test event, confirm one service execution and acknowledgement, then send the same event ID twice and confirm duplicate safety.
 
 ## 4. Attach required capabilities
 
