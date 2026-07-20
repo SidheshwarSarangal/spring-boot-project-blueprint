@@ -2,6 +2,9 @@
 
 > A working reference for creating a general Java/Spring Boot project. It tells you what to do, where to do it, how to verify it, and what to do next.
 
+> [!IMPORTANT]
+> **Timed interview and no Java experience:** start with the [Three-hour assignment runbook](THREE-HOUR-ASSIGNMENT.md), rehearse it once, and keep the [Java survival sheet](JAVA-SURVIVAL.md) open during adaptation.
+
 ## Use this repository
 
 ```mermaid
@@ -27,6 +30,8 @@ Start with the [project-building workflow](docs/00-project-workflow.md). Do not 
 
 | You need to… | Open |
 |---|---|
+| Complete a three-hour interview assignment | [Three-hour assignment runbook](THREE-HOUR-ASSIGNMENT.md) |
+| Read or adapt unfamiliar Java syntax | [Java survival sheet](JAVA-SURVIVAL.md) |
 | Start a project | [Workflow: Gate 0](docs/00-project-workflow.md#gate-0--define-the-first-useful-feature) |
 | Turn a request into a first release | [Project decisions](docs/01-project-decisions.md) |
 | Generate and run Spring Boot | [Project setup](docs/02-project-setup.md) |
