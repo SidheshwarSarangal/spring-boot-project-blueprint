@@ -6,23 +6,6 @@ Complete this once if Java or Spring Boot is new to you. The goal is not to lear
 
 Keep the [beginner execution guide](beginner-execution-guide.md) open for physical file/terminal actions and the [Java syntax primer](java-syntax-primer.md) open for unfamiliar symbols/types.
 
-## Foundation step map
-
-| Step | What | Where | Do | Verify | Next |
-|---|---|---|---|---|---|
-| 1 | Working tools | Terminal | Install/check JDK, Git, editor | Version commands succeed | 2 |
-| 2 | Running practice app | Initializr + project root | Generate, build, start | Build succeeds; app starts | 3 |
-| 3 | Project navigation | Generated tree | Locate build/source/resources/tests | You can name each location | 4 |
-| 4 | Read Java type declarations | Java files | Read class/record/interface/enum | Identify each type’s role | 5 |
-| 5 | Read object behavior | Service example | Trace fields/constructor/method | Explain input, call, return | 6 |
-| 6 | Understand Spring wiring | Root/feature packages | Trace beans and constructor injection | Explain dependency arrows | 7 |
-| 7 | Trace one HTTP flow | Controller/service/repository | Follow request to result | Name owner of each concern | 8 |
-| 8 | Use Maven | Project root | Run compile/test/verify/run | Know which command to choose | 9 |
-| 9 | Use development loop | Feature package/test | Change and verify one slice | Small checkpoint passes | 10 |
-| 10 | Clean handoff | `.gitignore`/Git status | Ignore output/secrets; clean verify | Status contains only intended files | Selector |
-
-The detailed section for each step contains the commands/code. Do not move to **Next** while **Verify** is false.
-
 ## 1. Install and verify the tools
 
 Required:

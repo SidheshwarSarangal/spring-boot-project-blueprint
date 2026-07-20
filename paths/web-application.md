@@ -6,26 +6,13 @@
 
 Use this process when Spring returns HTML pages and processes browser forms, commonly with Thymeleaf.
 
-## Repository action map
-
-| Step | Exact location | Add or run there |
-|---|---|---|
-| 1 | Create `<project-root>/PROJECT.md` | Page/form contract |
-| 2 | Browser: Initializr; Terminal: generated `<project-root>` | Generate/build/start/health command |
-| 3 | Create `src/main/java/com/company/project/task/`, `src/main/resources/templates/tasks/`, `src/main/resources/static/css/` | Form/controller/service/templates/CSS |
-| 4 | Edit `task/TaskController.java`, `task/TaskService.java`, `templates/tasks/form.html` | GET/POST/service/template code |
-| 5 | Create/edit selected capability package and `security/SecurityConfiguration.java` when required | Persistence/security/provider/file code |
-| 6 | Create matching `src/test/java/com/company/project/task/`; edit config/CI/README | Tests, configuration, delivery |
-
-**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [B generate](../docs/beginner-execution-guide.md#action-b-generate-the-spring-project-in-the-browser), [C import](../docs/beginner-execution-guide.md#action-c-open-and-import-the-generated-maven-project), [D terminal](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal); 3–5 → [E Java files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add Java](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file), [I resources/templates](../docs/beginner-execution-guide.md#action-i-create-a-resource-file), [J browser call](../docs/beginner-execution-guide.md#action-j-start-the-application-and-call-it); 6 → [K tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
-
 ## Step 1 · Define one page flow
 
 **What:** Specify one browser journey with success and validation behavior.
 
-**Where:** One feature sheet in `PROJECT.md`, copied from the [workbook](../docs/project-workbook.md).
+**Where:** Create `<project-root>/PROJECT.md`. Copy one feature sheet from the [workbook](../docs/project-workbook.md) into it.
 
-**Do:** Record:
+**Do now:** Record:
 
 ```text
 GET  /tasks/new     → render empty form
@@ -35,32 +22,32 @@ Invalid             → redisplay form and field errors
 Access              → authenticated member
 ```
 
-**Verify:** Expected page, form fields, redirect, errors, and access are unambiguous.
+**Finish this step when:** Expected page, form fields, redirect, errors, and access are unambiguous.
 
-**Next:** Step 2.
+**Go next:** Step 2.
 
 ## Step 2 · Generate and run the foundation
 
 **What:** Create a working web foundation.
 
-**Where:** Spring Initializr and extracted project root.
+**Where:** Use [Spring Initializr](https://start.spring.io/) in the browser. Run every command below in `<project-root>/`, the directory containing `pom.xml` and `mvnw`.
 
-**Do:** Select Spring Web, Thymeleaf, Validation, and Actuator; add only required capabilities.
+**Do now:** Select Spring Web, Thymeleaf, Validation, and Actuator; add only required capabilities.
 
 ```bash
 ./mvnw clean verify
 ./mvnw spring-boot:run
 ```
 
-**Verify:** Application starts and `http://localhost:8080/actuator/health` returns `UP`.
+**Finish this step when:** Application starts and `http://localhost:8080/actuator/health` returns `UP`.
 
-**Next:** Step 3.
+**Go next:** Step 3.
 
 ## Step 3 · Create the page-flow files
 
 **What:** Establish form → controller → service → template.
 
-**Where:**
+**Where:** Create these paths; replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/task/
@@ -73,7 +60,7 @@ src/main/resources/templates/tasks/
 src/main/resources/static/css/app.css
 ```
 
-**Do:** Create a validated form object:
+**Do now:** Create a validated form object:
 
 ```java
 public record TaskForm(
@@ -82,17 +69,17 @@ public record TaskForm(
 ) {}
 ```
 
-**Verify:** Files are under the application root package/resources and `./mvnw compile` passes.
+**Finish this step when:** Files are under the application root package/resources and `./mvnw compile` passes.
 
-**Next:** Step 4.
+**Go next:** Step 4.
 
 ## Step 4 · Implement GET, POST, and template
 
 **What:** Render, validate, submit, and redirect one form.
 
-**Where:** `TaskController.java`, `TaskService.java`, and `templates/tasks/form.html`.
+**Where:** Edit `src/main/java/com/company/project/task/TaskController.java`, `TaskService.java`, and `src/main/resources/templates/tasks/form.html`.
 
-**Do:**
+**Do now:**
 
 ```java
 @Controller
@@ -131,29 +118,29 @@ public class TaskController {
 
 Keep business rules in the service. Use Post/Redirect/Get after success.
 
-**Verify:** Open `/tasks/new`; invalid form stays with errors; valid form redirects and produces the intended result.
+**Finish this step when:** Open `/tasks/new`; invalid form stays with errors; valid form redirects and produces the intended result.
 
-**Next:** Step 5.
+**Go next:** Step 5.
 
 ## Step 5 · Add required capabilities and secure rendering
 
 **What:** Attach only necessary persistence/integrations and protect pages/forms.
 
-**Where:** Selected capability packages plus controller/service/templates.
+**Where:** Add capability files only in the paths named by the selected capability guide. Apply access rules in `src/main/java/com/company/project/security/SecurityConfiguration.java`; keep feature logic in `task/` and HTML in `src/main/resources/templates/tasks/`.
 
-**Do:** Choose only required modules: [data storage](../capabilities/data-storage.md), [security](../capabilities/security.md), [external API](../capabilities/external-api.md), [file storage](../capabilities/file-storage.md), or [caching](../capabilities/caching.md). Retain CSRF protection for authenticated browser forms and let Thymeleaf escape user content.
+**Do now:** Choose only required modules: [data storage](../capabilities/data-storage.md), [security](../capabilities/security.md), [external API](../capabilities/external-api.md), [file storage](../capabilities/file-storage.md), or [caching](../capabilities/caching.md). Retain CSRF protection for authenticated browser forms and let Thymeleaf escape user content.
 
-**Verify:** Public/protected pages match the access rules; CSRF, cross-user access, and user-supplied text behave safely.
+**Finish this step when:** Public/protected pages match the access rules; CSRF, cross-user access, and user-supplied text behave safely.
 
-**Next:** Step 6.
+**Go next:** Step 6.
 
 ## Step 6 · Test and deliver
 
 **What:** Prove page behavior and create a deployable artifact.
 
-**Where:** `src/test/java`, configuration, CI/deployment files, and project README.
+**Where:** Create tests in `src/test/java/com/company/project/task/`. Edit `src/main/resources/application.yml`, `<project-root>/README.md`, and the CI/deployment file required by the chosen platform. Run commands in `<project-root>/`.
 
-**Do:** Test view name/model, form binding, validation, redirect, CSRF, allowed/forbidden access, and service rules using the [testing guide](../docs/testing-guide.md).
+**Do now:** Test view name/model, form binding, validation, redirect, CSRF, allowed/forbidden access, and service rules using the [testing guide](../docs/testing-guide.md).
 
 ```bash
 ./mvnw clean verify
@@ -161,6 +148,6 @@ Keep business rules in the service. Use Post/Redirect/Get after success.
 
 Then follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), and the [production checklist](../docs/production-checklist.md).
 
-**Verify:** Clean build passes and a clean environment can complete the browser flow with correct security and health.
+**Finish this step when:** Clean build passes and a clean environment can complete the browser flow with correct security and health.
 
-**Next:** Release and monitor, or return to Step 1 for the next page flow.
+**Go next:** Release and monitor, or return to Step 1 for the next page flow.

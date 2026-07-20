@@ -4,37 +4,25 @@
 
 Insert this process when work/events must be asynchronous, durable, buffered, replayable, or shared between services.
 
-## Repository action map
-
-| Step | Exact location | Add or run there |
-|---|---|---|
-| 1 | Edit feature/event sheet in `<project-root>/PROJECT.md` | Payload/delivery/recovery contract |
-| 2 | Edit `pom.xml`, `application-local.yml`; run broker separately and app terminal at project root | Broker dependency/config/connectivity |
-| 3 | Create `src/main/java/com/company/project/messaging/` | Event/publisher/listener/config code |
-| 4 | Edit consumer service; create inbox/outbox/recovery files and broker config | Idempotency/ack/retry/dead letter |
-| 5 | Create matching broker tests under `src/test/java`; run terminal at project root | Real-broker integration proof |
-
-**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [G broker dependency](../docs/beginner-execution-guide.md#action-g-add-or-change-a-maven-dependency), [H broker YAML](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration), [D run/connect](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal); 3–4 → [E create messaging files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file); 5 → [K broker tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
-
 ## Step 1 · Define message and delivery behavior
 
 **What:** Produce the message/event contract and recovery rules.
 
-**Where:** Feature sheet/event documentation in `PROJECT.md`.
+**Where:** Add an `Event contract` section under the current feature in `<project-root>/PROJECT.md`.
 
-**Do:** Record name/version, producer, consumer, key, payload, ordering, expected delivery, acknowledgement, duplicate, retry, dead-letter, retention, and replay.
+**Do now:** Record name/version, producer, consumer, key, payload, ordering, expected delivery, acknowledgement, duplicate, retry, dead-letter, retention, and replay.
 
-**Verify:** Duplicate and failure behavior are explicit; “exactly once” is not assumed casually.
+**Finish this step when:** Duplicate and failure behavior are explicit; “exactly once” is not assumed casually.
 
-**Next:** Step 2.
+**Go next:** Step 2.
 
 ## Step 2 · Choose broker, dependency, and local connection
 
 **What:** Run the same broker type used by the target environment.
 
-**Where:** Spring Initializr/`pom.xml`, local broker, environment-backed `application-local.yml`.
+**Where:** Edit `<project-root>/pom.xml` and `src/main/resources/application-local.yml`; start the local broker from its project/container directory and keep credentials outside Git.
 
-**Do:** Choose Kafka for retained ordered streams/replay/high throughput; RabbitMQ for routed work queues/acknowledgement delivery; prefer the organization-operated broker when suitable. Add Spring for Apache Kafka or Spring for RabbitMQ.
+**Do now:** Choose Kafka for retained ordered streams/replay/high throughput; RabbitMQ for routed work queues/acknowledgement delivery; prefer the organization-operated broker when suitable. Add Spring for Apache Kafka or Spring for RabbitMQ.
 
 Kafka example:
 
@@ -46,15 +34,15 @@ spring:
       group-id: ${KAFKA_GROUP_ID:orders-local}
 ```
 
-**Verify:** Application connects and broker health/metadata succeeds before listener/publisher code.
+**Finish this step when:** Application connects and broker health/metadata succeeds before listener/publisher code.
 
-**Next:** Step 3.
+**Go next:** Step 3.
 
 ## Step 3 · Create typed publisher/listener adapters
 
 **What:** Send/receive one typed event without broker types in business services.
 
-**Where:**
+**Where:** Create these paths; replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/messaging/
@@ -64,7 +52,7 @@ src/main/java/com/company/project/messaging/
 └── MessagingConfiguration.java
 ```
 
-**Do:** Kafka example:
+**Do now:** Kafka example:
 
 ```java
 public record OrderCreatedEvent(UUID eventId, Long orderId, Instant occurredAt) {}
@@ -85,34 +73,34 @@ class OrderEventPublisher {
 
 Use `@KafkaListener`/`@RabbitListener` only in adapter classes, then delegate to a service.
 
-**Verify:** Publish and consume one local message; payload converts to the expected application event.
+**Finish this step when:** Publish and consume one local message; payload converts to the expected application event.
 
-**Next:** Step 4.
+**Go next:** Step 4.
 
 ## Step 4 · Add idempotency, acknowledgement, retry, and dead letter
 
 **What:** Make duplicate and failure handling safe and bounded.
 
-**Where:** Consumer service transaction, inbox/processed-event storage, listener container/recovery configuration, dead-letter handler.
+**Where:** Edit `src/main/java/com/company/project/messaging/OrderEventListener.java` and `MessagingConfiguration.java`; put business work in the feature service; add inbox/outbox entities and repositories under `messaging/` only when required.
 
-**Do:** Include operation/event ID; make consumer idempotent; acknowledge after intended durable work; retry transient failures with limit/backoff; route invalid/permanent/exhausted messages to recovery; use outbox when DB state and publication must be consistent. Bound size, concurrency, and processing time.
+**Do now:** Include operation/event ID; make consumer idempotent; acknowledge after intended durable work; retry transient failures with limit/backoff; route invalid/permanent/exhausted messages to recovery; use outbox when DB state and publication must be consistent. Bound size, concurrency, and processing time.
 
-**Verify:** Duplicate produces one effect; transient error retries; permanent error reaches recovery; broker restart does not silently lose required work.
+**Finish this step when:** Duplicate produces one effect; transient error retries; permanent error reaches recovery; broker restart does not silently lose required work.
 
-**Next:** Step 5.
+**Go next:** Step 5.
 
 ## Step 5 · Integration-test the real broker type
 
 **What:** Prove protocol/configuration assumptions and scale behavior.
 
-**Where:** Broker integration tests/Testcontainers, metrics/logging, CI.
+**Where:** Create `src/test/java/com/company/project/messaging/MessagingIntegrationTest.java`; configure metrics/logging in `src/main/resources/application.yml`; run tests in `<project-root>/` and the same command in CI.
 
-**Do:** Test publish/consume, invalid message, duplicate, ordering, retry, dead letter, broker outage, consumer restart, and multiple consumers. Observe lag/queue depth, outcome, retry, and dead-letter counts.
+**Do now:** Test publish/consume, invalid message, duplicate, ordering, retry, dead letter, broker outage, consumer restart, and multiple consumers. Observe lag/queue depth, outcome, retry, and dead-letter counts.
 
 ```bash
 ./mvnw clean verify
 ```
 
-**Verify:** Critical tests use the selected broker type; duplicates/failures are visible and recoverable.
+**Finish this step when:** Critical tests use the selected broker type; duplicates/failures are visible and recoverable.
 
-**Next:** Return to the application path’s next step.
+**Go next:** Return to the application path’s next step.

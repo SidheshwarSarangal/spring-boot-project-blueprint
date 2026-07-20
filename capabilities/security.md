@@ -4,37 +4,25 @@
 
 Insert this process when the application must identify callers or protect actions/data.
 
-## Repository action map
-
-| Step | Exact location | Add or run there |
-|---|---|---|
-| 1 | Edit users/access + feature in `<project-root>/PROJECT.md` | Identity/role/ownership rules |
-| 2 | Edit `<project-root>/pom.xml` and external identity-provider settings | Security/resource-server/OIDC dependencies |
-| 3 | Create `src/main/java/com/company/project/security/SecurityConfiguration.java` and related types | Filter-chain/authentication code |
-| 4 | Edit protected feature service/authorization service | Record ownership/business permission |
-| 5 | Create `src/test/java/com/company/project/security/`; edit logs/secrets config | Allow/deny/leakage tests |
-
-**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [G dependencies](../docs/beginner-execution-guide.md#action-g-add-or-change-a-maven-dependency), [H identity settings](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration); 3–4 → [E create security files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add/adapt code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file), [J call protected route](../docs/beginner-execution-guide.md#action-j-start-the-application-and-call-it); 5 → [K tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
-
 ## Step 1 · Define identity, permission, and ownership
 
 **What:** Produce explicit allow/deny rules before security configuration.
 
-**Where:** Users/access section and feature sheet in `PROJECT.md`.
+**Where:** Add an `Identity and access` section under the current feature in `<project-root>/PROJECT.md`.
 
-**Do:** Record public operations, caller identity source, role/authority, record owner, cross-user rule, and sensitive data.
+**Do now:** Record public operations, caller identity source, role/authority, record owner, cross-user rule, and sensitive data.
 
-**Verify:** Every protected feature has at least one allowed and one denied scenario.
+**Finish this step when:** Every protected feature has at least one allowed and one denied scenario.
 
-**Next:** Step 2.
+**Go next:** Step 2.
 
 ## Step 2 · Choose authentication and add dependencies
 
 **What:** Select one established authentication model.
 
-**Where:** Spring Initializr/`pom.xml` and identity-provider configuration.
+**Where:** Edit `<project-root>/pom.xml` and `src/main/resources/application.yml`; configure the identity provider in its admin console; set client secrets in the terminal/IDE run configuration or deployment secret store.
 
-**Do:**
+**Do now:**
 
 | Client | Add/use |
 |---|---|
@@ -44,15 +32,15 @@ Insert this process when the application must identify callers or protect action
 
 Do not invent token formats/crypto. Use an established identity provider. If the application owns passwords, store only adaptive `PasswordEncoder` hashes.
 
-**Verify:** Dependencies resolve and required issuer/client settings are known without committing secret values.
+**Finish this step when:** Dependencies resolve and required issuer/client settings are known without committing secret values.
 
-**Next:** Step 3.
+**Go next:** Step 3.
 
 ## Step 3 · Create security configuration
 
 **What:** Protect one operation and keep intended public endpoints open.
 
-**Where:**
+**Where:** Create these paths; replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/security/
@@ -61,7 +49,7 @@ src/main/java/com/company/project/security/
 └── AuthorizationService.java
 ```
 
-**Do:** Token API example:
+**Do now:** Token API example:
 
 ```java
 @Configuration
@@ -86,17 +74,17 @@ class SecurityConfiguration {
 
 For browser sessions use form/OIDC login and do not disable CSRF. Configure CORS only for required origins/methods/headers.
 
-**Verify:** Health/public route works; protected route returns `401` without valid identity and succeeds with allowed identity.
+**Finish this step when:** Health/public route works; protected route returns `401` without valid identity and succeeds with allowed identity.
 
-**Next:** Step 4.
+**Go next:** Step 4.
 
 ## Step 4 · Enforce business permission and ownership
 
 **What:** Prevent a valid user from accessing another user’s protected data.
 
-**Where:** Feature service or application authorization service—not only URL configuration.
+**Where:** Put reusable checks in `src/main/java/com/company/project/security/AuthorizationService.java` and call them from `src/main/java/com/company/project/task/TaskService.java`; do not rely only on URL rules.
 
-**Do:**
+**Do now:**
 
 ```java
 @Transactional(readOnly = true)
@@ -112,22 +100,22 @@ public TaskResponse findById(Long id, CurrentUser user) {
 
 Return/translate `401` for missing/invalid authentication and `403` for insufficient permission. Consider `404` instead of revealing existence when the contract requires privacy.
 
-**Verify:** User A cannot read/change User B’s record even by changing URL/body identifiers.
+**Finish this step when:** User A cannot read/change User B’s record even by changing URL/body identifiers.
 
-**Next:** Step 5.
+**Go next:** Step 5.
 
 ## Step 5 · Protect secrets/data and test the boundary
 
 **What:** Prove all allow/deny cases and remove credential leakage.
 
-**Where:** Security tests, logs/error handling, secret/configuration store.
+**Where:** Create `src/test/java/com/company/project/security/SecurityIntegrationTest.java`; inspect application logs; keep secret values in the terminal/IDE run configuration or deployment secret store.
 
-**Do:** Test public, unauthenticated, invalid/expired identity, forbidden role, allowed role, cross-owner, CSRF (browser), and CORS. Never log passwords, tokens, cookies, session IDs, keys, or sensitive bodies.
+**Do now:** Test public, unauthenticated, invalid/expired identity, forbidden role, allowed role, cross-owner, CSRF (browser), and CORS. Never log passwords, tokens, cookies, session IDs, keys, or sensitive bodies.
 
 ```bash
 ./mvnw clean verify
 ```
 
-**Verify:** All permission tests pass; responses/logs contain no credentials; secrets remain outside Git.
+**Finish this step when:** All permission tests pass; responses/logs contain no credentials; secrets remain outside Git.
 
-**Next:** Return to the application path’s next step.
+**Go next:** Return to the application path’s next step.

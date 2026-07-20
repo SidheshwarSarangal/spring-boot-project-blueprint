@@ -4,27 +4,6 @@
 
 Use this guide when the chosen application path needs a database-backed REST API. For an API without persistence, omit the entity and repository and let the service call the required adapter.
 
-**Beginner physical actions used here:** [create Java files](beginner-execution-guide.md#action-e-create-a-java-package-and-file), [put code in the named file](beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file), [edit YAML](beginner-execution-guide.md#action-h-edit-yaml-configuration), [run/call the app](beginner-execution-guide.md#action-j-start-the-application-and-call-it), and [create tests](beginner-execution-guide.md#action-k-create-and-run-a-test).
-
-## Core implementation step map
-
-| Step | What | Where | Do | Verify | Next |
-|---|---|---|---|---|---|
-| 1 | HTTP contract | `PROJECT.md` | Write input/output/status/errors | Test can be written | 2 |
-| 2 | Feature package | `src/main/java/<base>/<feature>` | Create named files | Packages compile | 3 |
-| 3 | Entity | `<feature>/Task.java` | Map stored state | Mapping compiles | 4 |
-| 4 | Repository | `<feature>/TaskRepository.java` | Extend JPA repository/add bounded query | Repository test can load | 5 |
-| 5 | DTOs | `<feature>/dto` | Define validated input/safe output | JSON boundary is explicit | 6 |
-| 6 | Mapper | `<feature>/TaskMapper.java` | Convert entity to response | Mapping result correct | 7 |
-| 7 | Service | `<feature>/TaskService.java` | Add rules/transaction/repository calls | Unit test passes | 8 |
-| 8 | Controller | `<feature>/TaskController.java` | Bind/validate/call/respond | Valid request reaches service | 9 |
-| 9 | Errors | Exception + `common/error` | Map expected exceptions | Intended 4xx bodies return | 10 |
-| 10 | Local DB | `application-local.yml` | Configure disposable local DB | App connects/starts | 11 |
-| 11 | Real request | Terminal/`requests.http` | Start and call endpoint | HTTP + stored result correct | 12 |
-| 12 | Automated proof | `src/test/java` | Add focused tests; clean verify | Clean build passes | Capability/delivery |
-
-The numbered sections below contain the relevant code. Stop when **Verify** fails.
-
 ## 1. Write the contract
 
 Define one operation before writing Java:

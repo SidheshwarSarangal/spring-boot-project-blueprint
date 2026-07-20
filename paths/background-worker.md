@@ -6,26 +6,13 @@
 
 Use this when work runs on a timer or outside the original HTTP request.
 
-## Repository action map
-
-| Step | Exact location | Add or run there |
-|---|---|---|
-| 1 | Create `<project-root>/PROJECT.md` | Job contract/retry/duplicate rules |
-| 2 | Browser: Initializr; Terminal: generated `<project-root>` | Generate/build/start |
-| 3 | Create `src/main/java/com/company/project/cleanup/`; edit `src/main/resources/application.yml` | Trigger/service/properties/schedule |
-| 4 | Edit `cleanup/CleanupService.java`; create/edit feature repository/entity as required | Bounded idempotent job code |
-| 5 | Edit selected capability/configuration files; add metrics/logs in job/service | Recovery/observability |
-| 6 | Create `src/test/java/com/company/project/cleanup/`; edit config/CI/README | Job tests and delivery |
-
-**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [B generate](../docs/beginner-execution-guide.md#action-b-generate-the-spring-project-in-the-browser), [C import](../docs/beginner-execution-guide.md#action-c-open-and-import-the-generated-maven-project), [D terminal](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal); 3–5 → [E create files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file), [H YAML](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration); 6 → [K tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
-
 ## Step 1 · Define one job
 
 **What:** Produce the trigger, result, failure, and duplicate-execution contract.
 
-**Where:** One job feature sheet in `PROJECT.md`.
+**Where:** Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
 
-**Do:** Record trigger, input/job ID, output/state change, maximum duration, duplicate rule, retry rule, and recovery owner.
+**Do now:** Record trigger, input/job ID, output/state change, maximum duration, duplicate rule, retry rule, and recovery owner.
 
 ```text
 Trigger: every 15 minutes
@@ -35,26 +22,26 @@ Duplicate behavior: safe; already-expired orders are skipped
 Failure: record failure and retry on next schedule
 ```
 
-**Verify:** Success and safe rerun can be tested without waiting for production time.
+**Finish this step when:** Success and safe rerun can be tested without waiting for production time.
 
-**Next:** Step 2.
+**Go next:** Step 2.
 
 ## Step 2 · Choose mechanism and create foundation
 
 **What:** Select the smallest execution mechanism and run an empty application.
 
-**Where:** Spring Initializr and project root.
+**Where:** Browser at `https://start.spring.io`; then terminal at `<project-root>` containing `pom.xml`.
 
-**Do:** Use `@Scheduled` for simple timed work, `@Async` only for non-durable in-process work, [messaging](../capabilities/messaging.md) when required work must survive restart, or the [batch process](batch-application.md) for large restartable datasets. Select Actuator plus required dependencies.
+**Do now:** Use `@Scheduled` for simple timed work, `@Async` only for non-durable in-process work, [messaging](../capabilities/messaging.md) when required work must survive restart, or the [batch process](batch-application.md) for large restartable datasets. Select Actuator plus required dependencies.
 
 ```bash
 ./mvnw clean verify
 ./mvnw spring-boot:run
 ```
 
-**Verify:** Untouched application starts and selected local dependencies are reachable.
+**Finish this step when:** Untouched application starts and selected local dependencies are reachable.
 
-**Next:** Step 3.
+**Go next:** Step 3.
 
 ## Step 3 · Create trigger, service, and configuration
 
@@ -70,7 +57,7 @@ src/main/java/com/company/project/cleanup/
 └── JobExecutionRecord.java   optional durable state
 ```
 
-**Do:** Enable scheduling in a configuration class and create a thin trigger:
+**Do now:** Enable scheduling in a configuration class and create a thin trigger:
 
 ```java
 @Configuration
@@ -98,17 +85,17 @@ jobs:
     cron: "0 */15 * * * *"
 ```
 
-**Verify:** `./mvnw compile` passes and application starts with the property present.
+**Finish this step when:** `./mvnw compile` passes and application starts with the property present.
 
-**Next:** Step 4.
+**Go next:** Step 4.
 
 ## Step 4 · Implement bounded, repeatable work
 
 **What:** Complete the job safely inside the service.
 
-**Where:** `CleanupService.java`, repository/adapter, and optional execution entity.
+**Where:** Edit `src/main/java/com/company/project/cleanup/CleanupService.java`; create/edit the feature repository/entity under its feature package; create `cleanup/JobExecutionRecord.java` only when durable execution history is required.
 
-**Do:** Query a bounded work set, make each state transition idempotent, transact database changes, record outcome, and set concurrency limits. For multiple instances, add a distributed scheduling lock or move required work to a broker.
+**Do now:** Query a bounded work set, make each state transition idempotent, transact database changes, record outcome, and set concurrency limits. For multiple instances, add a distributed scheduling lock or move required work to a broker.
 
 ```java
 @Service
@@ -132,29 +119,29 @@ class CleanupService {
 
 Inject a `Clock` instead of calling current time directly when the time rule requires deterministic testing.
 
-**Verify:** Call the service in a test; run the trigger once locally; run it again and confirm state is not corrupted or duplicated.
+**Finish this step when:** Call the service in a test; run the trigger once locally; run it again and confirm state is not corrupted or duplicated.
 
-**Next:** Step 5.
+**Go next:** Step 5.
 
 ## Step 5 · Add recovery, observability, and required capabilities
 
 **What:** Make slow/failing jobs bounded and diagnosable.
 
-**Where:** Job configuration, service, metrics/logging, and selected capability package.
+**Where:** Edit `cleanup/CleanupJob.java`, `cleanup/CleanupService.java`, and `src/main/resources/application.yml`; create only the capability folder linked by this step.
 
-**Do:** Add [data storage](../capabilities/data-storage.md), [external API](../capabilities/external-api.md), [messaging](../capabilities/messaging.md), or [file storage](../capabilities/file-storage.md) only when required. Record start/end, count, duration, outcome, and safe correlation ID. Retry only transient operations with a limit/backoff.
+**Do now:** Add [data storage](../capabilities/data-storage.md), [external API](../capabilities/external-api.md), [messaging](../capabilities/messaging.md), or [file storage](../capabilities/file-storage.md) only when required. Record start/end, count, duration, outcome, and safe correlation ID. Retry only transient operations with a limit/backoff.
 
-**Verify:** Forced timeout/permanent failure becomes a visible recorded/alertable outcome and cannot loop indefinitely.
+**Finish this step when:** Forced timeout/permanent failure becomes a visible recorded/alertable outcome and cannot loop indefinitely.
 
-**Next:** Step 6.
+**Go next:** Step 6.
 
 ## Step 6 · Test, configure, and deliver
 
 **What:** Prove job behavior across success, duplication, failure, and restart.
 
-**Where:** `src/test/java`, application configuration, CI/deployment files, README.
+**Where:** Create tests under `src/test/java/com/company/project/cleanup/`; edit `src/main/resources/application.yml`, root CI/deployment files, and `<project-root>/README.md`; run commands at `<project-root>`.
 
-**Do:** Test service rules, thin trigger delegation, duplicate execution, retry exhaustion, restart/recovery, and concurrency using the [testing guide](../docs/testing-guide.md).
+**Do now:** Test service rules, thin trigger delegation, duplicate execution, retry exhaustion, restart/recovery, and concurrency using the [testing guide](../docs/testing-guide.md).
 
 ```bash
 ./mvnw clean verify
@@ -162,6 +149,6 @@ Inject a `Clock` instead of calling current time directly when the time rule req
 
 Follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), and [production](../docs/production-checklist.md).
 
-**Verify:** Clean build passes; required work is not silently lost; operations expose job age/success/failure.
+**Finish this step when:** Clean build passes; required work is not silently lost; operations expose job age/success/failure.
 
-**Next:** Release, or return to Step 1 for another job.
+**Go next:** Release, or return to Step 1 for another job.

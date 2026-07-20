@@ -4,35 +4,23 @@
 
 Insert this process when a use case calls payments, email, maps, AI, identity, or another HTTP provider.
 
-## Repository action map
-
-| Step | Exact location | Add or run there |
-|---|---|---|
-| 1 | Edit feature sheet in `<project-root>/PROJECT.md` | Provider-independent boundary/failures |
-| 2 | Create `src/main/java/com/company/project/provider/` | Interface, DTO, properties, adapter files |
-| 3 | Edit `provider/ProviderConfiguration.java`, `src/main/resources/application.yml`, environment | HTTP client, URL, credentials, timeouts |
-| 4 | Edit `provider/HttpProviderAdapter.java` and application error mapping | Call/translation/retry/idempotency |
-| 5 | Create matching `src/test/java/.../provider/`; run terminal in project root | Stub tests, metrics, clean build |
-
-**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [E create provider files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file); 3 → [H provider YAML](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration), [F client bean code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file); 4 → [F adapter code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file); 5 → [K stub tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
-
 ## Step 1 · Define the provider boundary
 
 **What:** Specify application-owned input/output and provider failure rules.
 
-**Where:** Feature sheet in `PROJECT.md`.
+**Where:** Add an `External provider` section under the current feature in `<project-root>/PROJECT.md`.
 
-**Do:** Record operation, application input/output, credential source, connect/response timeout, rate limit, retry safety, idempotency support, and outage behavior.
+**Do now:** Record operation, application input/output, credential source, connect/response timeout, rate limit, retry safety, idempotency support, and outage behavior.
 
-**Verify:** Service behavior is stated without exposing provider DTO/status details.
+**Finish this step when:** Service behavior is stated without exposing provider DTO/status details.
 
-**Next:** Step 2.
+**Go next:** Step 2.
 
 ## Step 2 · Create interface, DTOs, properties, and adapter
 
 **What:** Isolate provider code behind an application interface.
 
-**Where:**
+**Where:** Create these paths; replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/provider/
@@ -44,7 +32,7 @@ src/main/java/com/company/project/provider/
 └── ProviderProperties.java
 ```
 
-**Do:**
+**Do now:**
 
 ```java
 public interface ProviderClient {
@@ -60,17 +48,17 @@ public record ProviderProperties(
 ) {}
 ```
 
-**Verify:** Service compiles against `ProviderClient`; provider DTOs remain inside adapter package.
+**Finish this step when:** Service compiles against `ProviderClient`; provider DTOs remain inside adapter package.
 
-**Next:** Step 3.
+**Go next:** Step 3.
 
 ## Step 3 · Configure a bounded HTTP client
 
 **What:** Create one reusable client with externalized URL/credentials/timeouts.
 
-**Where:** `ProviderConfiguration.java`, `application.yml`, underlying request-factory/client configuration.
+**Where:** Edit `src/main/java/com/company/project/provider/ProviderConfiguration.java`, `ProviderProperties.java`, and `src/main/resources/application.yml`.
 
-**Do:** For a synchronous MVC application use `RestClient`; use `WebClient` for selected reactive/streaming flows.
+**Do now:** For a synchronous MVC application use `RestClient`; use `WebClient` for selected reactive/streaming flows.
 
 ```java
 @Bean
@@ -99,17 +87,17 @@ provider:
 
 Use separate connect/response durations when the requirement needs different bounds.
 
-**Verify:** Missing/invalid properties fail startup and a stubbed delayed response stops within configured bound.
+**Finish this step when:** Missing/invalid properties fail startup and a stubbed delayed response stops within configured bound.
 
-**Next:** Step 4.
+**Go next:** Step 4.
 
 ## Step 4 · Implement and translate the call
 
 **What:** Convert application command → provider request → application result.
 
-**Where:** `HttpProviderAdapter.java`.
+**Where:** Edit `src/main/java/com/company/project/provider/HttpProviderAdapter.java`, `ProviderRequest.java`, and `ProviderResponse.java`.
 
-**Do:**
+**Do now:**
 
 ```java
 @Component
@@ -134,22 +122,22 @@ class HttpProviderAdapter implements ProviderClient {
 
 Translate decline/invalid/rate-limit/auth/outage to stable application outcomes. Retry only transient safe/idempotent operations with limit/backoff; use provider idempotency keys for side effects.
 
-**Verify:** Stub success maps correctly; each expected provider failure maps to the contract without leaking provider secrets.
+**Finish this step when:** Stub success maps correctly; each expected provider failure maps to the contract without leaking provider secrets.
 
-**Next:** Step 5.
+**Go next:** Step 5.
 
 ## Step 5 · Test offline and observe
 
 **What:** Prove provider behavior without real network dependency.
 
-**Where:** Stub-server adapter tests, metrics/logging, CI.
+**Where:** Create `src/test/java/com/company/project/provider/HttpProviderAdapterTest.java`; configure safe logging/metrics in `src/main/resources/application.yml`; run tests in `<project-root>/` and the same command in CI.
 
-**Do:** Test success, malformed/empty response, timeout, connection failure, auth failure, rate limit, retry exhaustion, duplicate, and outage. Record safe correlation/provider ID, latency, and outcome—not credentials/payload secrets.
+**Do now:** Test success, malformed/empty response, timeout, connection failure, auth failure, rate limit, retry exhaustion, duplicate, and outage. Record safe correlation/provider ID, latency, and outcome—not credentials/payload secrets.
 
 ```bash
 ./mvnw clean verify
 ```
 
-**Verify:** Normal automated tests run offline; calls cannot block forever; duplicate side effects are controlled.
+**Finish this step when:** Normal automated tests run offline; calls cannot block forever; duplicate side effects are controlled.
 
-**Next:** Return to the application path’s next step.
+**Go next:** Return to the application path’s next step.

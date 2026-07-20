@@ -4,36 +4,25 @@
 
 Insert this only after measurement shows repeated read/computation latency is a problem. Cache is not the source of truth.
 
-## Repository action map
-
-| Step | Exact location | Add or run there |
-|---|---|---|
-| 1 | Edit performance notes in `<project-root>/PROJECT.md`; run benchmark/metrics from project root | Baseline and correctness contract |
-| 2 | Edit `pom.xml`, create `src/main/java/com/company/project/cache/CacheConfiguration.java`, edit `application.yml` | Provider and bounded cache config |
-| 3 | Edit feature service; create matching cache test | Cache read/eviction/key code |
-| 4 | Run tests/measurements in project root; inspect cache metrics | Failure/correctness/benefit proof |
-
-**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook), [D baseline command](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal); 2 → [G cache dependency](../docs/beginner-execution-guide.md#action-g-add-or-change-a-maven-dependency), [E config class](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [H cache YAML](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration); 3 → [F service annotations](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file), [K cache test](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test); 4 → [D measure/build](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
-
 ## Step 1 · Measure and define correctness
 
 **What:** Prove a cache is needed and specify safe staleness/invalidation.
 
-**Where:** Feature performance notes in `PROJECT.md` and baseline metric/test.
+**Where:** Add a `Caching decision` section to `<project-root>/PROJECT.md`. Put the repeatable baseline test in `src/test/java/com/company/project/task/TaskPerformanceTest.java` or record the production metric/query used.
 
-**Do:** Record cached value/key, source of truth, acceptable staleness, TTL, invalidation event, maximum size, tenant/user isolation, and unavailable-cache behavior.
+**Do now:** Record cached value/key, source of truth, acceptable staleness, TTL, invalidation event, maximum size, tenant/user isolation, and unavailable-cache behavior.
 
-**Verify:** Baseline latency/load is measured and invalidation can be stated. Otherwise stop—do not add cache.
+**Finish this step when:** Baseline latency/load is measured and invalidation can be stated. Otherwise stop—do not add cache.
 
-**Next:** Step 2.
+**Go next:** Step 2.
 
 ## Step 2 · Choose provider and enable caching
 
 **What:** Configure one bounded local/distributed cache.
 
-**Where:** `pom.xml`, `CacheConfiguration.java`, `application.yml`.
+**Where:** Edit `<project-root>/pom.xml` and `src/main/resources/application.yml`. Create `src/main/java/com/company/project/cache/CacheConfiguration.java`.
 
-**Do:** Add Spring Cache plus Caffeine for per-instance cache or Redis for shared multi-instance cache. Keep enablement in dedicated configuration:
+**Do now:** Add Spring Cache plus Caffeine for per-instance cache or Redis for shared multi-instance cache. Keep enablement in dedicated configuration:
 
 ```java
 @Configuration
@@ -51,17 +40,17 @@ spring:
 
 Use provider-specific properties matching the selected provider. Do not place `@EnableCaching` on the main application class.
 
-**Verify:** Application starts with declared cache and fails/tests visibly if an undeclared cache name is used.
+**Finish this step when:** Application starts with declared cache and fails/tests visibly if an undeclared cache name is used.
 
-**Next:** Step 3.
+**Go next:** Step 3.
 
 ## Step 3 · Add read and invalidation at service boundary
 
 **What:** Cache one read and evict/update it with every source-of-truth change.
 
-**Where:** Feature service and cache-specific test.
+**Where:** Edit `src/main/java/com/company/project/task/TaskService.java`. Create `src/test/java/com/company/project/task/TaskCacheTest.java`.
 
-**Do:**
+**Do now:**
 
 ```java
 @Cacheable(cacheNames = "tasks", key = "#id")
@@ -79,22 +68,22 @@ public TaskResponse update(Long id, UpdateTaskRequest request) {
 
 Include tenant/user identity in keys where data is scoped. Avoid self-invocation that bypasses Spring caching proxies.
 
-**Verify:** First read loads source, second hits cache, update/delete invalidates, next read loads fresh source.
+**Finish this step when:** First read loads source, second hits cache, update/delete invalidates, next read loads fresh source.
 
-**Next:** Step 4.
+**Go next:** Step 4.
 
 ## Step 4 · Test failure and prove benefit
 
 **What:** Ensure correctness does not depend on cache and benefit is measurable.
 
-**Where:** Cache integration tests and metrics.
+**Where:** Add failure/expiry cases to `src/test/java/com/company/project/task/TaskCacheTest.java`, expose only approved metrics through `src/main/resources/application.yml`, and run commands in `<project-root>/`.
 
-**Do:** Test miss, hit, expiry, invalidation, cross-user isolation, unavailable cache, concurrent misses, and stale limit. Measure hit rate, latency, evictions, memory/key growth, and source load.
+**Do now:** Test miss, hit, expiry, invalidation, cross-user isolation, unavailable cache, concurrent misses, and stale limit. Measure hit rate, latency, evictions, memory/key growth, and source load.
 
 ```bash
 ./mvnw clean verify
 ```
 
-**Verify:** Source remains correct when cache is unavailable; size is bounded; post-cache measurement is meaningfully better.
+**Finish this step when:** Source remains correct when cache is unavailable; size is bounded; post-cache measurement is meaningfully better.
 
-**Next:** Keep the cache and return to the path, or remove it if benefit is not justified.
+**Go next:** Keep the cache and return to the path, or remove it if benefit is not justified.

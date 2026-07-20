@@ -55,33 +55,19 @@ flowchart TD
 
 Do not read or add every capability. Complete the primary path, attach one required capability at its stated step, verify it, and continue.
 
-## How every selected process works
+## Follow only the current step
 
-Every numbered step in a path or capability uses the same five instructions:
-
-| Instruction | Meaning |
-|---|---|
-| **What** | The result this step must produce |
-| **Where** | Exact project directory or file to work in |
-| **Do** | Actions and relevant code/commands in order |
-| **Verify** | Observable checkpoint that must pass |
-| **Next** | The next numbered step or selected capability |
-
-Do not move to **Next** while **Verify** is failing. Replace example package names, fields, routes, and domain names with those recorded in your project workbook.
-
-Code blocks show the relevant implementation at that step; add the matching `package` declaration and IDE-generated imports. When an API differs across Spring major versions, keep the version selected by Spring Initializr and confirm the linked official reference rather than mixing examples from another version.
-
-“Where” always uses one of these exact forms:
+After selecting a path, start at Step 1. Each step tells you:
 
 ```text
-Browser: https://start.spring.io
-Terminal (working directory): <project-root>
-Create file: src/main/java/com/company/project/task/TaskService.java
-Edit file: src/main/resources/application.yml
-Create folder: src/main/resources/db/migration/
+What        result to produce now
+Where       exact browser, file, folder, or terminal directory
+Do now      physical actions in order, with code/commands at that location
+Finish when observable result that must pass
+Go next     one next step
 ```
 
-If a step has several actions, its **Repository action map** states separately where each file is created/edited and where each command is run. The code block immediately following a file instruction belongs in that file.
+Do not read ahead or add optional capabilities until the current step directs you there. Do not continue while **Finish this step when** is false. Replace example names/fields with the current feature from `PROJECT.md`; add the package declaration and IDE imports described by the step.
 
 ## Shared resources
 

@@ -6,47 +6,34 @@
 
 Use this when the main purpose is coordinating a payment, email, maps, AI, identity, or another provider.
 
-## Repository action map
-
-| Step | Exact location | Add or run there |
-|---|---|---|
-| 1 | Create `<project-root>/PROJECT.md` | Provider-independent operation contract |
-| 2 | Follow chosen entry-path files; Terminal: generated `<project-root>` | Generate/build/start entry point |
-| 3 | Create `src/main/java/com/company/project/payment/` | Provider interface/adapter/DTO/config code |
-| 4 | Edit adapter/configuration and application error handler | Timeouts/outcome translation/retry |
-| 5 | Create/edit selected `security/`, persistence, messaging, or cache package | Required durability/access |
-| 6 | Create matching `src/test/java/.../payment/`; edit config/CI/README | Stub tests and delivery |
-
-**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → chosen entry path plus [B generate](../docs/beginner-execution-guide.md#action-b-generate-the-spring-project-in-the-browser), [D terminal](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal); 3–5 → [E create files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file), [H properties](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration); 6 → [K tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
-
 ## Step 1 · Define one integration action
 
 **What:** Specify application behavior independently from the provider API.
 
-**Where:** One feature sheet in `PROJECT.md`.
+**Where:** Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
 
-**Do:** Record caller/trigger, application input/output, provider operation, credential source, timeout, rate limit, retry safety, idempotency, and outage behavior.
+**Do now:** Record caller/trigger, application input/output, provider operation, credential source, timeout, rate limit, retry safety, idempotency, and outage behavior.
 
-**Verify:** The application result remains understandable without provider-specific field names.
+**Finish this step when:** The application result remains understandable without provider-specific field names.
 
-**Next:** Step 2.
+**Go next:** Step 2.
 
 ## Step 2 · Choose entry point and generate foundation
 
 **What:** Select how work starts and produce a running project.
 
-**Where:** Use [REST](rest-api.md) for an HTTP caller, [event](event-driven-service.md) for a broker trigger, or [background](background-worker.md) for timed synchronization. Then return here.
+**Where:** Work in the files/terminal named by the chosen [REST](rest-api.md), [event](event-driven-service.md), or [background](background-worker.md) entry path; return here after its foundation step passes.
 
-**Do:** Generate that path’s minimum dependencies plus Actuator. Do not add a second web/reactive stack without a requirement.
+**Do now:** Generate that path’s minimum dependencies plus Actuator. Do not add a second web/reactive stack without a requirement.
 
 ```bash
 ./mvnw clean verify
 ./mvnw spring-boot:run
 ```
 
-**Verify:** Entry-point foundation starts before provider code exists.
+**Finish this step when:** Entry-point foundation starts before provider code exists.
 
-**Next:** Step 3.
+**Go next:** Step 3.
 
 ## Step 3 · Create provider boundary and adapter
 
@@ -65,7 +52,7 @@ src/main/java/com/company/project/payment/
 └── ProviderProperties.java
 ```
 
-**Do:** Define an application-owned interface and adapter:
+**Do now:** Define an application-owned interface and adapter:
 
 ```java
 public interface PaymentProvider {
@@ -93,41 +80,41 @@ class ProviderPaymentAdapter implements PaymentProvider {
 
 Follow the [external API capability](../capabilities/external-api.md) for client configuration/timeouts.
 
-**Verify:** `./mvnw compile` passes and service depends on `PaymentProvider`, not the concrete adapter/provider DTO.
+**Finish this step when:** `./mvnw compile` passes and service depends on `PaymentProvider`, not the concrete adapter/provider DTO.
 
-**Next:** Step 4.
+**Go next:** Step 4.
 
 ## Step 4 · Handle provider outcomes safely
 
 **What:** Bound calls and translate every expected provider outcome.
 
-**Where:** HTTP client configuration, adapter, service, and application error handler.
+**Where:** Edit `payment/ProviderConfiguration.java`, `payment/ProviderPaymentAdapter.java`, `payment/PaymentService.java`, and `common/error/ApiExceptionHandler.java`.
 
-**Do:** Configure connection/response timeouts; translate success/decline/rate-limit/auth/outage; retry only transient safe requests; use idempotency keys for retryable side effects; record safe correlation/provider IDs.
+**Do now:** Configure connection/response timeouts; translate success/decline/rate-limit/auth/outage; retry only transient safe requests; use idempotency keys for retryable side effects; record safe correlation/provider IDs.
 
-**Verify:** A stubbed timeout finishes within the configured bound and a decline becomes the intended application result—not a generic `500`.
+**Finish this step when:** A stubbed timeout finishes within the configured bound and a decline becomes the intended application result—not a generic `500`.
 
-**Next:** Step 5.
+**Go next:** Step 5.
 
 ## Step 5 · Add required durability/security
 
 **What:** Attach only state, security, asynchronous work, or caching required by the contract.
 
-**Where:** Selected capability packages.
+**Where:** Create only the linked required folder under `src/main/java/com/company/project/`: `security/`, feature persistence files, `messaging/`, or `cache/`; edit `payment/PaymentService.java` to use it.
 
-**Do:** Choose [security](../capabilities/security.md), [data storage](../capabilities/data-storage.md), [messaging](../capabilities/messaging.md), or [caching](../capabilities/caching.md). Persist audit/idempotency state when required; never store/log provider credentials or full sensitive payloads.
+**Do now:** Choose [security](../capabilities/security.md), [data storage](../capabilities/data-storage.md), [messaging](../capabilities/messaging.md), or [caching](../capabilities/caching.md). Persist audit/idempotency state when required; never store/log provider credentials or full sensitive payloads.
 
-**Verify:** Duplicate requests, cross-user access, and provider failure cannot produce an uncontrolled side effect or secret leak.
+**Finish this step when:** Duplicate requests, cross-user access, and provider failure cannot produce an uncontrolled side effect or secret leak.
 
-**Next:** Step 6.
+**Go next:** Step 6.
 
 ## Step 6 · Test and deliver
 
 **What:** Prove the service without depending on the real provider.
 
-**Where:** Stub-server integration tests, service tests, configuration, CI/deployment, README.
+**Where:** Create tests under `src/test/java/com/company/project/payment/`; edit `application.yml`, root CI/deployment files, and `<project-root>/README.md`; run commands at `<project-root>`.
 
-**Do:** Test success, malformed response, validation rejection, timeout, rate limit, authentication failure, retry exhaustion, duplicate request, and outage using the [testing guide](../docs/testing-guide.md).
+**Do now:** Test success, malformed response, validation rejection, timeout, rate limit, authentication failure, retry exhaustion, duplicate request, and outage using the [testing guide](../docs/testing-guide.md).
 
 ```bash
 ./mvnw clean verify
@@ -135,6 +122,6 @@ Follow the [external API capability](../capabilities/external-api.md) for client
 
 Follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), and [production](../docs/production-checklist.md).
 
-**Verify:** Tests run offline; failures cannot block forever; duplicate effects are controlled; a clean environment can deploy the adapter settings externally.
+**Finish this step when:** Tests run offline; failures cannot block forever; duplicate effects are controlled; a clean environment can deploy the adapter settings externally.
 
-**Next:** Release, or return to Step 1 for another provider operation.
+**Go next:** Release, or return to Step 1 for another provider operation.

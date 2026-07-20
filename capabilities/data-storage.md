@@ -4,37 +4,25 @@
 
 Insert this process when state must survive application restart.
 
-## Repository action map
-
-| Step | Exact location | Add or run there |
-|---|---|---|
-| 1 | Edit data sketch in `<project-root>/PROJECT.md` | Fields, constraints, relationships, queries |
-| 2 | Edit `<project-root>/pom.xml`, `src/main/resources/application-local.yml`; Terminal: project root | Dependency/configuration/start command |
-| 3 | Create `src/main/resources/db/migration/`; create feature entity/repository + matching test | Migration/mapping/query code |
-| 4 | Edit feature service/mapper/DTO | Transactions and safe returned shape |
-| 5 | Create/edit repository/integration tests, production config, recovery runbook | DB proof and operations |
-
-**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [G dependency](../docs/beginner-execution-guide.md#action-g-add-or-change-a-maven-dependency), [H DB YAML](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration), [D terminal](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal); 3 → [I migration](../docs/beginner-execution-guide.md#action-i-create-a-resource-file), [E Java files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file); 4 → [F service code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file); 5 → [K tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
-
 ## Step 1 · Choose and design the data model
 
 **What:** Select one source-of-truth database and write its fields/constraints/access patterns.
 
-**Where:** Data sketch in `PROJECT.md` before Java classes.
+**Where:** Add a `Data model` section under the current feature in `<project-root>/PROJECT.md`; do this before creating entity/document classes.
 
-**Do:** Prefer SQL for transactions, relationships, constraints, and reporting. Choose MongoDB when document-shaped data/access requirements justify it. For every field record type, nullability, length, unique/default, ownership, index/query, retention, and growth.
+**Do now:** Prefer SQL for transactions, relationships, constraints, and reporting. Choose MongoDB when document-shaped data/access requirements justify it. For every field record type, nullability, length, unique/default, ownership, index/query, retention, and growth.
 
-**Verify:** Every stored field/query supports a written feature; no database is selected only “for later.”
+**Finish this step when:** Every stored field/query supports a written feature; no database is selected only “for later.”
 
-**Next:** Step 2.
+**Go next:** Step 2.
 
 ## Step 2 · Add dependency and local configuration
 
 **What:** Connect the chosen local database and start successfully.
 
-**Where:** `pom.xml`, `src/main/resources/application-local.yml`, external environment variables.
+**Where:** Edit `<project-root>/pom.xml` and `src/main/resources/application-local.yml`. Set credentials in the terminal/IDE run configuration or deployment secret store, never in Git.
 
-**Do:** For SQL add Spring Data JPA, one driver, and Flyway or Liquibase. For MongoDB add Spring Data MongoDB. Example SQL config:
+**Do now:** For SQL add Spring Data JPA, one driver, and Flyway or Liquibase. For MongoDB add Spring Data MongoDB. Example SQL config:
 
 ```yaml
 spring:
@@ -50,9 +38,9 @@ spring:
 
 Use H2 only for disposable local examples; use the production database type for important integration tests.
 
-**Verify:** Application starts and connects with local settings; invalid credentials fail clearly.
+**Finish this step when:** Application starts and connects with local settings; invalid credentials fail clearly.
 
-**Next:** Step 3.
+**Go next:** Step 3.
 
 ## Step 3 · Create migration, entity/document, and repository
 
@@ -67,7 +55,7 @@ src/main/java/com/company/project/task/TaskRepository.java
 src/test/java/com/company/project/task/TaskRepositoryTest.java
 ```
 
-**Do:** Migration:
+**Do now:** Migration:
 
 ```sql
 CREATE TABLE tasks (
@@ -104,17 +92,17 @@ interface TaskRepository extends JpaRepository<Task, Long> {
 
 For MongoDB, replace migration/entity with intentional document/index design and a Mongo repository.
 
-**Verify:** Migration applies to empty DB; repository saves/reads one record; bounded query test passes.
+**Finish this step when:** Migration applies to empty DB; repository saves/reads one record; bounded query test passes.
 
-**Next:** Step 4.
+**Go next:** Step 4.
 
 ## Step 4 · Put persistence inside the service transaction
 
 **What:** Make complete business state changes commit or roll back together.
 
-**Where:** Feature service and mapper/DTO; never controller/template/listener SQL.
+**Where:** Edit `src/main/java/com/company/project/task/TaskService.java` and `TaskMapper.java`, plus DTOs in `task/dto/`. Do not add database calls to controllers, templates, or listeners.
 
-**Do:**
+**Do now:**
 
 ```java
 @Transactional
@@ -131,22 +119,22 @@ public Page<TaskResponse> list(TaskStatus status, Pageable page) {
 
 Do not expose persistence objects directly. Use `@Version`/locking when a written concurrency rule requires it.
 
-**Verify:** Forced exception rolls back intended changes; API/job returns DTO/result, not entity internals.
+**Finish this step when:** Forced exception rolls back intended changes; API/job returns DTO/result, not entity internals.
 
-**Next:** Step 5.
+**Go next:** Step 5.
 
 ## Step 5 · Test and prepare shared environments
 
 **What:** Prove mappings/migrations/queries and production safety.
 
-**Where:** JPA/Mongo/integration tests, production configuration, backup/restore runbook.
+**Where:** Add tests in `src/test/java/com/company/project/task/`; edit `src/main/resources/application.yml`; create `<project-root>/docs/database-runbook.md`; run commands in `<project-root>/`.
 
-**Do:** Test constraints, custom queries, pagination, concurrency, rollback, migrations from supported versions, and production database behavior using the [testing guide](../docs/testing-guide.md). Externalize credentials, set pool/query limits, and plan backup/restore.
+**Do now:** Test constraints, custom queries, pagination, concurrency, rollback, migrations from supported versions, and production database behavior using the [testing guide](../docs/testing-guide.md). Externalize credentials, set pool/query limits, and plan backup/restore.
 
 ```bash
 ./mvnw clean verify
 ```
 
-**Verify:** Clean build passes; migrations work on empty/prior schema; queries are bounded; recovery owner is known.
+**Finish this step when:** Clean build passes; migrations work on empty/prior schema; queries are bounded; recovery owner is known.
 
-**Next:** Return to the application path’s next step.
+**Go next:** Return to the application path’s next step.
