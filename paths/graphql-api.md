@@ -1,75 +1,135 @@
-# Path: GraphQL API
+# Process: Build a GraphQL API
 
 [← Choose another type](../README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
 
-> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once.
 
-Choose this when clients query a typed schema and select the fields they need. If fixed HTTP resources are sufficient, use the [REST API path](rest-api.md).
+Use this when clients query a typed schema and select fields. If fixed resources/status codes are the better contract, use [REST](rest-api.md).
 
-## 1. Define the first operation
+## Step 1 · Define one query or mutation
 
-Write one query or mutation, its schema types, authorization, validation, and expected errors in the [project workbook](../docs/project-workbook.md).
+**What:** Produce the schema contract, authorization, and error behavior.
+
+**Where:** Feature sheet in `PROJECT.md` and `src/main/resources/graphql/schema.graphqls`.
+
+**Do:** Start with one operation:
 
 ```graphql
 type Task { id: ID!, title: String!, status: TaskStatus! }
+enum TaskStatus { TODO, DONE }
+input CreateTaskInput { title: String!, dueDate: String }
 type Query { task(id: ID!): Task }
 type Mutation { createTask(input: CreateTaskInput!): Task! }
 ```
 
-## 2. Generate the project
+Record missing data, validation, permission, and conflict behavior.
 
-Select Spring for GraphQL, Spring Web, Validation, and Actuator. Add [data storage](../capabilities/data-storage.md) and [security](../capabilities/security.md) only when required.
+**Verify:** Schema parses conceptually and the client-visible fields/types are intentional.
+
+**Next:** Step 2.
+
+## Step 2 · Generate and run the foundation
+
+**What:** Start a GraphQL-capable Spring application.
+
+**Where:** Spring Initializr and project root.
+
+**Do:** Select Spring for GraphQL, Spring Web, Validation, and Actuator; add only required capabilities.
 
 ```bash
 ./mvnw clean verify
 ./mvnw spring-boot:run
 ```
 
-Continue only after the untouched application starts.
+**Verify:** Application starts and GraphQL endpoint is registered without schema errors.
 
-## 3. Build one operation
+**Next:** Step 3.
 
-```text
-schema → input/output types → @QueryMapping/@MutationMapping
-→ service → repository/adapter → GraphQL result
-```
+## Step 3 · Create operation types, controller, and service
+
+**What:** Connect schema operation → controller → service.
+
+**Where:**
 
 ```text
 src/main/resources/graphql/schema.graphqls
 src/main/java/com/company/project/task/
+├── CreateTaskInput.java
+├── TaskPayload.java
 ├── TaskGraphqlController.java
-├── TaskService.java
-├── TaskInput.java
-└── TaskPayload.java
+└── TaskService.java
 ```
 
-1. Keep resolvers/controllers thin and business rules in services.
-2. Validate mutation input and return stable application errors.
-3. Authorize operations and field/data ownership.
-4. Batch related data loading to prevent N+1 queries.
-5. Bound query depth, complexity, aliases, and result size.
-6. Evolve the schema with deprecation instead of breaking clients.
+**Do:**
 
-Checkpoint: execute one query/mutation through the GraphQL endpoint and verify the response shape and one invalid-input error before adding relationships.
+```java
+public record CreateTaskInput(
+    @NotBlank @Size(max = 120) String title,
+    LocalDate dueDate
+) {}
 
-## 4. Attach required capabilities
+@Controller
+class TaskGraphqlController {
+    private final TaskService service;
 
-- [Data storage](../capabilities/data-storage.md)
-- [Security](../capabilities/security.md)
-- [External API](../capabilities/external-api.md)
-- [File storage](../capabilities/file-storage.md)—usually through a separate upload flow
-- [Caching](../capabilities/caching.md)
+    TaskGraphqlController(TaskService service) {
+        this.service = service;
+    }
 
-## 5. Verify
+    @QueryMapping
+    TaskPayload task(@Argument Long id) {
+        return service.findById(id);
+    }
 
-Test valid query/mutation, validation, unauthorized fields/data, missing records, complexity limits, batching/N+1 behavior, and schema compatibility.
+    @MutationMapping
+    TaskPayload createTask(@Argument @Valid CreateTaskInput input) {
+        return service.create(input);
+    }
+}
+```
+
+**Verify:** `./mvnw compile` passes; execute one query/mutation and confirm selected response fields.
+
+**Next:** Step 4.
+
+## Step 4 · Bound data loading and errors
+
+**What:** Prevent expensive/unbounded queries and return useful GraphQL errors.
+
+**Where:** Schema, data loaders/query layer, GraphQL exception resolver, security configuration.
+
+**Do:** Batch related loading to prevent N+1; bound depth/complexity/aliases/result sizes; map expected domain exceptions to stable GraphQL error extensions; authorize both operations and returned records/fields.
+
+**Verify:** Relationship query uses a bounded/batched access pattern; excessive query is rejected; missing/invalid/forbidden outcomes match the contract.
+
+**Next:** Step 5.
+
+## Step 5 · Attach required capabilities
+
+**What:** Add only infrastructure used by the operation.
+
+**Where:** Selected capability packages.
+
+**Do:** Choose [data storage](../capabilities/data-storage.md), [security](../capabilities/security.md), [external API](../capabilities/external-api.md), [file storage](../capabilities/file-storage.md), or [caching](../capabilities/caching.md). Use a separate upload flow for files unless the schema/provider contract explicitly defines one.
+
+**Verify:** Capability failure/permission behavior appears as bounded, safe GraphQL results.
+
+**Next:** Step 6.
+
+## Step 6 · Test and deliver
+
+**What:** Prove schema compatibility, behavior, limits, and delivery.
+
+**Where:** `src/test/java`, schema tests, configuration, CI/deployment, client documentation.
+
+**Do:** Test query/mutation, validation, missing data, field/record authorization, complexity limits, batching/N+1, and schema compatibility using the [testing guide](../docs/testing-guide.md).
 
 ```bash
 ./mvnw clean verify
 ```
 
-## 6. Finish
+Follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), and [production](../docs/production-checklist.md).
 
-Repeat for the next required operation, publish schema/client guidance, then complete the [production checklist](../docs/production-checklist.md).
+**Verify:** Clean build passes; schema is published; queries are bounded; authorized results are correct in a clean environment.
 
-Done means the schema is compatible, queries are bounded, data loading is efficient, and authorization applies to returned data—not only the operation name.
+**Next:** Release, or return to Step 1 for another operation.

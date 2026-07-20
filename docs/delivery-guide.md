@@ -4,6 +4,21 @@
 
 Use this after required features pass. Choose JAR or container delivery according to the target platform; do not create both unless needed.
 
+## Delivery step map
+
+| Step | What | Where | Do | Verify | Next |
+|---|---|---|---|---|---|
+| 1 | Immutable verified artifact | Project root/`target` | Clean verify; run JAR | Artifact starts and smoke test passes | 2 |
+| 2 | Production-like run | Environment + JAR | Supply external config/secrets | Missing invalid config fails fast | 3 |
+| 3 | Optional container | `Dockerfile`/image registry | Build/run non-root image | Container health/smoke passes | 4 |
+| 4 | CI gate | CI workflow | JDK → verify → scan → publish | Clean checkout produces artifact | 5 |
+| 5 | Safe migration | Migration/deployment job | Backup; apply compatible migration | History/readiness correct | 6 |
+| 6 | Deployment | Platform | Configure → start → health → smoke | New release serves safely | 7 |
+| 7 | Recovery | Deployment/runbook | Decide rollback/roll-forward | Recovery procedure is executable | 8 |
+| 8 | Operator handoff | Project README/runbook | Document run/health/limits/recovery | New operator can run it | Checklist |
+
+Use the detailed command/code in each numbered section. Do not continue while **Verify** is false.
+
 ## 1. Produce the verified artifact
 
 ```bash

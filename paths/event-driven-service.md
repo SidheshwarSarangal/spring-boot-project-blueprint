@@ -1,78 +1,135 @@
-# Path: Event-driven service
+# Process: Build an event-driven service
 
-[← Choose another type](../README.md) · [Messaging](../capabilities/messaging.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
+[← Choose another type](../README.md) · [Messaging](../capabilities/messaging.md) · [Testing](../docs/testing-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
 
-> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once.
 
-Choose this when an event/message starts the main business action or the service primarily publishes events.
+Use this when a broker message/event starts the main work or the service publishes domain events.
 
-## 1. Define the event contract
+## Step 1 · Define one event contract
 
-```text
-Event name and version:
-Producer and consumers:
-Payload and key:
-Delivery expectation:
-Ordering requirement:
-Duplicate handling:
-Retry/dead-letter rule:
+**What:** Produce a versioned event and delivery/failure agreement.
+
+**Where:** `PROJECT.md` and the event documentation owned by the producer.
+
+**Do:** Record event name/version, producer, consumers, key, payload, ordering, duplicate handling, acknowledgement, retry, dead-letter, and compatibility.
+
+```json
+{
+  "eventId": "uuid",
+  "eventType": "order.created.v1",
+  "occurredAt": "2030-01-01T10:00:00Z",
+  "orderId": 42
+}
 ```
 
-Record the behavior in the [project workbook](../docs/project-workbook.md).
+**Verify:** Producer and consumer agree which fields are required and how old/new versions behave.
 
-## 2. Generate and connect the broker
+**Next:** Step 2.
 
-Select Actuator and the required broker integration, commonly Spring for Apache Kafka or Spring for RabbitMQ. Then follow [Messaging](../capabilities/messaging.md) for broker configuration and safety rules.
+## Step 2 · Generate and connect the broker
+
+**What:** Start the application and same broker type used by the target environment.
+
+**Where:** Spring Initializr, `application.yml`, local broker environment.
+
+**Do:** Select Actuator plus Spring for Apache Kafka or Spring for RabbitMQ; follow [messaging setup](../capabilities/messaging.md). Supply broker location through configuration.
 
 ```bash
 ./mvnw clean verify
 ./mvnw spring-boot:run
 ```
 
-Continue only after the untouched application and required local broker start successfully.
+**Verify:** Application starts and broker connection/health succeeds before listener code is added.
 
-## 3. Build one event flow
+**Next:** Step 3.
 
-```text
-message → listener → deserialize/validate → service
-→ database/external adapter → acknowledge or retry
-```
+## Step 3 · Create event, listener, and service
+
+**What:** Establish message adapter → service without broker types in business logic.
+
+**Where:**
 
 ```text
 src/main/java/com/company/project/order/
 ├── OrderCreatedEvent.java
 ├── OrderEventListener.java
 ├── OrderService.java
-├── ProcessedEvent.java      optional idempotency record
+├── ProcessedEvent.java
 └── MessagingConfiguration.java
 ```
 
-1. Keep transport code in the listener/adapter.
-2. Convert provider payloads to application-owned types.
-3. Make processing idempotent using an event/operation ID.
-4. Define when acknowledgement occurs.
-5. Bound concurrency and processing time.
-6. Publish events only after the related business state is safely recorded; use an outbox pattern when database/event consistency is required.
+**Do:** Example Kafka listener (use the equivalent Rabbit listener when RabbitMQ was selected):
 
-Checkpoint: publish one local test event, confirm one service execution and acknowledgement, then send the same event ID twice and confirm duplicate safety.
+```java
+public record OrderCreatedEvent(UUID eventId, Long orderId, Instant occurredAt) {}
 
-## 4. Attach required capabilities
+@Component
+class OrderEventListener {
+    private final OrderService service;
 
-- [Data storage](../capabilities/data-storage.md)
-- [Security](../capabilities/security.md) for administrative HTTP endpoints
-- [External API](../capabilities/external-api.md)
-- [File storage](../capabilities/file-storage.md)
+    OrderEventListener(OrderService service) {
+        this.service = service;
+    }
 
-## 5. Verify
+    @KafkaListener(topics = "orders.created", groupId = "billing")
+    void onOrderCreated(OrderCreatedEvent event) {
+        service.processOrderCreated(event);
+    }
+}
+```
 
-Test valid events, invalid schema, duplicate delivery, ordering assumptions, transient retry, dead-letter routing, broker outage, and restart behavior. Use integration tests with the real broker type when the flow is critical.
+**Verify:** Compile; publish one local event; listener deserializes it and calls the service once.
+
+**Next:** Step 4.
+
+## Step 4 · Make processing idempotent and consistent
+
+**What:** Prevent duplicate effects and database/message divergence.
+
+**Where:** Service transaction, processed-event/inbox record, and publisher/outbox where applicable.
+
+**Do:** Check/record `eventId` in the same transaction as the business change. Acknowledge only after the intended durable point. Use an outbox when database commit and publication must be consistent.
+
+```java
+@Transactional
+public void processOrderCreated(OrderCreatedEvent event) {
+    if (processedEvents.existsById(event.eventId())) return;
+    billing.createFor(event.orderId());
+    processedEvents.save(new ProcessedEvent(event.eventId()));
+}
+```
+
+**Verify:** Send the same `eventId` twice; exactly one business effect remains.
+
+**Next:** Step 5.
+
+## Step 5 · Configure retry, dead letter, and limits
+
+**What:** Make transient and permanent failure behavior explicit.
+
+**Where:** Listener container/broker configuration and recovery handler.
+
+**Do:** Bound message size, concurrency, processing time, and retries. Retry transient failures with backoff; route permanent/exhausted failures to a dead-letter/recovery process. Never retry invalid schema forever.
+
+**Verify:** A transient forced failure retries then succeeds; a permanent failure reaches recovery with event ID/error context.
+
+**Next:** Step 6.
+
+## Step 6 · Test and deliver
+
+**What:** Prove broker semantics and deploy safely.
+
+**Where:** `src/test/java`, broker integration tests, configuration, CI/deployment, event docs.
+
+**Do:** Test valid/invalid event, duplicate, ordering assumption, retry, dead letter, broker outage, consumer restart, and scale-out using the [testing guide](../docs/testing-guide.md).
 
 ```bash
 ./mvnw clean verify
 ```
 
-## 6. Finish
+Follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), and [production](../docs/production-checklist.md).
 
-Document event ownership and compatibility, then complete the [production checklist](../docs/production-checklist.md).
+**Verify:** Clean build passes; duplicates are safe; failures are visible/recoverable; event contract is published.
 
-Done means events are versioned, consumers tolerate duplicates, failures are recoverable/visible, and publishing cannot silently diverge from stored state.
+**Next:** Release, or return to Step 1 for another event flow.

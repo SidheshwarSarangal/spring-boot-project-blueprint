@@ -1,64 +1,156 @@
-# Path: REST API
+# Process: Build a REST API
 
-[← Choose another type](../README.md) · [Working example](../taskboard-api/README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
+[← Choose another type](../README.md) · [Working example](../taskboard-api/README.md) · [Testing](../docs/testing-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
 
-> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once.
 
-Choose this when clients send HTTP requests and expect JSON responses.
+Use this process when a frontend, mobile app, or another service sends HTTP requests and expects JSON.
 
-## 1. Define the first endpoint
+## Step 1 · Define one endpoint
 
-Copy the [project workbook](../docs/project-workbook.md) and write one resource action:
+**What:** Produce a testable HTTP contract for one user action.
+
+**Where:** Copy [project-workbook.md](../docs/project-workbook.md) into the new project as `PROJECT.md`; fill one feature sheet.
+
+**Do:** Record method, path, input, success response/status, errors, access, and stored data.
 
 ```text
 POST /api/tasks
-Input: title, dueDate
-Success: 201 + saved task + Location header
-Failures: 400 invalid input, 401/403 access, 409 conflict
+Request:  { "title": "Learn Spring", "dueDate": "2030-01-01" }
+Success:  201 Created + TaskResponse + Location: /api/tasks/{id}
+Errors:   400 invalid, 401 unauthenticated, 403 forbidden, 409 conflict
 ```
 
-## 2. Generate the project
+**Verify:** Another person can write success and failure tests from the contract without asking what the endpoint should do.
 
-At [Spring Initializr](https://start.spring.io/), select Maven, Java, Jar, a supported Java version, and:
+**Next:** Step 2.
 
-- Spring Web;
-- Validation;
-- Actuator.
+## Step 2 · Generate and run the foundation
 
-Add [data storage](../capabilities/data-storage.md) or [security](../capabilities/security.md) only when required.
+**What:** Create an untouched application that builds and starts.
+
+**Where:** [Spring Initializr](https://start.spring.io/), then the extracted project root containing `pom.xml`.
+
+**Do:** Select Maven, Java, Jar, Spring Web, Validation, and Actuator. Add only currently required [capabilities](../README.md#add-capabilities-only-when-the-selected-path-asks-for-them).
 
 ```bash
 ./mvnw clean verify
 ./mvnw spring-boot:run
+curl http://localhost:8080/actuator/health
 ```
 
-Continue only after the untouched application starts.
+**Verify:** Build ends with `BUILD SUCCESS`; application starts; health returns `UP`.
 
-## 3. Build one endpoint end to end
+**Next:** Stop the application and continue to Step 3.
 
-For a database-backed API, follow the exact code order in the [core implementation guide](../docs/core-guide.md):
+## Step 3 · Create the feature files
+
+**What:** Create the package structure and dependency direction for one endpoint.
+
+**Where:** `src/main/java/<base-package>/<feature>/` and matching `src/test/java/` package.
+
+**Do:** For a database-backed feature create:
 
 ```text
-contract → entity → repository → request/response DTOs
-→ mapper → service → controller → error handler → request
+task/
+├── Task.java
+├── TaskRepository.java
+├── TaskMapper.java
+├── TaskService.java
+├── TaskController.java
+├── TaskNotFoundException.java
+└── dto/
+    ├── CreateTaskRequest.java
+    └── TaskResponse.java
 ```
 
-Without a database, omit entity/repository and let the service call the required adapter.
+Without persistence, omit entity/repository. Keep the flow controller → service → repository/adapter.
 
-## 4. Complete the API behavior
+```java
+public record CreateTaskRequest(
+    @NotBlank @Size(max = 120) String title,
+    @FutureOrPresent LocalDate dueDate
+) {}
+```
 
-Add only required operations:
+**Verify:** Package declarations match directories and `./mvnw compile` passes.
 
-- create: `POST` → `201`;
-- read/list: `GET` → `200`;
-- update: `PUT` or `PATCH` → `200`;
-- delete: `DELETE` → `204`;
-- paginate every collection that can grow;
-- return stable `ProblemDetail` errors.
+**Next:** Step 4.
 
-## 5. Attach required capabilities
+## Step 4 · Implement the vertical slice
 
-Add one at a time at the service boundary:
+**What:** Make the endpoint work through every required layer.
+
+**Where:** Files created in Step 3. Use the [core implementation guide](../docs/core-guide.md) for complete entity, repository, mapper, service, controller, and error examples.
+
+**Do:** Implement in dependency order:
+
+```text
+entity → repository → DTOs → mapper → service → controller
+```
+
+Service:
+
+```java
+@Service
+public class TaskService {
+    private final TaskRepository repository;
+    private final TaskMapper mapper;
+
+    public TaskService(TaskRepository repository, TaskMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
+
+    @Transactional
+    public TaskResponse create(CreateTaskRequest request) {
+        Task task = Task.create(request.title(), request.dueDate());
+        return mapper.toResponse(repository.save(task));
+    }
+}
+```
+
+Controller:
+
+```java
+@RestController
+@RequestMapping("/api/tasks")
+public class TaskController {
+    private final TaskService service;
+
+    public TaskController(TaskService service) {
+        this.service = service;
+    }
+
+    @PostMapping
+    ResponseEntity<TaskResponse> create(
+            @Valid @RequestBody CreateTaskRequest request) {
+        TaskResponse result = service.create(request);
+        return ResponseEntity.created(URI.create("/api/tasks/" + result.id()))
+            .body(result);
+    }
+}
+```
+
+**Verify:** Start the application and call the endpoint:
+
+```bash
+curl -i -X POST http://localhost:8080/api/tasks \
+  -H 'Content-Type: application/json' \
+  -d '{"title":"Learn Spring","dueDate":"2030-01-01"}'
+```
+
+Confirm `201`, `Location`, response JSON, and stored/observable result.
+
+**Next:** Step 5.
+
+## Step 5 · Make errors and optional capabilities explicit
+
+**What:** Complete failure behavior and attach only required infrastructure.
+
+**Where:** Request DTOs, service exceptions, `common/error/ApiExceptionHandler.java`, and selected capability package.
+
+**Do:** Map validation to `400`, missing data to `404`, permission to `401/403`, and conflict to `409` using `ProblemDetail` and `@RestControllerAdvice`. Then attach one required module:
 
 - [Data storage](../capabilities/data-storage.md)
 - [Security](../capabilities/security.md)
@@ -67,20 +159,34 @@ Add one at a time at the service boundary:
 - [File storage](../capabilities/file-storage.md)
 - [Caching](../capabilities/caching.md)
 
-## 6. Verify
+**Verify:** Valid JSON succeeds; blank/malformed input and every written expected failure return the contract status and safe body.
 
-- Service unit tests cover rules.
-- MVC tests cover routes, JSON, validation, status, and errors.
-- Persistence tests cover mappings and custom queries.
-- One integration test covers the critical full flow.
-- Manual requests prove the happy path and important failures.
+**Next:** Step 6.
+
+## Step 6 · Test and document
+
+**What:** Create repeatable proof of the contract.
+
+**Where:** Matching packages under `src/test/java`; `requests.http` or project README for manual calls.
+
+**Do:** Follow the [testing guide](../docs/testing-guide.md). Add service unit tests, MVC tests, repository tests when persistence exists, and one critical integration test.
 
 ```bash
 ./mvnw clean verify
 ```
 
-## 7. Finish
+**Verify:** Clean build passes outside the IDE and manual happy/failure calls match the workbook.
 
-Repeat from Step 1 for the next required endpoint. When requirements are complete, use the [production checklist](../docs/production-checklist.md).
+**Next:** Return to Step 1 for another required endpoint, or Step 7 when requirements are complete.
 
-Done means the API contract is documented, bounded, secured where required, tested, observable, and runnable in a clean environment.
+## Step 7 · Configure and deliver
+
+**What:** Produce a configurable, observable, deployable artifact.
+
+**Where:** `application.yml`, environment configuration, CI/deployment files, and project README.
+
+**Do:** Follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), then the [production checklist](../docs/production-checklist.md).
+
+**Verify:** A clean environment can configure, migrate, start, health-check, and smoke-test the same artifact without source edits.
+
+**Next:** Release and monitor the application.

@@ -1,62 +1,89 @@
-# Capability: Caching
+# Capability process: Add caching
 
-[← Application selector](../README.md) · [Production checklist](../docs/production-checklist.md)
+[← Application selector](../README.md) · [Testing](../docs/testing-guide.md) · [Production](../docs/production-checklist.md)
 
-Add caching only after measurement shows repeated computation/read latency is a problem. A cache is not the source of truth.
+Insert this only after measurement shows repeated read/computation latency is a problem. Cache is not the source of truth.
 
-## 1. Define correctness
+## Step 1 · Measure and define correctness
 
-```text
-Cached value and key:
-Source of truth:
-Acceptable staleness:
-TTL:
-Invalidation event:
-Maximum size:
-Behavior when cache is unavailable:
+**What:** Prove a cache is needed and specify safe staleness/invalidation.
+
+**Where:** Feature performance notes in `PROJECT.md` and baseline metric/test.
+
+**Do:** Record cached value/key, source of truth, acceptable staleness, TTL, invalidation event, maximum size, tenant/user isolation, and unavailable-cache behavior.
+
+**Verify:** Baseline latency/load is measured and invalidation can be stated. Otherwise stop—do not add cache.
+
+**Next:** Step 2.
+
+## Step 2 · Choose provider and enable caching
+
+**What:** Configure one bounded local/distributed cache.
+
+**Where:** `pom.xml`, `CacheConfiguration.java`, `application.yml`.
+
+**Do:** Add Spring Cache plus Caffeine for per-instance cache or Redis for shared multi-instance cache. Keep enablement in dedicated configuration:
+
+```java
+@Configuration
+@EnableCaching
+class CacheConfiguration {}
 ```
 
-If acceptable staleness or invalidation cannot be stated, do not add the cache yet.
+```yaml
+spring:
+  cache:
+    cache-names: tasks
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=10m
+```
 
-## 2. Choose scope
+Use provider-specific properties matching the selected provider. Do not place `@EnableCaching` on the main application class.
 
-- In-memory cache: simplest, per application instance, lost on restart.
-- Distributed cache such as Redis: shared across instances, adds network/operational failure modes.
+**Verify:** Application starts with declared cache and fails/tests visibly if an undeclared cache name is used.
 
-Add Spring Cache and the selected provider. Enable caching in a dedicated configuration class, then apply cache behavior at service methods:
+**Next:** Step 3.
+
+## Step 3 · Add read and invalidation at service boundary
+
+**What:** Cache one read and evict/update it with every source-of-truth change.
+
+**Where:** Feature service and cache-specific test.
+
+**Do:**
 
 ```java
 @Cacheable(cacheNames = "tasks", key = "#id")
-public TaskResponse findById(Long id) { /* load source of truth */ }
+public TaskResponse findById(Long id) {
+    return mapper.toResponse(repository.findById(id)
+        .orElseThrow(() -> new TaskNotFoundException(id)));
+}
 
 @CacheEvict(cacheNames = "tasks", key = "#id")
-public TaskResponse update(Long id, UpdateTaskRequest request) { /* update */ }
+@Transactional
+public TaskResponse update(Long id, UpdateTaskRequest request) {
+    return mapper.toResponse(updateSourceOfTruth(id, request));
+}
 ```
 
-Do not place `@EnableCaching` on the main application class; keep the capability replaceable in tests/environments.
+Include tenant/user identity in keys where data is scoped. Avoid self-invocation that bypasses Spring caching proxies.
 
-## 3. Implement
+**Verify:** First read loads source, second hits cache, update/delete invalidates, next read loads fresh source.
 
-1. Cache bounded read results with stable keys.
-2. Set TTL and size/eviction limits.
-3. Invalidate/update on every source-of-truth change.
-4. Prevent cache keys from mixing users/tenants.
-5. Avoid caching secrets or unbounded error responses.
-6. Decide whether a cache failure falls back to the source or fails the request.
-7. Measure hit rate, latency, evictions, and load on the source.
+**Next:** Step 4.
 
-Typical files:
+## Step 4 · Test failure and prove benefit
 
-```text
-src/main/java/com/company/project/cache/CacheConfiguration.java
-src/main/java/com/company/project/feature/FeatureService.java
-src/test/java/com/company/project/feature/FeatureCacheTest.java
+**What:** Ensure correctness does not depend on cache and benefit is measurable.
+
+**Where:** Cache integration tests and metrics.
+
+**Do:** Test miss, hit, expiry, invalidation, cross-user isolation, unavailable cache, concurrent misses, and stale limit. Measure hit rate, latency, evictions, memory/key growth, and source load.
+
+```bash
+./mvnw clean verify
 ```
 
-Checkpoint: measure the uncached operation, prove miss → hit → invalidation, then measure again. Remove the cache if it does not provide a useful improvement.
+**Verify:** Source remains correct when cache is unavailable; size is bounded; post-cache measurement is meaningfully better.
 
-## 4. Verify
-
-Test miss, hit, expiry, update/delete invalidation, cross-user isolation, unavailable cache, concurrent misses, and stale-data limits.
-
-Completion: correctness does not depend on cache availability, memory/key growth is bounded, invalidation is tested, and measurement shows useful benefit.
+**Next:** Keep the cache and return to the path, or remove it if benefit is not justified.

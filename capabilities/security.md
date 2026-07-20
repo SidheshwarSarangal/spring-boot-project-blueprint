@@ -1,63 +1,121 @@
-# Capability: Security
+# Capability process: Add security
 
-[← Application selector](../README.md) · [Production checklist](../docs/production-checklist.md)
+[← Application selector](../README.md) · [Testing](../docs/testing-guide.md) · [Production](../docs/production-checklist.md)
 
-Add this when the application must identify callers or protect an action/data.
+Insert this process when the application must identify callers or protect actions/data.
 
-## 1. Define the rule first
+## Step 1 · Define identity, permission, and ownership
 
-```text
-Who is the caller?
-How is identity established?
-Which role/permission is required?
-Does the record have an owner?
-What is public?
-```
+**What:** Produce explicit allow/deny rules before security configuration.
 
-## 2. Choose the model
+**Where:** Users/access section and feature sheet in `PROJECT.md`.
 
-| Client | Common choice |
+**Do:** Record public operations, caller identity source, role/authority, record owner, cross-user rule, and sensitive data.
+
+**Verify:** Every protected feature has at least one allowed and one denied scenario.
+
+**Next:** Step 2.
+
+## Step 2 · Choose authentication and add dependencies
+
+**What:** Select one established authentication model.
+
+**Where:** Spring Initializr/`pom.xml` and identity-provider configuration.
+
+**Do:**
+
+| Client | Add/use |
 |---|---|
-| Browser pages/forms | Server session, secure cookie, CSRF protection |
-| SPA/mobile/HTTP service | OAuth 2.0/OIDC resource server validating access tokens |
-| Internal service | Organization-approved service identity, often OAuth 2.0 or mTLS |
+| Browser forms/pages | Spring Security + server session/OIDC; retain CSRF |
+| SPA/mobile/API | Spring Security + OAuth2 Resource Server validating tokens |
+| Internal service | Organization-approved OAuth2 or mTLS service identity |
 
-Select Spring Security. For bearer-token APIs also select OAuth2 Resource Server; for browser login use the organization’s OIDC/session approach. Use an established identity provider where possible. Do not invent token formats, encryption, or password storage.
+Do not invent token formats/crypto. Use an established identity provider. If the application owns passwords, store only adaptive `PasswordEncoder` hashes.
 
-Typical files:
+**Verify:** Dependencies resolve and required issuer/client settings are known without committing secret values.
+
+**Next:** Step 3.
+
+## Step 3 · Create security configuration
+
+**What:** Protect one operation and keep intended public endpoints open.
+
+**Where:**
 
 ```text
 src/main/java/com/company/project/security/
 ├── SecurityConfiguration.java
-├── CurrentUser.java              application identity abstraction
-└── AuthorizationService.java     reusable ownership/permission checks
-src/test/java/com/company/project/security/
-└── SecurityIntegrationTest.java
+├── CurrentUser.java
+└── AuthorizationService.java
 ```
 
-## 3. Implement in layers
+**Do:** Token API example:
 
-```text
-authentication → route-level authorization → service ownership rule
-→ safe response/logging → security tests
+```java
+@Configuration
+@EnableMethodSecurity
+class SecurityConfiguration {
+    @Bean
+    SecurityFilterChain apiSecurity(HttpSecurity http) throws Exception {
+        return http
+            .csrf(csrf -> csrf.disable()) // only for stateless bearer-token API
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/tasks/**")
+                    .hasAuthority("SCOPE_tasks.write")
+                .anyRequest().authenticated())
+            .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
+            .build();
+    }
+}
 ```
 
-1. Configure public and protected entry points.
-2. Validate identity using the selected provider/session mechanism.
-3. Enforce broad permissions at the web/method boundary.
-4. Enforce record ownership and business permissions in the service.
-5. Return `401` for missing/invalid authentication and `403` for insufficient permission.
-6. Retain CSRF protection for browser session applications.
-7. Restrict CORS to required origins, methods, and headers.
+For browser sessions use form/OIDC login and do not disable CSRF. Configure CORS only for required origins/methods/headers.
 
-Checkpoint: protect one operation and prove public, unauthenticated, forbidden, allowed, and cross-owner cases before protecting the rest of the application.
+**Verify:** Health/public route works; protected route returns `401` without valid identity and succeeds with allowed identity.
 
-## 4. Protect data
+**Next:** Step 4.
 
-Never log passwords, tokens, session IDs, secrets, or sensitive payloads. Store application-owned passwords only through an approved adaptive `PasswordEncoder`. Keep keys and client secrets in a secret manager.
+## Step 4 · Enforce business permission and ownership
 
-## 5. Verify
+**What:** Prevent a valid user from accessing another user’s protected data.
 
-Test public access, unauthenticated access, invalid identity, forbidden role, allowed role, cross-user ownership, expired credentials, CSRF where relevant, and sensitive log/response leakage.
+**Where:** Feature service or application authorization service—not only URL configuration.
 
-Completion: every protected operation has allowed and denied tests, ownership cannot be bypassed, and credentials remain outside source/logs.
+**Do:**
+
+```java
+@Transactional(readOnly = true)
+public TaskResponse findById(Long id, CurrentUser user) {
+    Task task = repository.findById(id)
+        .orElseThrow(() -> new TaskNotFoundException(id));
+    if (!task.isOwnedBy(user.id()) && !user.isAdmin()) {
+        throw new AccessDeniedException("Task is not accessible");
+    }
+    return mapper.toResponse(task);
+}
+```
+
+Return/translate `401` for missing/invalid authentication and `403` for insufficient permission. Consider `404` instead of revealing existence when the contract requires privacy.
+
+**Verify:** User A cannot read/change User B’s record even by changing URL/body identifiers.
+
+**Next:** Step 5.
+
+## Step 5 · Protect secrets/data and test the boundary
+
+**What:** Prove all allow/deny cases and remove credential leakage.
+
+**Where:** Security tests, logs/error handling, secret/configuration store.
+
+**Do:** Test public, unauthenticated, invalid/expired identity, forbidden role, allowed role, cross-owner, CSRF (browser), and CORS. Never log passwords, tokens, cookies, session IDs, keys, or sensitive bodies.
+
+```bash
+./mvnw clean verify
+```
+
+**Verify:** All permission tests pass; responses/logs contain no credentials; secrets remain outside Git.
+
+**Next:** Return to the application path’s next step.

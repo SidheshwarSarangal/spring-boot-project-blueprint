@@ -1,18 +1,28 @@
-# Capability: File storage
+# Capability process: Add file storage
 
-[← Application selector](../README.md) · [Production checklist](../docs/production-checklist.md)
+[← Application selector](../README.md) · [Security](security.md) · [Production](../docs/production-checklist.md)
 
-Add this for uploads, downloads, documents, images, exports, or imports.
+Insert this process for uploads, downloads, documents, images, exports, or imports.
 
-## 1. Define the file contract
+## Step 1 · Define file and access contract
 
-Record allowed content, maximum size, ownership, retention, download authorization, processing, and failure cleanup.
+**What:** Specify accepted content, limits, ownership, retention, and cleanup.
 
-## 2. Choose storage
+**Where:** Feature sheet in `PROJECT.md`.
 
-Use object storage or another durable file service for shared/production use. Do not rely on the application container filesystem. Store file metadata, ownership, state, and storage key in the database—not necessarily the bytes.
+**Do:** Record allowed type/content, max size, filename use, owner, scan rule, storage lifetime, download authorization, processing, and partial-failure cleanup.
 
-For HTTP uploads, Spring Web already provides multipart handling. Set explicit request/file limits in configuration; do not rely on defaults:
+**Verify:** Oversized/invalid/unauthorized/missing-file outcomes are written before upload code.
+
+**Next:** Step 2.
+
+## Step 2 · Choose durable storage and configure request limits
+
+**What:** Select a storage service and reject excessive requests before reading them.
+
+**Where:** Storage provider setup, `application.yml`, secret/environment configuration.
+
+**Do:** Use object/durable file storage for shared/production use, not the application container filesystem. Store bytes under generated keys and metadata/owner/status in database.
 
 ```yaml
 spring:
@@ -22,36 +32,89 @@ spring:
       max-request-size: 10MB
 ```
 
-## 3. Implement safely
+**Verify:** Application starts; oversized multipart request is rejected at configured limit.
 
-```text
-request/job → validate → generate storage key → stream bytes
-→ store metadata → authorized download/processing
-```
+**Next:** Step 3.
 
-1. Never use a client filename as a filesystem/storage path.
-2. Validate size, filename, declared type, and actual content as risk requires.
-3. Stream large data instead of loading it fully into memory.
-4. Authorize every upload and download.
-5. Scan untrusted content when appropriate.
-6. Use short-lived signed URLs for direct object-storage transfer when useful.
-7. Clean up partial uploads and reconcile bytes/metadata after failure.
+## Step 3 · Create storage interface and adapter
 
-Typical files:
+**What:** Isolate provider/file implementation from business service.
+
+**Where:**
 
 ```text
 src/main/java/com/company/project/file/
-├── FileStorage.java            application-owned interface
+├── FileStorage.java
 ├── ObjectStorageAdapter.java
-├── StoredFile.java             metadata/ownership entity
-├── FileService.java
-└── FileController.java         only for HTTP upload/download
+├── StoredFile.java
+├── StoredFileRepository.java
+└── FileService.java
 ```
 
-Checkpoint: store and retrieve one small test file, reject one oversized/invalid file, and prove cross-user access is denied before enabling large uploads.
+**Do:**
 
-## 4. Verify
+```java
+public interface FileStorage {
+    void put(String key, InputStream content, long size, String contentType);
+    InputStream get(String key);
+    void delete(String key);
+}
 
-Test valid file, empty/oversized file, invalid content, malicious filename, unauthorized/cross-user download, interrupted upload, missing object, and storage outage.
+@Service
+class FileService {
+    private final FileStorage storage;
+    private final StoredFileRepository files;
 
-Completion: untrusted input cannot control paths or unbounded memory, access is authorized, storage is durable, and partial failure has cleanup/recovery.
+    StoredFile upload(CurrentUser user, MultipartFile file) throws IOException {
+        validate(file);
+        String key = UUID.randomUUID().toString();
+        storage.put(key, file.getInputStream(), file.getSize(), file.getContentType());
+        return files.save(StoredFile.uploaded(key, file.getOriginalFilename(), user.id()));
+    }
+}
+```
+
+Never use client filename as storage/filesystem path. Stream content; do not call `getBytes()` for large files.
+
+**Verify:** Store and retrieve one small file through interface/adapter using generated key.
+
+**Next:** Step 4.
+
+## Step 4 · Add HTTP/job entry and authorization
+
+**What:** Permit only authorized upload/download and validate untrusted content.
+
+**Where:** Controller/job entry, service ownership checks, scanner/validator.
+
+**Do:**
+
+```java
+@PostMapping(path = "/api/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+ResponseEntity<FileResponse> upload(@RequestPart MultipartFile file,
+                                    Authentication authentication) throws IOException {
+    StoredFile stored = service.upload(CurrentUser.from(authentication), file);
+    return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(stored));
+}
+```
+
+Validate size, filename, declared/actual content as risk requires; authorize every upload/download; scan untrusted content; use short-lived signed URLs when direct transfer is selected.
+
+**Verify:** Valid owner succeeds; invalid/oversized/malicious filename rejects; User A cannot download User B’s private file.
+
+**Next:** Step 5.
+
+## Step 5 · Handle partial failure and test storage outage
+
+**What:** Keep metadata and stored bytes consistent/recoverable.
+
+**Where:** Service compensation/reconciliation, cleanup job, tests, metrics.
+
+**Do:** Delete orphaned bytes when metadata save fails or mark state for reconciliation; handle missing object; record safe storage outcome; test interrupted upload/outage. Do not put remote storage operation inside a database transaction and assume automatic rollback.
+
+```bash
+./mvnw clean verify
+```
+
+**Verify:** Partial upload and storage outage have deterministic cleanup/recovery; no path traversal/unbounded memory/access leak.
+
+**Next:** Return to the application path’s next step.

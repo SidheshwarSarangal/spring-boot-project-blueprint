@@ -1,75 +1,107 @@
-# Path: Real-time application
+# Process: Build a real-time application
 
 [← Choose another type](../README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
 
-> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once.
 
-Choose this for chat, live tracking, dashboards, notifications, or streaming updates through WebSocket or Server-Sent Events (SSE).
+Use this for chat, live tracking, dashboards, or notifications through SSE or WebSocket.
 
-## 1. Choose the connection model
+## Step 1 · Choose connection and message behavior
 
-| Need | Use |
-|---|---|
-| Server pushes updates; client only receives | SSE |
-| Both client and server send messages | WebSocket |
-| Ordinary request/response | Use the [REST API path](rest-api.md) instead |
+**What:** Define transport, connection lifecycle, messages, and missed-update behavior.
 
-Define connection lifetime, message types, authentication, ordering, reconnect, and missed-message behavior in the [project workbook](../docs/project-workbook.md).
+**Where:** One feature sheet in `PROJECT.md`.
 
-## 2. Generate the project
+**Do:** Choose SSE for server → client only, WebSocket for two-way messaging, or REST/polling when real-time is unnecessary. Record auth, subscribe/publish, ordering, reconnect, replay, size/rate limits, and disconnect cleanup.
 
-Select Spring Web for MVC/SSE or WebSocket for bidirectional messaging, plus Actuator. Add Spring Security when connections or channels are private.
+**Verify:** Client behavior is defined for connect, normal message, disconnect, reconnect, and missed message.
+
+**Next:** Step 2.
+
+## Step 2 · Generate and run foundation
+
+**What:** Start the selected real-time transport.
+
+**Where:** Spring Initializr and project root.
+
+**Do:** Select Spring Web for MVC/SSE or WebSocket for bidirectional messaging, plus Actuator; add Security for private connections.
 
 ```bash
 ./mvnw clean verify
 ./mvnw spring-boot:run
 ```
 
-Continue only after the untouched application starts.
+**Verify:** Application starts before connection code exists.
 
-## 3. Build one live flow
+**Next:** Step 3.
 
-```text
-connect/authenticate → subscribe → service receives state/event
-→ publish update → client handles/reconnects
-```
+## Step 3 · Implement one connection and message
+
+**What:** Connect one client and deliver one typed update.
+
+**Where:**
 
 ```text
 src/main/java/com/company/project/live/
 ├── LiveMessage.java
-├── LiveController.java       SSE/WebSocket entry point
+├── LiveController.java
 ├── LiveUpdateService.java
-├── WebSocketConfiguration.java  when WebSocket is selected
-└── LiveSecurityConfiguration.java
+└── WebSocketConfiguration.java  only for WebSocket
 ```
 
-1. Define small versioned message DTOs.
-2. Authenticate at connection/subscription boundaries.
-3. Authorize channels/topics per user or role.
-4. Keep business state in services, not connection handlers.
-5. Bound message size, rate, buffers, and connection count.
-6. Decide whether missed messages are discarded, replayed, or read through a REST endpoint.
-7. Clean up disconnected/slow clients.
+**Do:** Minimal MVC SSE example:
 
-Checkpoint: connect one local client, receive one message, disconnect, and confirm server resources are released before adding fan-out or persistence.
+```java
+public record LiveMessage(String type, String value, Instant occurredAt) {}
 
-## 4. Attach required capabilities
+@RestController
+@RequestMapping("/api/live")
+class LiveController {
+    private final LiveUpdateService updates;
 
-- [Security](../capabilities/security.md)
-- [Messaging](../capabilities/messaging.md) for multi-instance fan-out/durable events
-- [Data storage](../capabilities/data-storage.md) for durable state/history
-- [REST API](rest-api.md) for initial state and recovery
+    LiveController(LiveUpdateService updates) {
+        this.updates = updates;
+    }
 
-## 5. Verify
+    @GetMapping(path = "/events", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    SseEmitter events() {
+        return updates.subscribe();
+    }
+}
+```
 
-Test connection, authentication, forbidden subscription, publish/receive, malformed/oversized messages, reconnect, slow client, disconnect cleanup, and multiple application instances where applicable.
+The service owns emitter registration, send, completion, timeout, and removal. For WebSocket, define equivalent message DTOs and handlers/channel mappings.
+
+**Verify:** One client connects, receives one message, disconnects, and is removed from server resources.
+
+**Next:** Step 4.
+
+## Step 4 · Add authentication, limits, and scale behavior
+
+**What:** Protect and bound long-lived connections.
+
+**Where:** Security config, update service, WebSocket/SSE configuration, selected broker/data package.
+
+**Do:** Authenticate connection/subscription; authorize topics per user; bound message/rate/buffer/connection count; clean slow clients; define replay or REST recovery; add [messaging](../capabilities/messaging.md) for multi-instance fan-out and [data storage](../capabilities/data-storage.md) for durable history.
+
+**Verify:** Forbidden subscription fails; oversized/fast/slow client is bounded; multi-instance behavior matches requirement.
+
+**Next:** Step 5.
+
+## Step 5 · Test and deliver
+
+**What:** Prove lifecycle, security, capacity controls, and deployment.
+
+**Where:** Connection/integration tests, configuration, CI/deployment, client connection guide.
+
+**Do:** Test connect/auth, forbidden topic, publish/receive, malformed/oversized message, reconnect, slow client, cleanup, restart, and multi-instance fan-out using the [testing guide](../docs/testing-guide.md).
 
 ```bash
 ./mvnw clean verify
 ```
 
-## 6. Finish
+Follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), and [production](../docs/production-checklist.md).
 
-Document client connection/reconnect behavior and capacity limits, then complete the [production checklist](../docs/production-checklist.md).
+**Verify:** Clean build passes; connection lifecycle is bounded/observable; client recovery works in a clean deployment.
 
-Done means connections are authenticated and bounded, missed-message behavior is explicit, and the system works correctly across restart and scale-out requirements.
+**Next:** Release, or return to Step 1 for another live flow.

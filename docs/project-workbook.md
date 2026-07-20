@@ -4,6 +4,20 @@
 
 Copy this file into a new project as `PROJECT.md`. Keep it short and update it as decisions change. It is the link between the requirement, code, tests, and delivery.
 
+## Workbook process
+
+| Step | What | Where | Do | Verify | Next |
+|---|---|---|---|---|---|
+| 1 | Project outcome | Section 1 | State problem/user/result/scope | Result is testable | 2 |
+| 2 | Selected application/dependencies | Section 2 | Check one primary shape + required capabilities | Each dependency has a reason | 3 |
+| 3 | Access rules | Section 3 | List roles/allowed/denied/ownership | Protected behavior is explicit | 4 |
+| 4 | Ordered feature queue | Section 4 | Prioritize smallest useful actions | Only one is in progress | 5 |
+| 5 | Implementable feature sheet | Section 5 | Fill contract/data/files/tests | Another person can implement/test it | Build selected path |
+| 6 | Environment settings | Section 6 | Record variable names/sources | No secret value is written here | 7 |
+| 7 | Delivery handoff | Section 7 | Record build/run/migrate/health/recovery | Clean environment can operate it | Release gate |
+
+Update the relevant section at each application-path step; do not fill imagined future features “just in case.”
+
 ## 1. Project result
 
 ```text

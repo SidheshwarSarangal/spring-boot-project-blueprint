@@ -53,6 +53,22 @@ flowchart TD
 
 Do not read or add every capability. Complete the primary path, attach one required capability at its stated step, verify it, and continue.
 
+## How every selected process works
+
+Every numbered step in a path or capability uses the same five instructions:
+
+| Instruction | Meaning |
+|---|---|
+| **What** | The result this step must produce |
+| **Where** | Exact project directory or file to work in |
+| **Do** | Actions and relevant code/commands in order |
+| **Verify** | Observable checkpoint that must pass |
+| **Next** | The next numbered step or selected capability |
+
+Do not move to **Next** while **Verify** is failing. Replace example package names, fields, routes, and domain names with those recorded in your project workbook.
+
+Code blocks show the relevant implementation at that step; add the matching `package` declaration and IDE-generated imports. When an API differs across Spring major versions, keep the version selected by Spring Initializr and confirm the linked official reference rather than mixing examples from another version.
+
 ## Shared resources
 
 - [Project workbook](docs/project-workbook.md) — copy into your project to track requirements, features, tests, and delivery.

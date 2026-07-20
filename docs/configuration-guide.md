@@ -4,6 +4,20 @@
 
 Build one application artifact and change behavior between environments through configuration—not source edits.
 
+## Configuration step map
+
+| Step | What | Where | Do | Verify | Next |
+|---|---|---|---|---|---|
+| 1 | Safe base defaults | `application.yml` | Add shared non-secret defaults | Local startup uses expected defaults | 2 |
+| 2 | Environment overrides | YAML + env/platform | Reference environment variables | Values change without source edit | 3 |
+| 3 | Typed validated settings | Properties record/config package | Add `@ConfigurationProperties` | Invalid/missing setting fails fast | 4 |
+| 4 | Narrow profiles | `application-<profile>.yml` | Group true environment differences | Intended profile activates explicitly | 5 |
+| 5 | External secrets | Secret manager/env | Remove secret values from Git | No secret in source/logs | 6 |
+| 6 | Resource limits/settings | Adapter/resource config | Add URLs/timeouts/pools/retries | Dependency behavior is bounded | 7 |
+| 7 | Environment proof | Project root/deployment | Build once; run with each config | Same artifact runs without edits | Delivery |
+
+The detailed section for each step contains its code/configuration. Stop when **Verify** fails.
+
 ## 1. Put normal defaults in the base file
 
 Use `src/main/resources/application.yml`:
@@ -55,6 +69,16 @@ public record ProviderProperties(
 ```
 
 Enable configuration-property scanning in the application/configuration package. Inject this record into the adapter/configuration that needs it. Validated configuration makes startup fail early instead of failing during a request.
+
+```java
+@SpringBootApplication
+@ConfigurationPropertiesScan
+public class OrdersApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(OrdersApplication.class, args);
+    }
+}
+```
 
 ## 4. Use profiles narrowly
 

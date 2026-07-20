@@ -4,11 +4,15 @@
 
 ## Use this loop
 
-1. Reproduce the smallest failure.
-2. Read the first meaningful exception and its deepest `Caused by` message.
-3. Identify the phase: compile, context startup, HTTP, database, or test.
-4. Change one cause.
-5. Rerun the smallest relevant command, then `./mvnw clean verify`.
+| Step | What | Where | Do | Verify | Next |
+|---|---|---|---|---|---|
+| 1 | Small reproducible failure | Terminal/test/request | Remove unrelated actions | Failure repeats reliably | 2 |
+| 2 | First real cause | First exception + deepest `Caused by` | Ignore consequence noise | Application-owned failing point is known | 3 |
+| 3 | Failure phase | Compile/startup/HTTP/data/test | Select matching section below | Scope is narrowed | 4 |
+| 4 | One correction | Relevant file/config | Change one suspected cause | Small reproduction passes | 5 |
+| 5 | Regression proof | Project root | Run smallest test then clean verify | Clean build passes | Return to path |
+
+If Step 5 fails, return to Step 1 with the new smallest failure.
 
 ## Fast checks
 

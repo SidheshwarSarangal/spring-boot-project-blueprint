@@ -1,86 +1,153 @@
-# Path: Server-rendered web application
+# Process: Build a server-rendered web application
 
 [← Choose another type](../README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
 
-> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once.
 
-Choose this when Spring returns HTML pages and processes browser forms, commonly with Thymeleaf.
+Use this process when Spring returns HTML pages and processes browser forms, commonly with Thymeleaf.
 
-## 1. Define the first page flow
+## Step 1 · Define one page flow
+
+**What:** Specify one browser journey with success and validation behavior.
+
+**Where:** One feature sheet in `PROJECT.md`, copied from the [workbook](../docs/project-workbook.md).
+
+**Do:** Record:
 
 ```text
-User opens: GET /tasks/new
-User submits: POST /tasks
-Valid result: redirect to /tasks/{id}
-Invalid result: show the form with field errors
-Access: state who may view and submit
+GET  /tasks/new     → render empty form
+POST /tasks         → validate and create
+Success             → redirect to /tasks/{id}
+Invalid             → redisplay form and field errors
+Access              → authenticated member
 ```
 
-Record it in the [project workbook](../docs/project-workbook.md).
+**Verify:** Expected page, form fields, redirect, errors, and access are unambiguous.
 
-## 2. Generate the project
+**Next:** Step 2.
 
-Select:
+## Step 2 · Generate and run the foundation
 
-- Spring Web;
-- Thymeleaf;
-- Validation;
-- Actuator.
+**What:** Create a working web foundation.
 
-Add [data storage](../capabilities/data-storage.md) and [security](../capabilities/security.md) when required.
+**Where:** Spring Initializr and extracted project root.
+
+**Do:** Select Spring Web, Thymeleaf, Validation, and Actuator; add only required capabilities.
 
 ```bash
 ./mvnw clean verify
 ./mvnw spring-boot:run
 ```
 
-## 3. Build one page flow
+**Verify:** Application starts and `http://localhost:8080/actuator/health` returns `UP`.
 
-```text
-form object → @Controller → service → repository/adapter
-→ model → Thymeleaf template → browser
-```
+**Next:** Step 3.
+
+## Step 3 · Create the page-flow files
+
+**What:** Establish form → controller → service → template.
+
+**Where:**
 
 ```text
 src/main/java/com/company/project/task/
+├── TaskForm.java
 ├── TaskController.java
-├── TaskService.java
-└── TaskForm.java
+└── TaskService.java
 src/main/resources/templates/tasks/
 ├── form.html
 └── detail.html
+src/main/resources/static/css/app.css
 ```
 
-1. Create a form object with validation.
-2. Create a service method containing the business action.
-3. Add a `GET` controller method to render the form.
-4. Add a `POST` method to validate and submit it.
-5. On validation failure, return the same template with errors.
-6. On success, use Post/Redirect/Get.
-7. Keep business rules out of controllers and templates.
+**Do:** Create a validated form object:
 
-Place templates in `src/main/resources/templates/` and static CSS/images in `src/main/resources/static/`.
+```java
+public record TaskForm(
+    @NotBlank @Size(max = 120) String title,
+    @FutureOrPresent LocalDate dueDate
+) {}
+```
 
-Checkpoint: compile, start the application, open the form, submit one valid and one invalid request, and confirm the redirect/error display before adding another page.
+**Verify:** Files are under the application root package/resources and `./mvnw compile` passes.
 
-## 4. Attach required capabilities
+**Next:** Step 4.
 
-- [Data storage](../capabilities/data-storage.md)
-- [Security](../capabilities/security.md)—normally required for private forms/pages; retain CSRF protection
-- [External API](../capabilities/external-api.md)
-- [File storage](../capabilities/file-storage.md)
-- [Caching](../capabilities/caching.md)
+## Step 4 · Implement GET, POST, and template
 
-## 5. Verify
+**What:** Render, validate, submit, and redirect one form.
 
-Test page rendering, form binding, validation messages, successful redirects, permissions, and escaped user content. Manually complete the browser flow.
+**Where:** `TaskController.java`, `TaskService.java`, and `templates/tasks/form.html`.
+
+**Do:**
+
+```java
+@Controller
+@RequestMapping("/tasks")
+public class TaskController {
+    private final TaskService service;
+
+    public TaskController(TaskService service) {
+        this.service = service;
+    }
+
+    @GetMapping("/new")
+    String form(Model model) {
+        model.addAttribute("taskForm", new TaskForm("", null));
+        return "tasks/form";
+    }
+
+    @PostMapping
+    String create(@Valid @ModelAttribute TaskForm taskForm,
+                  BindingResult errors) {
+        if (errors.hasErrors()) return "tasks/form";
+        Long id = service.create(taskForm);
+        return "redirect:/tasks/" + id;
+    }
+}
+```
+
+```html
+<form th:action="@{/tasks}" th:object="${taskForm}" method="post">
+  <input th:field="*{title}" />
+  <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+  <input type="date" th:field="*{dueDate}" />
+  <button type="submit">Create</button>
+</form>
+```
+
+Keep business rules in the service. Use Post/Redirect/Get after success.
+
+**Verify:** Open `/tasks/new`; invalid form stays with errors; valid form redirects and produces the intended result.
+
+**Next:** Step 5.
+
+## Step 5 · Add required capabilities and secure rendering
+
+**What:** Attach only necessary persistence/integrations and protect pages/forms.
+
+**Where:** Selected capability packages plus controller/service/templates.
+
+**Do:** Choose only required modules: [data storage](../capabilities/data-storage.md), [security](../capabilities/security.md), [external API](../capabilities/external-api.md), [file storage](../capabilities/file-storage.md), or [caching](../capabilities/caching.md). Retain CSRF protection for authenticated browser forms and let Thymeleaf escape user content.
+
+**Verify:** Public/protected pages match the access rules; CSRF, cross-user access, and user-supplied text behave safely.
+
+**Next:** Step 6.
+
+## Step 6 · Test and deliver
+
+**What:** Prove page behavior and create a deployable artifact.
+
+**Where:** `src/test/java`, configuration, CI/deployment files, and project README.
+
+**Do:** Test view name/model, form binding, validation, redirect, CSRF, allowed/forbidden access, and service rules using the [testing guide](../docs/testing-guide.md).
 
 ```bash
 ./mvnw clean verify
 ```
 
-## 6. Finish
+Then follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), and the [production checklist](../docs/production-checklist.md).
 
-Repeat for the next page flow, then complete the [production checklist](../docs/production-checklist.md).
+**Verify:** Clean build passes and a clean environment can complete the browser flow with correct security and health.
 
-Done means every page has defined access, forms behave safely on success/failure, templates contain presentation only, and the application starts from documented commands.
+**Next:** Release and monitor, or return to Step 1 for the next page flow.

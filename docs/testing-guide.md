@@ -4,6 +4,22 @@
 
 Test observable behavior at the smallest useful scope. Do not load the full application for every test.
 
+## Testing step map
+
+| Step | What | Where | Do | Verify | Next |
+|---|---|---|---|---|---|
+| 1 | Test cases | `PROJECT.md` | Convert acceptance/failures to cases | Every required outcome has a case | 2 |
+| 2 | Correct scope | Test plan | Pick unit/MVC/JPA/integration | Each case uses smallest useful scope | 3–6 |
+| 3 | Service rule tests | Matching `src/test/java` package | Mock collaborators; assert result | Rule passes/fails intentionally | 4 |
+| 4 | HTTP contract tests | Controller test | Use MockMvc for JSON/status/errors | Public contract is locked | 5 |
+| 5 | Query/mapping tests | Repository test | Use data slice/real DB where needed | Query and constraints work | 6 |
+| 6 | Critical wiring tests | Integration test | Load real graph/stubs/containers | Essential full flow works | 7 |
+| 7 | Non-HTTP tests | Selected path test package | Test trigger/protocol lifecycle | Path-specific failures covered | 8 |
+| 8 | Trustworthy suite | All tests | Remove order/time/external flakiness | Repeat run is deterministic | 9 |
+| 9 | Build gate | Project root/CI | Run focused then clean verify | Clean build passes | Path/delivery |
+
+Use the detailed code under each numbered section. Do not continue while its **Verify** result is failing.
+
 ## 1. Turn the feature sheet into cases
 
 For each feature copy its success, invalid, missing, forbidden, conflict, external-failure, and retry cases from the [project workbook](project-workbook.md). Each test should prove one behavior.

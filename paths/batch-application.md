@@ -1,79 +1,138 @@
-# Path: Batch application
+# Process: Build a batch application
 
 [← Choose another type](../README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
 
-> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once.
 
-Choose this for large finite imports, exports, reports, migrations, or processing that must restart safely.
+Use this for large, finite, restartable imports, exports, reports, migrations, or transformations.
 
-## 1. Define the job
+## Step 1 · Define one job and restart rule
 
-```text
-Input source and expected volume:
-Output destination:
-Record validation/transformation:
-Chunk and transaction boundary:
-Skip/retry policy:
-Restart rule:
-Success report:
-```
+**What:** Specify input, transformation, output, chunk/failure behavior, and completion report.
 
-Record it in the [project workbook](../docs/project-workbook.md).
+**Where:** One job feature sheet in `PROJECT.md`.
 
-## 2. Generate the project
+**Do:** Record source, expected volume, item shape, validation, output, job parameters, chunk/transaction boundary, retry/skip/fail rules, restart rule, and audit counts.
 
-Select Spring Batch, Actuator, and the required database driver. Add Validation when input objects use Jakarta constraints.
+**Verify:** You can state what happens to a bad record and how a failed job resumes without duplicating completed work.
+
+**Next:** Step 2.
+
+## Step 2 · Generate and run foundation
+
+**What:** Start Spring Batch with required metadata/output infrastructure.
+
+**Where:** Spring Initializr, local input, and database configuration.
+
+**Do:** Select Spring Batch, Actuator, and required database driver. Add Validation when item constraints use it.
 
 ```bash
 ./mvnw clean verify
 ./mvnw spring-boot:run
 ```
 
-Continue only after the untouched application and batch metadata database initialize successfully.
+**Verify:** Application starts and batch metadata storage initializes. Do not add `@EnableBatchProcessing` casually; Spring Boot auto-configuration should remain active unless intentionally replaced.
 
-## 3. Build one job
+**Next:** Step 3.
 
-```text
-Job → Step → ItemReader → ItemProcessor → ItemWriter
-                  ↘ job repository/status ↙
-```
+## Step 3 · Create reader, processor, writer, step, and job
+
+**What:** Execute one small input through chunk processing.
+
+**Where:**
 
 ```text
 src/main/java/com/company/project/importjob/
 ├── ImportJobConfiguration.java
 ├── ImportItem.java
-├── ImportItemReader.java
 ├── ImportItemProcessor.java
-└── ImportItemWriter.java
+└── ImportJobListener.java
+src/main/resources/input/sample.csv
 ```
 
-1. Configure the job repository and input parameters.
-2. Build a reader for the real source.
-3. Put validation/transformation in the processor.
-4. Build an idempotent writer where possible.
-5. Choose chunk size from transaction cost and memory behavior.
-6. Define which failures retry, skip, or fail the job.
-7. Produce counts and error records required by operators.
+**Do:** Define reader/processor/writer beans appropriate to the source/target. Spring Batch 6 step skeleton:
 
-Checkpoint: run a tiny valid input and confirm read/write counts, then rerun with one invalid record and confirm the chosen fail/skip behavior.
+```java
+@Configuration
+class ImportJobConfiguration {
+    @Bean
+    Step importStep(JobRepository jobRepository,
+                    ItemReader<ImportItem> reader,
+                    ItemProcessor<ImportItem, ImportItem> processor,
+                    ItemWriter<ImportItem> writer) {
+        return new ChunkOrientedStepBuilder<ImportItem, ImportItem>(
+                "importStep", jobRepository, 100)
+            .reader(reader)
+            .processor(processor)
+            .writer(writer)
+            .build();
+    }
 
-## 4. Attach required capabilities
+    @Bean
+    Job importJob(JobRepository jobRepository, Step importStep) {
+        return new JobBuilder("importJob", jobRepository)
+            .start(importStep)
+            .build();
+    }
+}
+```
 
-- [Data storage](../capabilities/data-storage.md)
-- [External API](../capabilities/external-api.md)—respect provider limits; avoid unbounded per-record calls
-- [File storage](../capabilities/file-storage.md)
-- [Messaging](../capabilities/messaging.md) when jobs are submitted asynchronously
+Use the builder API matching the Spring Batch version selected by Spring Boot; do not mix examples from an older major version.
 
-## 5. Verify
+**Verify:** Tiny valid input completes and reported read/write counts match expected output.
 
-Test empty input, valid input, malformed record, partial failure, retry/skip limits, restart from a failed step, duplicate job parameters, and realistic data volume.
+**Next:** Step 4.
+
+## Step 4 · Add validation, retry, skip, and restart
+
+**What:** Make partial failure behavior explicit and recoverable.
+
+**Where:** Processor, step fault-tolerance configuration, job parameters, listener/error output.
+
+**Do:** Validate/transform in processor; retry only transient failures; skip only explicitly acceptable bad items with a limit; fail on unknown/systemic errors; use identifying job parameters; keep reader/writer state restartable.
+
+```java
+@Component
+class ImportItemProcessor implements ItemProcessor<ImportItem, ImportItem> {
+    public ImportItem process(ImportItem item) {
+        if (item.email() == null || item.email().isBlank()) {
+            throw new InvalidImportItemException("email is required");
+        }
+        return item.normalized();
+    }
+}
+```
+
+**Verify:** One invalid input follows the chosen fail/skip rule; restart resumes correctly; repeating completed parameters does not duplicate output.
+
+**Next:** Step 5.
+
+## Step 5 · Attach required capabilities and measure volume
+
+**What:** Connect real source/target and confirm bounded performance.
+
+**Where:** Selected [data](../capabilities/data-storage.md), [external API](../capabilities/external-api.md), [file](../capabilities/file-storage.md), or [messaging](../capabilities/messaging.md) package plus job configuration.
+
+**Do:** Add only required capabilities. Avoid unbounded per-record provider calls. Test realistic volume before adding concurrency; size database/HTTP pools consistently with any parallelism.
+
+**Verify:** Realistic sample completes inside expected time/memory and produces auditable read/process/write/skip/fail counts.
+
+**Next:** Step 6.
+
+## Step 6 · Test, operate, and deliver
+
+**What:** Prove restart/failure behavior and provide an operator runbook.
+
+**Where:** Batch tests, configuration, CI/deployment, project README.
+
+**Do:** Test empty/valid/malformed input, partial failure, retry/skip limit, restart, duplicate parameters, and realistic volume using the [testing guide](../docs/testing-guide.md). Document parameters, launch, duration, output, recovery, and monitoring.
 
 ```bash
 ./mvnw clean verify
 ```
 
-## 6. Finish
+Follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), and [production](../docs/production-checklist.md).
 
-Document job parameters, launch command, expected duration, output, recovery, and monitoring. Then complete the [production checklist](../docs/production-checklist.md).
+**Verify:** Clean build passes; failed execution is restartable; operators can launch, observe, and recover the job.
 
-Done means the job is restartable, bounded, observable, and produces an auditable result without silently losing records.
+**Next:** Release, or return to Step 1 for another batch job.

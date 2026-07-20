@@ -1,63 +1,143 @@
-# Capability: External HTTP API
+# Capability process: Add an external HTTP API
 
-[← Application selector](../README.md) · [Integration-service path](../paths/integration-service.md)
+[← Application selector](../README.md) · [Integration process](../paths/integration-service.md) · [Configuration](../docs/configuration-guide.md)
 
-Add this when a use case calls payments, email, maps, AI, identity, or another HTTP provider.
+Insert this process when a use case calls payments, email, maps, AI, identity, or another HTTP provider.
 
-## 1. Define the boundary
+## Step 1 · Define the provider boundary
 
-Record provider operation, required input/output, credential source, timeout, rate limit, retry safety, idempotency support, and outage behavior.
+**What:** Specify application-owned input/output and provider failure rules.
 
-## 2. Isolate the provider
+**Where:** Feature sheet in `PROJECT.md`.
+
+**Do:** Record operation, application input/output, credential source, connect/response timeout, rate limit, retry safety, idempotency support, and outage behavior.
+
+**Verify:** Service behavior is stated without exposing provider DTO/status details.
+
+**Next:** Step 2.
+
+## Step 2 · Create interface, DTOs, properties, and adapter
+
+**What:** Isolate provider code behind an application interface.
+
+**Where:**
 
 ```text
-service → application-owned interface → provider adapter
-→ configured HTTP client → provider
+src/main/java/com/company/project/provider/
+├── ProviderClient.java
+├── HttpProviderAdapter.java
+├── ProviderRequest.java
+├── ProviderResponse.java
+├── ProviderConfiguration.java
+└── ProviderProperties.java
 ```
 
-Use your own application types at the interface. Keep provider DTOs, headers, status codes, and error formats inside the adapter.
+**Do:**
 
-For a normal synchronous Spring MVC service, begin with `RestClient`; use `WebClient` when the selected application is reactive/streaming. Configure the client once as a bean and inject it into the adapter:
+```java
+public interface ProviderClient {
+    ProviderResult perform(ProviderCommand command);
+}
+
+@Validated
+@ConfigurationProperties("provider")
+public record ProviderProperties(
+    @NotNull URI baseUrl,
+    @NotBlank String apiKey,
+    @NotNull Duration timeout
+) {}
+```
+
+**Verify:** Service compiles against `ProviderClient`; provider DTOs remain inside adapter package.
+
+**Next:** Step 3.
+
+## Step 3 · Configure a bounded HTTP client
+
+**What:** Create one reusable client with externalized URL/credentials/timeouts.
+
+**Where:** `ProviderConfiguration.java`, `application.yml`, underlying request-factory/client configuration.
+
+**Do:** For a synchronous MVC application use `RestClient`; use `WebClient` for selected reactive/streaming flows.
 
 ```java
 @Bean
 RestClient providerRestClient(RestClient.Builder builder,
                               ProviderProperties properties) {
-    return builder.baseUrl(properties.baseUrl().toString()).build();
+    HttpClient httpClient = HttpClient.newBuilder()
+        .connectTimeout(properties.timeout())
+        .build();
+    JdkClientHttpRequestFactory requestFactory =
+        new JdkClientHttpRequestFactory(httpClient);
+    requestFactory.setReadTimeout(properties.timeout());
+    return builder
+        .requestFactory(requestFactory)
+        .baseUrl(properties.baseUrl().toString())
+        .defaultHeader("Authorization", "Bearer " + properties.apiKey())
+        .build();
 }
 ```
 
-Configure connection/response timeouts on the underlying request factory/client; a base URL alone is not production-safe.
-
-```text
-src/main/java/com/company/project/provider/
-├── ProviderClient.java          application-owned interface
-├── HttpProviderAdapter.java
-├── ProviderRequest.java        provider-only DTO
-├── ProviderResponse.java       provider-only DTO
-├── ProviderConfiguration.java
-└── ProviderProperties.java
-src/test/java/com/company/project/provider/HttpProviderAdapterTest.java
+```yaml
+provider:
+  base-url: ${PROVIDER_BASE_URL}
+  api-key: ${PROVIDER_API_KEY}
+  timeout: 3s
 ```
 
-## 3. Configure safety
+Use separate connect/response durations when the requirement needs different bounds.
 
-1. Externalize URL, credentials, connection timeout, response timeout, and limits.
-2. Validate provider responses before using them.
-3. Retry only transient failures and safe/idempotent operations.
-4. Use bounded exponential backoff.
-5. Use an idempotency key for retryable side effects where supported.
-6. Respect rate-limit responses; do not retry immediately in a loop.
-7. Map provider errors to stable application errors without leaking provider details.
+**Verify:** Missing/invalid properties fail startup and a stubbed delayed response stops within configured bound.
 
-Checkpoint: call a local stub for one success and one timeout. Do not connect the real provider until the adapter contract tests pass.
+**Next:** Step 4.
 
-## 4. Observe
+## Step 4 · Implement and translate the call
 
-Record request correlation/provider IDs, latency, outcome, and rate-limit state without recording secrets or sensitive payloads.
+**What:** Convert application command → provider request → application result.
 
-## 5. Verify offline
+**Where:** `HttpProviderAdapter.java`.
 
-Use a stub HTTP server. Test success, invalid response, timeout, connection failure, authentication failure, rate limit, retry exhaustion, duplicate request, and provider outage.
+**Do:**
 
-Completion: normal tests do not call the real provider, failures cannot block forever, retries cannot casually duplicate side effects, and changing providers is isolated to adapters.
+```java
+@Component
+class HttpProviderAdapter implements ProviderClient {
+    private final RestClient client;
+
+    HttpProviderAdapter(RestClient client) {
+        this.client = client;
+    }
+
+    public ProviderResult perform(ProviderCommand command) {
+        ProviderResponse response = client.post()
+            .uri("/operations")
+            .body(ProviderRequest.from(command))
+            .retrieve()
+            .body(ProviderResponse.class);
+        if (response == null) throw new ProviderUnavailableException();
+        return response.toResult();
+    }
+}
+```
+
+Translate decline/invalid/rate-limit/auth/outage to stable application outcomes. Retry only transient safe/idempotent operations with limit/backoff; use provider idempotency keys for side effects.
+
+**Verify:** Stub success maps correctly; each expected provider failure maps to the contract without leaking provider secrets.
+
+**Next:** Step 5.
+
+## Step 5 · Test offline and observe
+
+**What:** Prove provider behavior without real network dependency.
+
+**Where:** Stub-server adapter tests, metrics/logging, CI.
+
+**Do:** Test success, malformed/empty response, timeout, connection failure, auth failure, rate limit, retry exhaustion, duplicate, and outage. Record safe correlation/provider ID, latency, and outcome—not credentials/payload secrets.
+
+```bash
+./mvnw clean verify
+```
+
+**Verify:** Normal automated tests run offline; calls cannot block forever; duplicate side effects are controlled.
+
+**Next:** Return to the application path’s next step.

@@ -1,77 +1,126 @@
-# Path: Command-line application
+# Process: Build a command-line application
 
 [← Choose another type](../README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
 
-> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once before Step 1.
+> New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once.
 
-Choose this for terminal tools, administrative commands, and small one-off automations that benefit from Spring configuration and dependency injection.
+Use this for terminal tools, administration, and small one-off automation.
 
-## 1. Define the command
+## Step 1 · Define one command
+
+**What:** Specify arguments, output, exit codes, side effects, and rerun behavior.
+
+**Where:** One feature sheet in `PROJECT.md`.
+
+**Do:** Record command syntax, required/optional values, stdin/file input, stdout result, stderr diagnostics, success/failure exit codes, confirmation, and partial-failure recovery.
 
 ```text
-Command and arguments/options:
-Input source:
-Output and exit code:
-Side effects:
-Invalid-input behavior:
-Partial-failure/re-run behavior:
+java -jar import-tool.jar --file=customers.csv --dry-run=true
+Exit 0: completed
+Exit 2: invalid arguments
+Exit 3: input/processing failure
 ```
 
-Record it in the [project workbook](../docs/project-workbook.md).
+**Verify:** A shell script could call the command and decide success solely from documented output/exit code.
 
-## 2. Generate the project
+**Next:** Step 2.
 
-Generate a minimal Spring Boot project. Do not add Spring Web unless the command also runs an HTTP server. Add only required database/provider dependencies.
+## Step 2 · Generate and package foundation
+
+**What:** Build a minimal non-web executable JAR.
+
+**Where:** Spring Initializr and project root.
+
+**Do:** Generate minimal Spring Boot; do not add Spring Web unless the command also serves HTTP. Add only required data/provider dependencies.
 
 ```bash
 ./mvnw clean verify
 ```
 
-Continue only after the untouched project builds successfully.
+**Verify:** JAR is created under `target/` without starting a web server.
 
-## 3. Build one command
+**Next:** Step 3.
 
-```text
-arguments/options → command runner → service → repository/adapter
-→ terminal output + exit code
-```
+## Step 3 · Create runner, options, and service
+
+**What:** Parse input then delegate one action to a service.
+
+**Where:**
 
 ```text
 src/main/java/com/company/project/command/
 ├── ImportCommand.java
 ├── ImportOptions.java
-├── ImportService.java
-└── ExitCodeConfiguration.java
+└── ImportService.java
 ```
 
-1. Parse and validate arguments before side effects.
-2. Keep terminal formatting separate from the service.
-3. Return useful output to stdout and diagnostics to stderr.
-4. Use non-zero exit codes for failure.
-5. Make repeated execution safe or clearly require confirmation.
-6. Avoid starting an embedded web server when it is not required.
+**Do:**
 
-Checkpoint: package the JAR, run valid and invalid arguments from a terminal, and confirm stdout/stderr and exit codes before adding side effects.
+```java
+@Component
+class ImportCommand implements ApplicationRunner {
+    private final ImportService service;
 
-## 4. Attach required capabilities
+    ImportCommand(ImportService service) {
+        this.service = service;
+    }
 
-- [Data storage](../capabilities/data-storage.md)
-- [External API](../capabilities/external-api.md)
-- [File storage](../capabilities/file-storage.md)
+    public void run(ApplicationArguments args) {
+        if (!args.containsOption("file")) {
+            throw new InvalidCommandException("--file is required");
+        }
+        Path file = Path.of(args.getOptionValues("file").get(0));
+        ImportResult result = service.importFile(file);
+        System.out.println("Imported " + result.count() + " records");
+    }
+}
+```
 
-For large restartable record processing, use the [batch path](batch-application.md) instead.
+Keep terminal parsing/printing here; business/file/provider rules belong in the service/adapters.
 
-## 5. Verify
+**Verify:** Package and run valid/invalid arguments; valid reaches service, invalid fails before side effects.
 
-Test valid arguments, missing/invalid options, successful output/exit code, external/data failure, partial work, interruption, and safe rerun.
+**Next:** Step 4.
+
+## Step 4 · Make exit and rerun behavior reliable
+
+**What:** Return stable exit codes and control partial side effects.
+
+**Where:** Exception/exit-code configuration, service transaction, dry-run/idempotency logic.
+
+**Do:** Map known failures to documented non-zero exit codes with `ExitCodeGenerator`/application exit handling; send diagnostics to stderr; add dry-run/confirmation for risky changes; make operations idempotent or checkpointed.
+
+**Verify:** Shell observes exact exit codes; interruption/partial failure has documented safe rerun behavior.
+
+**Next:** Step 5.
+
+## Step 5 · Attach required capabilities
+
+**What:** Add only external resources used by the command.
+
+**Where:** Selected [data](../capabilities/data-storage.md), [external API](../capabilities/external-api.md), or [file](../capabilities/file-storage.md) package.
+
+**Do:** Configure resources externally; validate availability before irreversible work; close/flush resources on exit. For large restartable record processing use the [batch process](batch-application.md).
+
+**Verify:** Missing resource fails with documented exit code and no uncontrolled partial side effect.
+
+**Next:** Step 6.
+
+## Step 6 · Test and deliver
+
+**What:** Make the command scriptable and distributable.
+
+**Where:** Runner/service tests, README command examples, configuration, CI/release artifact.
+
+**Do:** Test argument parsing, stdout/stderr, exit codes, data/provider failure, partial work, interruption, and rerun using the [testing guide](../docs/testing-guide.md).
 
 ```bash
 ./mvnw clean verify
-java -jar target/your-app.jar --required-option=value
+java -jar target/your-app.jar --file=sample.csv --dry-run=true
 ```
 
-## 6. Finish
+Follow relevant [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), and [production](../docs/production-checklist.md) steps.
 
-Document install/run examples and exit codes, then apply the relevant parts of the [production checklist](../docs/production-checklist.md).
+**Verify:** Clean build passes; documented command works in a clean environment; exit codes are stable.
 
-Done means the command is scriptable, produces reliable exit codes, validates before side effects, and is safe to retry or clearly documents why it is not.
+**Next:** Release, or return to Step 1 for another command.
