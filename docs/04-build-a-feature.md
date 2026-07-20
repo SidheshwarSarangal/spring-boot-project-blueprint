@@ -1,6 +1,6 @@
 # 04 · Build a feature
 
-[← Architecture](03-architecture-and-connections.md) · [README](../README.md) · [Next: Database →](05-database-and-jpa.md)
+[← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Implementation gate](00-project-workflow.md#gate-5--implement-one-vertical-slice)
 
 Use a vertical slice: finish one small behavior through every layer.
 

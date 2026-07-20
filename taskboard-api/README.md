@@ -1,6 +1,6 @@
 # Taskboard reference API
 
-[← Handbook](../README.md) · [Build-a-feature guide](../docs/04-build-a-feature.md)
+[← Repository home](../README.md) · [Project workflow](../docs/00-project-workflow.md) · [Feature reference](../docs/04-build-a-feature.md)
 
 This small API is intentionally plain Java. It demonstrates structure and connections without Lombok, authentication, Docker, or a production database obscuring the core flow.
 
@@ -85,7 +85,7 @@ User: sa
 Password: [blank]
 ```
 
-The reference uses `ddl-auto: update` for beginner convenience. Use Flyway or Liquibase for shared/production databases.
+The reference uses `ddl-auto: update` because its file-backed database is local and disposable. Use Flyway or Liquibase for shared/production databases.
 
 ## Test
 

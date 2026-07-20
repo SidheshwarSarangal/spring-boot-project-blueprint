@@ -1,6 +1,6 @@
-# Spring Boot Project Blueprint
+# Spring Boot Project Builder
 
-> A visual, beginner-first handbook for turning a project idea into a structured Java/Spring Boot application—with a runnable reference API beside the documentation.
+> A visual execution reference for building Java/Spring Boot projects. Start with the current project requirement, perform the named steps, verify the result, and follow the explicit next action.
 
 **Baseline:** Java 17 · Spring Boot 4.1 · Maven · Spring MVC · Spring Data JPA · H2
 
@@ -14,33 +14,52 @@ flowchart LR
     Protect --> Ship["Package + deploy"]
 ```
 
-## Start here
+## Start here when building a project
 
 ```mermaid
 flowchart TB
-    New{"What do you need?"}
-    New -->|"I am completely new"| Path["Follow 00 → 10 in order"]
-    New -->|"I need a project now"| Quick["Quick start + Taskboard code"]
-    New -->|"I know Node/Express"| Map["Use the Node → Spring map"]
-    New -->|"I am designing a real app"| Checklist["Use the project checklist"]
+    New{"What are you doing now?"}
+    New -->|"Starting a project"| Path["Open project workflow"]
+    New -->|"Adding a feature"| Feature["Open Gate 3 and build a vertical slice"]
+    New -->|"Changing existing code"| Change["Use the change-impact map"]
+    New -->|"Blocked by an error"| Fix["Open troubleshooting"]
 ```
 
-| Goal | Open |
+The [project-building workflow](docs/00-project-workflow.md) is the primary document. Keep it open while working. It tells you what to create, where to create it, how the files connect, how to verify the phase, and what to do next.
+
+| Current task | Use |
 |---|---|
-| Understand the complete path | [Learning roadmap](docs/00-learning-roadmap.md) |
-| Translate Node/Express concepts | [Mental model](docs/01-mental-model.md) |
-| Create a project correctly | [Project setup](docs/02-project-setup.md) |
-| See how every layer connects | [Architecture and connections](docs/03-architecture-and-connections.md) |
-| Build controllers, services, repositories, and DTOs | [Build a feature](docs/04-build-a-feature.md) |
-| Understand entities, JPA, SQL, and migrations | [Database and JPA](docs/05-database-and-jpa.md) |
-| Validate input and return useful errors | [Validation and errors](docs/06-validation-and-errors.md) |
-| Use config, environments, and secrets | [Configuration and profiles](docs/07-configuration-and-profiles.md) |
-| Test without guessing | [Testing](docs/08-testing.md) |
-| Add auth and production features safely | [Security and production](docs/09-security-and-production.md) |
-| Decide what a general project needs | [Real-project toolbox](docs/10-real-project-toolbox.md) |
-| Plan or review your own project | [Reusable project checklist](PROJECT-CHECKLIST.md) |
-| Fix common problems | [Troubleshooting](docs/11-troubleshooting.md) |
-| Check official sources | [Official references](docs/official-references.md) |
+| Start a new project and always know the next step | [Project-building workflow](docs/00-project-workflow.md) |
+| Translate a familiar Node/Express structure | [Node → Spring lookup](docs/01-mental-model.md) |
+| Generate, configure, and run the foundation | [Project setup reference](docs/02-project-setup.md) |
+| Decide which class connects to which | [Architecture and connections](docs/03-architecture-and-connections.md) |
+| Implement controllers, services, repositories, entities, and DTOs | [Feature implementation reference](docs/04-build-a-feature.md) |
+| Add entities, relationships, queries, migrations, or transactions | [Database and JPA reference](docs/05-database-and-jpa.md) |
+| Add input rules and consistent API failures | [Validation and error reference](docs/06-validation-and-errors.md) |
+| Add environment variables, profiles, and typed settings | [Configuration reference](docs/07-configuration-and-profiles.md) |
+| Choose and create the required tests | [Testing reference](docs/08-testing.md) |
+| Prepare authentication, authorization, and operations | [Security and production reference](docs/09-security-and-production.md) |
+| Decide whether the project needs queues, cache, jobs, files, or clients | [Capability selection toolbox](docs/10-real-project-toolbox.md) |
+| Review completeness before sharing or deploying | [Project checklist](PROJECT-CHECKLIST.md) |
+| Resolve a build, startup, HTTP, or database failure | [Troubleshooting map](docs/11-troubleshooting.md) |
+| Confirm framework behavior | [Official references](docs/official-references.md) |
+
+## How to use this repository
+
+```mermaid
+flowchart LR
+    Requirement["Current requirement"] --> Workflow["Find its gate in the workflow"]
+    Workflow --> Work["Create and connect named files"]
+    Work --> Example["Compare with Taskboard when needed"]
+    Example --> Verify["Run the gate verification"]
+    Verify --> Next["Follow the stated Next instruction"]
+```
+
+1. Do not read the repository from beginning to end.
+2. Start at the workflow gate matching the work in front of you.
+3. Open a supporting page only when that gate links to it.
+4. Copy structure and patterns from Taskboard, then rename and adapt them to the actual domain.
+5. Do not copy optional infrastructure until a project requirement needs it.
 
 ## The one diagram to remember
 
@@ -68,9 +87,9 @@ flowchart LR
 | DTO | Boundary-shaped data | Request/response fields | Persistence behavior |
 | Mapper | Shape converter | Entity ↔ DTO conversion | Business decisions |
 
-## Runnable reference project
+## Copyable working reference
 
-The included [Taskboard API](taskboard-api/README.md) demonstrates one complete CRUD feature.
+The included [Taskboard API](taskboard-api/README.md) is a working pattern library for one complete CRUD feature. Use its files as concrete references while implementing the corresponding step in your own project.
 
 ```mermaid
 flowchart TB
@@ -124,7 +143,7 @@ flowchart TD
 
 You create classes and declare their dependencies. Spring creates and connects the managed objects—called **beans**—at startup.
 
-## Project-building loop
+## The repeatable feature loop
 
 ```mermaid
 flowchart LR
@@ -137,7 +156,7 @@ flowchart LR
     Review --> Story
 ```
 
-Build one complete vertical slice before creating dozens of empty controllers, services, and repositories.
+After the foundation runs, repeat this loop for every requested feature. Build one complete vertical slice before creating empty layers for future ideas.
 
 ## Common project map
 
@@ -179,9 +198,9 @@ mindmap
       CI/CD
 ```
 
-You rarely need everything on day one. [The toolbox](docs/10-real-project-toolbox.md) explains when each piece earns its place.
+Select only what the current requirements need. [The toolbox](docs/10-real-project-toolbox.md) maps each need to the appropriate project capability.
 
-## Quick vocabulary
+## Lookup glossary
 
 | Term | Meaning |
 |---|---|
@@ -201,5 +220,5 @@ You rarely need everything on day one. [The toolbox](docs/10-real-project-toolbo
 This handbook was researched against the official Spring documentation on **2026-07-20**. The reference app uses Spring Boot `4.1.0`, whose documented minimum is Java 17. When starting a future project, confirm the latest stable version at [Spring Initializr](https://start.spring.io/) and the [Spring Boot system requirements](https://docs.spring.io/spring-boot/system-requirements.html).
 
 > [!TIP]
-> Read diagrams first, run the Taskboard API second, and return to the detailed pages when you need to change something. Spring becomes much easier once you can trace one request through the layers.
+> Keep the workflow open, finish one gate at a time, and do not move forward until its verification passes.
 # spring-boot-project-blueprint

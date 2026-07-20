@@ -15,7 +15,7 @@
     <artifactId>taskboard-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>taskboard-api</name>
-    <description>Beginner Spring Boot reference application</description>
+    <description>Working Spring Boot project-structure reference</description>
 
     <properties>
         <java.version>17</java.version>

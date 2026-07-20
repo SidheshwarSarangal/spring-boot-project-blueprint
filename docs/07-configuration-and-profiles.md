@@ -1,6 +1,6 @@
 # 07 · Configuration and profiles
 
-[← Validation](06-validation-and-errors.md) · [README](../README.md) · [Next: Testing →](08-testing.md)
+[← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Environment gate](00-project-workflow.md#gate-9--prepare-shared-environments)
 
 ## One artifact, many environments
 

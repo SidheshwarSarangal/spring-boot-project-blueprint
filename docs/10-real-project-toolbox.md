@@ -1,6 +1,6 @@
 # 10 · Real-project toolbox
 
-[← Security](09-security-and-production.md) · [README](../README.md) · [Next: Troubleshooting →](11-troubleshooting.md)
+[← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Capability gate](00-project-workflow.md#gate-8--add-optional-capabilities-only-when-required)
 
 Add capabilities because a requirement demands them—not because a diagram says mature systems have them.
 

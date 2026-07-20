@@ -1,6 +1,6 @@
 # 02 · Project setup
 
-[← Mental model](01-mental-model.md) · [README](../README.md) · [Next: Architecture →](03-architecture-and-connections.md)
+[← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Setup gate](00-project-workflow.md#gate-1--generate-the-project)
 
 ## Choose a boring baseline
 

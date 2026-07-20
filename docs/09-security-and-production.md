@@ -1,6 +1,6 @@
 # 09 · Security and production
 
-[← Testing](08-testing.md) · [README](../README.md) · [Next: Toolbox →](10-real-project-toolbox.md)
+[← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Environment gate](00-project-workflow.md#gate-9--prepare-shared-environments)
 
 Adding Spring Security changes the request path before the controller.
 

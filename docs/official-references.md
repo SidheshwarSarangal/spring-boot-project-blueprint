@@ -1,6 +1,6 @@
 # Official references
 
-[← Troubleshooting](11-troubleshooting.md) · [README](../README.md)
+[← Project workflow](00-project-workflow.md) · [Repository home](../README.md)
 
 These are the primary sources used to design this handbook. Version-specific claims were checked on **2026-07-20**.
 
@@ -39,7 +39,7 @@ These are the primary sources used to design this handbook. Version-specific cla
 ```mermaid
 flowchart LR
     Question["Question"] --> Guide{"Learning or exact behavior?"}
-    Guide -->|"Learning"| Start["Spring guide"]
+    Guide -->|"Working example"| Start["Spring guide"]
     Guide -->|"Exact behavior"| Reference["Versioned reference docs"]
     Reference --> Version["Confirm selected Boot version"]
     Start --> Code["Build a small example"]

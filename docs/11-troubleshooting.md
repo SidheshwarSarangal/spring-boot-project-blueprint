@@ -1,6 +1,6 @@
 # 11 · Troubleshooting
 
-[← Toolbox](10-real-project-toolbox.md) · [README](../README.md) · [Official references →](official-references.md)
+[← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Official references](official-references.md)
 
 ## Diagnose by phase
 

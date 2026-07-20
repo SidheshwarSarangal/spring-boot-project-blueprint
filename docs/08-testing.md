@@ -1,6 +1,6 @@
 # 08 · Testing
 
-[← Configuration](07-configuration-and-profiles.md) · [README](../README.md) · [Next: Security →](09-security-and-production.md)
+[← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Testing gate](00-project-workflow.md#gate-7--test-the-slice)
 
 ## Test the smallest useful scope
 

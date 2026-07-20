@@ -1,6 +1,6 @@
 # 05 · Database and JPA
 
-[← Build a feature](04-build-a-feature.md) · [README](../README.md) · [Next: Validation →](06-validation-and-errors.md)
+[← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [API and data gate](00-project-workflow.md#gate-3--design-the-api-and-data)
 
 ## From Java to SQL
 
@@ -97,7 +97,7 @@ Use fetch joins, entity graphs, DTO projections, or purpose-built queries after 
 
 ```mermaid
 flowchart LR
-    Dev["Local learning"] --> Update["ddl-auto: update<br/>convenient, not controlled"]
+    Dev["Disposable local development"] --> Update["ddl-auto: update<br/>convenient, not controlled"]
     Prod["Shared / production"] --> Migration["Flyway or Liquibase"]
     Migration --> V1["V1__create_tasks.sql"]
     V1 --> V2["V2__add_priority.sql"]
@@ -141,7 +141,7 @@ Always paginate unbounded collections exposed by APIs.
 
 ```mermaid
 flowchart LR
-    H2["H2 local learning"] --> PG["PostgreSQL production"]
+    H2["H2 local development"] --> PG["PostgreSQL production"]
     PG --> Driver["PostgreSQL driver"]
     PG --> URL["JDBC URL from environment"]
     PG --> Migrate["Versioned migrations"]
@@ -149,4 +149,4 @@ flowchart LR
     PG --> Backup["Backups + recovery"]
 ```
 
-H2 is useful for learning, but database differences mean important integration tests should run against the same database engine used in production—often through Testcontainers.
+H2 is useful for disposable local development, but database differences mean important integration tests should run against the same database engine used in production—often through Testcontainers.

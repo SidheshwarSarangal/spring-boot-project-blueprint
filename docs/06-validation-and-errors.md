@@ -1,6 +1,6 @@
 # 06 · Validation and errors
 
-[← Database](05-database-and-jpa.md) · [README](../README.md) · [Next: Configuration →](07-configuration-and-profiles.md)
+[← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Validation gate](00-project-workflow.md#gate-6--add-validation-and-error-handling)
 
 ## Three validation levels
 

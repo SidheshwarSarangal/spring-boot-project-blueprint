@@ -1,6 +1,6 @@
 # 03 · Architecture and connections
 
-[← Setup](02-project-setup.md) · [README](../README.md) · [Next: Build a feature →](04-build-a-feature.md)
+[← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [File skeleton gate](00-project-workflow.md#gate-4--create-the-package-and-file-skeleton)
 
 ## Complete request lifecycle
 

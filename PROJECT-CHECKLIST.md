@@ -1,8 +1,8 @@
 # Reusable Spring Boot project checklist
 
-[← Handbook](README.md) · [Project setup](docs/02-project-setup.md) · [Real-project toolbox](docs/10-real-project-toolbox.md)
+[← Repository home](README.md) · [Execution workflow](docs/00-project-workflow.md) · [Real-project toolbox](docs/10-real-project-toolbox.md)
 
-Copy this page into a new project and check only what its requirements need.
+Use the [execution workflow](docs/00-project-workflow.md) to build the project. Use this checklist only to review whether the current feature or release is complete.
 
 ```mermaid
 flowchart LR

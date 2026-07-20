@@ -1,6 +1,6 @@
-# 01 · Mental model
+# 01 · Node-to-Spring structure lookup
 
-[← Roadmap](00-learning-roadmap.md) · [README](../README.md) · [Next: Setup →](02-project-setup.md)
+[← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Working example](../taskboard-api/README.md)
 
 ## Node/Express → Spring Boot
 
