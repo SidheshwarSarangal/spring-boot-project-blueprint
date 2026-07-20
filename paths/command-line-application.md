@@ -17,6 +17,8 @@ Use this for terminal tools, administration, and small one-off automation.
 | 5 | Create/edit selected data/provider/file package | Required resources |
 | 6 | Create matching `src/test/java/.../command/`; edit README/config/CI | CLI tests and delivery |
 
+**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [B generate](../docs/beginner-execution-guide.md#action-b-generate-the-spring-project-in-the-browser), [D terminal](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal); 3–5 → [E create files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file), [D run JAR](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal); 6 → [K tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
+
 ## Step 1 · Define one command
 
 **What:** Specify arguments, output, exit codes, side effects, and rerun behavior.

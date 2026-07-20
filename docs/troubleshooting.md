@@ -2,6 +2,8 @@
 
 [← Start page](../README.md) · [Core guide](core-guide.md) · [Production checklist](production-checklist.md)
 
+For the physical error-reading and rerun procedure, use [Action L](beginner-execution-guide.md#action-l-fix-the-first-compile-or-startup-error).
+
 ## Use this loop
 
 | Step | What | Where | Do | Verify | Next |

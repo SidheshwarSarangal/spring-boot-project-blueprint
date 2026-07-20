@@ -4,6 +4,8 @@
 
 Build one application artifact and change behavior between environments through configuration—not source edits.
 
+If editing configuration/code is new, use [Action H for YAML](beginner-execution-guide.md#action-h-edit-yaml-configuration) and [Action F for the properties Java record](beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file).
+
 ## Configuration step map
 
 | Step | What | Where | Do | Verify | Next |

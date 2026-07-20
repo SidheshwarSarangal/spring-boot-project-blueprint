@@ -4,6 +4,8 @@ Choose the result your application must produce. Open only that path; it contain
 
 > **First Java or Spring Boot project?** Complete the [Java and Spring Boot foundation](docs/java-spring-foundation.md) once, then return here and select a path. Experienced readers can select immediately.
 
+> **Not sure how to physically perform a step?** Keep the [beginner execution guide](docs/beginner-execution-guide.md) open. It explains exactly how to create/open files, use the project terminal, paste/adapt Java, add imports/dependencies, edit YAML, compile, test, and fix the first error. Use the [Java syntax primer](docs/java-syntax-primer.md) whenever a code symbol is unfamiliar.
+
 ## Select one primary application type
 
 | I need to build… | Choose this path |
@@ -85,6 +87,8 @@ If a step has several actions, its **Repository action map** states separately w
 
 - [Project workbook](docs/project-workbook.md) — copy into your project to track requirements, features, tests, and delivery.
 - [Java and Spring Boot foundation](docs/java-spring-foundation.md) — prerequisites, Java syntax, generated files, Spring wiring, and the normal development loop.
+- [Beginner execution guide](docs/beginner-execution-guide.md) — physical IDE/file/terminal actions used by every process step.
+- [Java syntax primer](docs/java-syntax-primer.md) — packages, imports, types, methods, collections, exceptions, annotations, and safe code adaptation.
 - [Testing guide](docs/testing-guide.md) — concrete unit, MVC, persistence, and integration-test patterns.
 - [Configuration guide](docs/configuration-guide.md) — YAML, environment variables, profiles, validated settings, and secrets.
 - [Delivery guide](docs/delivery-guide.md) — package, run, containerize, verify in CI, migrate, deploy, and roll back.

@@ -17,6 +17,8 @@ Use this when clients query a typed schema and select fields. If fixed resources
 | 5 | Create/edit selected capability package | Data/security/provider/file/cache |
 | 6 | Create matching `src/test/java/.../task/`; edit schema docs/config/CI | Tests and delivery |
 
+**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook), [I schema resource](../docs/beginner-execution-guide.md#action-i-create-a-resource-file); 2 → [B generate](../docs/beginner-execution-guide.md#action-b-generate-the-spring-project-in-the-browser), [D terminal](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal); 3–5 → [E create files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file), [I schema](../docs/beginner-execution-guide.md#action-i-create-a-resource-file), [J call](../docs/beginner-execution-guide.md#action-j-start-the-application-and-call-it); 6 → [K tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
+
 ## Step 1 · Define one query or mutation
 
 **What:** Produce the schema contract, authorization, and error behavior.

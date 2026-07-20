@@ -18,6 +18,8 @@ Use this process when a frontend, mobile app, or another service sends HTTP requ
 | 6 | Create matching `src/test/java/com/company/project/task/`; edit `<project-root>/README.md` or `requests.http` | Tests and runnable examples |
 | 7 | Edit `src/main/resources/application.yml`; create CI/deployment files at project root/platform location | Configure, package, deploy |
 
+**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [B generate](../docs/beginner-execution-guide.md#action-b-generate-the-spring-project-in-the-browser), [C import](../docs/beginner-execution-guide.md#action-c-open-and-import-the-generated-maven-project), [D terminal](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal), [J call](../docs/beginner-execution-guide.md#action-j-start-the-application-and-call-it); 3–5 → [E create files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file); 6 → [K tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test); 7 → [H configuration](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
+
 ## Step 1 · Define one endpoint
 
 **What:** Produce a testable HTTP contract for one user action.

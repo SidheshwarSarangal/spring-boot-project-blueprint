@@ -14,6 +14,8 @@ Insert this process when work/events must be asynchronous, durable, buffered, re
 | 4 | Edit consumer service; create inbox/outbox/recovery files and broker config | Idempotency/ack/retry/dead letter |
 | 5 | Create matching broker tests under `src/test/java`; run terminal at project root | Real-broker integration proof |
 
+**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [G broker dependency](../docs/beginner-execution-guide.md#action-g-add-or-change-a-maven-dependency), [H broker YAML](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration), [D run/connect](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal); 3–4 → [E create messaging files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file); 5 → [K broker tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
+
 ## Step 1 · Define message and delivery behavior
 
 **What:** Produce the message/event contract and recovery rules.

@@ -17,6 +17,8 @@ Use this when the main purpose is coordinating a payment, email, maps, AI, ident
 | 5 | Create/edit selected `security/`, persistence, messaging, or cache package | Required durability/access |
 | 6 | Create matching `src/test/java/.../payment/`; edit config/CI/README | Stub tests and delivery |
 
+**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → chosen entry path plus [B generate](../docs/beginner-execution-guide.md#action-b-generate-the-spring-project-in-the-browser), [D terminal](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal); 3–5 → [E create files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file), [H properties](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration); 6 → [K tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
+
 ## Step 1 · Define one integration action
 
 **What:** Specify application behavior independently from the provider API.

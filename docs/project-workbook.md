@@ -4,6 +4,8 @@
 
 Copy this file into a new project as `PROJECT.md`. Keep it short and update it as decisions change. It is the link between the requirement, code, tests, and delivery.
 
+If copying/placing this file is new, follow [Action A](beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook).
+
 ## Workbook process
 
 | Step | What | Where | Do | Verify | Next |

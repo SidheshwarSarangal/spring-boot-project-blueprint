@@ -4,6 +4,8 @@
 
 Test observable behavior at the smallest useful scope. Do not load the full application for every test.
 
+If creating/running test files is new, use [Action K](beginner-execution-guide.md#action-k-create-and-run-a-test); for failures use [Action L](beginner-execution-guide.md#action-l-fix-the-first-compile-or-startup-error).
+
 ## Testing step map
 
 | Step | What | Where | Do | Verify | Next |

@@ -14,6 +14,8 @@ Insert this process when the application must identify callers or protect action
 | 4 | Edit protected feature service/authorization service | Record ownership/business permission |
 | 5 | Create `src/test/java/com/company/project/security/`; edit logs/secrets config | Allow/deny/leakage tests |
 
+**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [G dependencies](../docs/beginner-execution-guide.md#action-g-add-or-change-a-maven-dependency), [H identity settings](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration); 3–4 → [E create security files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add/adapt code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file), [J call protected route](../docs/beginner-execution-guide.md#action-j-start-the-application-and-call-it); 5 → [K tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
+
 ## Step 1 · Define identity, permission, and ownership
 
 **What:** Produce explicit allow/deny rules before security configuration.

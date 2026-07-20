@@ -17,6 +17,8 @@ Use this when a broker message/event starts the main work or the service publish
 | 5 | Edit broker listener-container/recovery configuration | Retry/dead-letter/limits |
 | 6 | Create matching `src/test/java/.../order/`; edit config/CI/event docs | Broker tests and delivery |
 
+**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [B/G dependency](../docs/beginner-execution-guide.md#action-g-add-or-change-a-maven-dependency), [C import](../docs/beginner-execution-guide.md#action-c-open-and-import-the-generated-maven-project), [D terminal](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal), [H broker YAML](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration); 3–5 → [E create files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file); 6 → [K tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
+
 ## Step 1 · Define one event contract
 
 **What:** Produce a versioned event and delivery/failure agreement.

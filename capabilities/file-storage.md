@@ -14,6 +14,8 @@ Insert this process for uploads, downloads, documents, images, exports, or impor
 | 4 | Edit/create `file/FileController.java` or selected job entry; edit security/service | Upload/download/authorization code |
 | 5 | Create matching `src/test/java/.../file/`; create cleanup/reconciliation job if required | Failure/outage/cleanup proof |
 
+**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [H multipart/storage YAML](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration); 3–4 → [E create file package](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file), [J upload call](../docs/beginner-execution-guide.md#action-j-start-the-application-and-call-it); 5 → [K tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
+
 ## Step 1 · Define file and access contract
 
 **What:** Specify accepted content, limits, ownership, retention, and cleanup.

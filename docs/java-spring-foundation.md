@@ -4,6 +4,8 @@
 
 Complete this once if Java or Spring Boot is new to you. The goal is not to learn all of Java; it is to understand and safely modify the patterns used by every path in this repository.
 
+Keep the [beginner execution guide](beginner-execution-guide.md) open for physical file/terminal actions and the [Java syntax primer](java-syntax-primer.md) open for unfamiliar symbols/types.
+
 ## Foundation step map
 
 | Step | What | Where | Do | Verify | Next |

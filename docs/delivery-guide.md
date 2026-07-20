@@ -4,6 +4,8 @@
 
 Use this after required features pass. Choose JAR or container delivery according to the target platform; do not create both unless needed.
 
+Use [Action D](beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal) for commands, [Action H](beginner-execution-guide.md#action-h-edit-yaml-configuration) for configuration, and [Action M](beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git) before publishing.
+
 ## Delivery step map
 
 | Step | What | Where | Do | Verify | Next |

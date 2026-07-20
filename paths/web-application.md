@@ -17,6 +17,8 @@ Use this process when Spring returns HTML pages and processes browser forms, com
 | 5 | Create/edit selected capability package and `security/SecurityConfiguration.java` when required | Persistence/security/provider/file code |
 | 6 | Create matching `src/test/java/com/company/project/task/`; edit config/CI/README | Tests, configuration, delivery |
 
+**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [B generate](../docs/beginner-execution-guide.md#action-b-generate-the-spring-project-in-the-browser), [C import](../docs/beginner-execution-guide.md#action-c-open-and-import-the-generated-maven-project), [D terminal](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal); 3–5 → [E Java files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add Java](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file), [I resources/templates](../docs/beginner-execution-guide.md#action-i-create-a-resource-file), [J browser call](../docs/beginner-execution-guide.md#action-j-start-the-application-and-call-it); 6 → [K tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
+
 ## Step 1 · Define one page flow
 
 **What:** Specify one browser journey with success and validation behavior.

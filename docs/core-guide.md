@@ -4,6 +4,8 @@
 
 Use this guide when the chosen application path needs a database-backed REST API. For an API without persistence, omit the entity and repository and let the service call the required adapter.
 
+**Beginner physical actions used here:** [create Java files](beginner-execution-guide.md#action-e-create-a-java-package-and-file), [put code in the named file](beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file), [edit YAML](beginner-execution-guide.md#action-h-edit-yaml-configuration), [run/call the app](beginner-execution-guide.md#action-j-start-the-application-and-call-it), and [create tests](beginner-execution-guide.md#action-k-create-and-run-a-test).
+
 ## Core implementation step map
 
 | Step | What | Where | Do | Verify | Next |

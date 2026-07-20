@@ -16,6 +16,8 @@ Use this when the application is a controlled entry point to downstream services
 | 4 | Create `src/main/java/com/company/gateway/CorrelationIdFilter.java`; edit security/route config | Trust, limit, timeout code |
 | 5 | Create `src/test/java/com/company/gateway/`; edit config/CI/route docs | Gateway tests and delivery |
 
+**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [B generate](../docs/beginner-execution-guide.md#action-b-generate-the-spring-project-in-the-browser), [D terminal](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal); 3 → [H route YAML](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration), [J call](../docs/beginner-execution-guide.md#action-j-start-the-application-and-call-it); 4 → [E create filter](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file); 5 → [K tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
+
 ## Step 1 · Define one route and policy
 
 **What:** Produce an incoming → downstream routing contract.

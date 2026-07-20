@@ -13,6 +13,8 @@ Insert this only after measurement shows repeated read/computation latency is a 
 | 3 | Edit feature service; create matching cache test | Cache read/eviction/key code |
 | 4 | Run tests/measurements in project root; inspect cache metrics | Failure/correctness/benefit proof |
 
+**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook), [D baseline command](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal); 2 → [G cache dependency](../docs/beginner-execution-guide.md#action-g-add-or-change-a-maven-dependency), [E config class](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [H cache YAML](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration); 3 → [F service annotations](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file), [K cache test](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test); 4 → [D measure/build](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
+
 ## Step 1 · Measure and define correctness
 
 **What:** Prove a cache is needed and specify safe staleness/invalidation.

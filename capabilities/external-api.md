@@ -14,6 +14,8 @@ Insert this process when a use case calls payments, email, maps, AI, identity, o
 | 4 | Edit `provider/HttpProviderAdapter.java` and application error mapping | Call/translation/retry/idempotency |
 | 5 | Create matching `src/test/java/.../provider/`; run terminal in project root | Stub tests, metrics, clean build |
 
+**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [E create provider files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file); 3 → [H provider YAML](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration), [F client bean code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file); 4 → [F adapter code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file); 5 → [K stub tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
+
 ## Step 1 · Define the provider boundary
 
 **What:** Specify application-owned input/output and provider failure rules.

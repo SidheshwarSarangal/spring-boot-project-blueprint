@@ -14,6 +14,8 @@ Insert this process when state must survive application restart.
 | 4 | Edit feature service/mapper/DTO | Transactions and safe returned shape |
 | 5 | Create/edit repository/integration tests, production config, recovery runbook | DB proof and operations |
 
+**Beginner actions by step:** 1 → [A workbook](../docs/beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook); 2 → [G dependency](../docs/beginner-execution-guide.md#action-g-add-or-change-a-maven-dependency), [H DB YAML](../docs/beginner-execution-guide.md#action-h-edit-yaml-configuration), [D terminal](../docs/beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal); 3 → [I migration](../docs/beginner-execution-guide.md#action-i-create-a-resource-file), [E Java files](../docs/beginner-execution-guide.md#action-e-create-a-java-package-and-file), [F add code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file); 4 → [F service code](../docs/beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file); 5 → [K tests](../docs/beginner-execution-guide.md#action-k-create-and-run-a-test), [M checkpoint](../docs/beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git).
+
 ## Step 1 · Choose and design the data model
 
 **What:** Select one source-of-truth database and write its fields/constraints/access patterns.
