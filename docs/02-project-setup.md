@@ -1,163 +1,144 @@
-# 02 · Project setup
+# 02 · Create the project foundation
 
 [← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Setup gate](00-project-workflow.md#gate-1--generate-the-project)
 
-## Choose a boring baseline
-
-```mermaid
-flowchart LR
-    I["Spring Initializr"] --> M["Maven"]
-    I --> J["Java 17"]
-    I --> B["Latest stable Boot"]
-    I --> P["Jar packaging"]
-    I --> D["Only needed dependencies"]
-```
-
-Recommended first API selections:
-
-| Initializr field | Choice |
+| Before you act | Details |
 |---|---|
-| Project | Maven |
-| Language | Java |
-| Spring Boot | Latest stable, not snapshot |
-| Group | Reverse domain, e.g. `com.example` |
-| Artifact | Project name, e.g. `taskboard` |
-| Packaging | Jar |
-| Java | 17 minimum for the current Boot 4.1 baseline |
-| Dependencies | Spring Web, Validation, Spring Data JPA, H2, Actuator |
+| What | Generate, open, build, and run the project foundation. |
+| Where | Spring Initializr, then the generated project root containing `pom.xml`. |
+| Input | Project name, base package, supported Java version, and required capabilities. |
+| Finish when | `mvn clean verify` succeeds and the application reports healthy. |
 
-Generate at [start.spring.io](https://start.spring.io/).
+> **Terms:** **Spring Initializr** generates a Spring project. **JDK** is the Java compiler and runtime. **Maven** downloads dependencies, compiles, tests, and packages the project. A **dependency** is external code declared in `pom.xml`; a Spring **starter** is a dependency bundle for one capability.
 
-## Install and check the tools
+## Step 1 — Check the tools
 
-```mermaid
-flowchart LR
-    JDK["Install a JDK 17+"] --> Java["java -version"]
-    Java --> Maven["Install Maven 3.6.3+"]
-    Maven --> Check["mvn -version"]
-    Check --> Ready["Ready to generate and run"]
-```
-
-- Install a JDK from a trusted distribution listed at [dev.java](https://dev.java/learn/getting-started/).
-- Install Maven using the [official Maven instructions](https://maven.apache.org/install.html), or use the Maven wrapper (`./mvnw`) when an Initializr project includes it.
-- Make sure `mvn -version` reports the same Java installation you intend to use.
+| What | Where | Required result |
+|---|---|---|
+| Check Java and Maven | Terminal in any directory | Both commands print supported versions |
 
 ```bash
 java -version
 mvn -version
 ```
 
-If both commands print versions and Maven reports Java 17 or newer, the toolchain is ready.
+Install a JDK from [dev.java](https://dev.java/learn/getting-started/) and Maven from the [official Maven instructions](https://maven.apache.org/install.html) if needed. `mvn -version` must show the Java installation you intend to use.
 
-## Dependency purpose
+**Next:** Continue only when both commands work.
 
-```mermaid
-flowchart TB
-    P["pom.xml"]
-    P --> W["Web MVC<br/>controllers + JSON + Tomcat"]
-    P --> V["Validation<br/>request constraints"]
-    P --> J["Data JPA<br/>repositories + Hibernate"]
-    P --> H["H2<br/>local database"]
-    P --> A["Actuator<br/>health + metrics foundation"]
-    P --> T["Test starters<br/>JUnit + Spring test tools"]
-```
+## Step 2 — Generate only the required foundation
 
-Do not add Redis, Kafka, Security, MongoDB, WebFlux, or cloud SDKs “just in case.” Add a dependency when a requirement needs it.
+| What | Where | Required result |
+|---|---|---|
+| Select project metadata and dependencies | [start.spring.io](https://start.spring.io/) | Downloaded ZIP containing `pom.xml` |
 
-## Generated structure
+| Initializr field | Choice |
+|---|---|
+| Project | Maven |
+| Language | Java |
+| Spring Boot | Latest stable, not snapshot |
+| Group | Reverse domain, such as `com.company` |
+| Artifact | Project name, such as `orders-api` |
+| Packaging | Jar |
+| Java | Version supported by the selected Boot release |
 
-```text
-taskboard-api/
-├── pom.xml
-└── src/
-    ├── main/
-    │   ├── java/com/example/taskboard/
-    │   │   └── TaskboardApplication.java
-    │   └── resources/
-    │       └── application.yml
-    └── test/
-        └── java/com/example/taskboard/
-```
-
-## Place the main class at the top
-
-```mermaid
-flowchart TB
-    Root["com.example.taskboard<br/>TaskboardApplication"]
-    Root --> Task["com.example.taskboard.task"]
-    Root --> Error["com.example.taskboard.common.error"]
-    Root --> Config["com.example.taskboard.config"]
-```
-
-`@SpringBootApplication` scans its package and children. Putting it in a root package allows Spring to find controllers, services, components, repositories, and entities below it.
-
-## First run
-
-```bash
-cd taskboard-api
-mvn spring-boot:run
-```
+Choose dependencies from requirements:
 
 ```mermaid
 flowchart TD
-    Run["mvn spring-boot:run"] --> Compile["Compile Java"]
-    Compile --> Context["Build Spring context"]
-    Context --> DB["Connect H2 + prepare schema"]
-    DB --> Web["Start embedded Tomcat :8080"]
-    Web --> Health["GET /actuator/health"]
+    Need["Requirement"] --> API{"HTTP and JSON API?"}
+    API -->|"yes"| Web["Spring Web"]
+    Need --> Input{"Input constraints?"}
+    Input -->|"yes"| Validation["Validation"]
+    Need --> Data{"Relational database?"}
+    Data -->|"yes"| JPA["Spring Data JPA"]
+    JPA --> Driver["Chosen database driver"]
+    Need --> Health{"Deployed application?"}
+    Health -->|"yes"| Actuator["Actuator"]
 ```
 
-Build an executable JAR:
+> **Terms:** **Spring MVC** is Spring’s HTTP controller system. **JPA** maps Java entities to relational data; **Hibernate** commonly implements it. A database **driver** connects Java to a chosen database. **H2** is suitable for a disposable local database. **Actuator** adds operational endpoints such as health.
+
+For a normal database-backed API, select Spring Web, Validation, Spring Data JPA, Actuator, and the driver for the database the project will actually use. Add H2 only when a disposable local database is useful. Do not add queues, caches, cloud SDKs, security, or a second database without a requirement.
+
+**Next:** Download and extract the project.
+
+## Step 3 — Open and build the untouched project
+
+| What | Where | Required result |
+|---|---|---|
+| Import and build | Extracted directory containing `pom.xml` | `BUILD SUCCESS` |
+
+Open `pom.xml` as a Maven project in the IDE, select the supported JDK, then run:
+
+```bash
+cd orders-api
+mvn clean verify
+```
+
+Do not add feature code until the generated build passes.
+
+**Next:** Put the application class above all project packages.
+
+## Step 4 — Establish the package root
+
+| What | Where | Required result |
+|---|---|---|
+| Keep the generated application class at the common package root | `src/main/java/<group>/<project>/` | All feature packages are below it |
+
+```text
+src/main/java/com/company/orders/
+├── OrdersApplication.java
+├── common/
+└── order/
+```
+
+`@SpringBootApplication` starts configuration and scans its package and child packages. A **package** is Java’s namespace and directory grouping. Keeping the application class at the root lets Spring find controllers, services, repositories, and other beans below it.
+
+Use packages by feature:
+
+```text
+order/
+├── Order.java
+├── OrderController.java
+├── OrderService.java
+├── OrderRepository.java
+├── OrderMapper.java
+└── dto/
+```
+
+**Next:** Start the application without feature code.
+
+## Step 5 — Run and verify the foundation
+
+| What | Where | Required result |
+|---|---|---|
+| Start the application and call health | Project root and terminal/API client | Application starts; health is `UP` |
+
+```bash
+mvn spring-boot:run
+```
+
+```bash
+curl http://localhost:8080/actuator/health
+```
+
+Build the executable JAR after stopping the running process:
 
 ```bash
 mvn clean verify
-java -jar target/taskboard-api-0.0.1-SNAPSHOT.jar
+java -jar target/orders-api-0.0.1-SNAPSHOT.jar
 ```
 
-## IDE setup
+> **Terms:** A **JAR** is the packaged Java application. An **embedded server** is the HTTP server inside that JAR. A **health endpoint** reports whether the application can serve requests.
 
-```mermaid
-flowchart LR
-    Import["Open pom.xml as Maven project"] --> JDK["Select JDK 17+"]
-    JDK --> Sync["Wait for dependency sync"]
-    Sync --> Main["Run TaskboardApplication"]
-    Main --> Debug["Set breakpoint in controller"]
-```
+## Foundation verification
 
-IntelliJ IDEA, Spring Tools, and VS Code with Java extensions can all run the project. The command line remains the source of truth for reproducible builds.
+- [ ] Stable Spring Boot and supported Java selected.
+- [ ] Only requirement-driven dependencies added.
+- [ ] Main class above all application packages.
+- [ ] `mvn clean verify` succeeds without the IDE.
+- [ ] Application starts and health returns `UP`.
+- [ ] Generated data and secrets are ignored by Git.
 
-## Package by feature
-
-For small and medium applications, keep one feature together:
-
-```text
-com.example.taskboard/
-├── TaskboardApplication.java
-├── common/error/
-└── task/
-    ├── Task.java
-    ├── TaskController.java
-    ├── TaskService.java
-    ├── TaskRepository.java
-    ├── TaskMapper.java
-    └── dto/
-```
-
-```mermaid
-flowchart LR
-    Package["task package"] --> Change["A task feature change"]
-    Change --> Nearby["Most affected files are nearby"]
-```
-
-Layer-only packages (`controller/`, `service/`, `repository/`) are easy initially but scatter each feature across the repository as the project grows.
-
-## Setup checklist
-
-- [ ] Stable Spring Boot version selected.
-- [ ] Supported Java version installed.
-- [ ] Package uses a reverse-domain name.
-- [ ] Main class sits above application packages.
-- [ ] Only requirement-driven starters are included.
-- [ ] `mvn clean verify` succeeds.
-- [ ] `/actuator/health` returns `UP`.
-- [ ] Secrets and generated data are ignored by Git.
+**Next:** Return to [Workflow Gate 3](00-project-workflow.md#gate-3--design-the-api-and-data) and design the first feature contract.

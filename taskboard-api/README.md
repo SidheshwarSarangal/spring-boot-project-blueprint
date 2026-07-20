@@ -100,11 +100,3 @@ flowchart LR
     JPA["TaskRepositoryTest"] --> Query["Mapping + status query"]
     Context["TaskboardApplicationTest"] --> Wiring["Full bean graph"]
 ```
-
-## Try these extensions
-
-1. Add `priority` to entity, DTOs, mapper, filters, and tests.
-2. Add a `Project` entity and connect tasks with `@ManyToOne`.
-3. Replace H2 with PostgreSQL and version the schema with Flyway.
-4. Add ownership and protect routes with Spring Security.
-5. Add an OpenAPI description or Spring REST Docs.

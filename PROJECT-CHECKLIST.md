@@ -103,3 +103,5 @@ flowchart LR
 - [ ] Database changes are transactional and migrated.
 - [ ] Tests explain the intended behavior.
 - [ ] An example request is runnable.
+
+**Next:** If the agreed release scope is incomplete, return to [Workflow Gate 10](docs/00-project-workflow.md#gate-10--repeat-for-the-next-feature). If it is complete, prepare and verify the target deployment through Gate 9.

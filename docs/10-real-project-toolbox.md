@@ -2,9 +2,18 @@
 
 [← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Capability gate](00-project-workflow.md#gate-8--add-optional-capabilities-only-when-required)
 
+| Before you act | Details |
+|---|---|
+| What | Select one optional capability required by a written project need. |
+| Where | A dedicated adapter/configuration package connected through the service layer. |
+| Input | Requirement, expected failures, data ownership, and operational limits. |
+| Finish when | The capability is isolated, configured externally, and tested for success and failure. |
+
+> **Terms:** An **adapter** isolates provider-specific code behind an application-owned interface. A **queue** stores work for background processing. A **cache** is a temporary copy used to speed reads. **Idempotent** work can be repeated without producing an extra effect. A **timeout** stops waiting for an external dependency after a fixed period.
+
 Add capabilities because a requirement demands them—not because a diagram says mature systems have them.
 
-## Decision map
+## Select a capability from the requirement
 
 ```mermaid
 flowchart TD
@@ -19,7 +28,7 @@ flowchart TD
     Type -->|"Search large text"| Search["Search engine when SQL is insufficient"]
 ```
 
-## Capability matrix
+## Use the capability matrix
 
 | Need | Common Spring choice | Add when | Main risk |
 |---|---|---|---|
@@ -38,7 +47,7 @@ flowchart TD
 | Resilience | Timeouts, retry, circuit breaker | Unreliable remote dependency | Retry storms |
 | Containers | OCI image/buildpack | Reproducible deployment | Oversized/outdated image |
 
-## External HTTP call
+## Connect an external HTTP API
 
 ```mermaid
 sequenceDiagram
@@ -60,7 +69,7 @@ sequenceDiagram
 
 Set timeouts. Retry only operations safe to repeat, use backoff, cap attempts, and observe failures.
 
-## Background job
+## Move slow or retryable work to a background job
 
 ```mermaid
 flowchart LR
@@ -74,7 +83,7 @@ flowchart LR
 
 Assume messages may be delivered more than once. Make handlers idempotent and preserve an audit trail.
 
-## Cache flow
+## Add a cache only after measuring
 
 ```mermaid
 flowchart TD
@@ -89,7 +98,7 @@ flowchart TD
 
 Caching creates a second copy of data. Define TTL, invalidation, ownership, and failure behavior before adding it.
 
-## File storage
+## Store uploaded files outside the application filesystem
 
 ```mermaid
 flowchart LR
@@ -103,51 +112,4 @@ flowchart LR
 
 Do not treat the original filename as a trusted filesystem path.
 
-## Monolith first
-
-```mermaid
-flowchart LR
-    Modules["Well-separated feature modules"] --> Monolith["One deployable application"]
-    Monolith --> Evidence{"Independent scaling/team/deploy need?"}
-    Evidence -- No --> Improve["Keep modular monolith"]
-    Evidence -- Yes --> Extract["Consider service extraction"]
-```
-
-Microservices add networking, distributed data, deployment, observability, and failure-mode costs. Start with clear module boundaries; split only with evidence.
-
-## Project discovery checklist
-
-```mermaid
-mindmap
-  root(("Before coding"))
-    Users
-      Roles
-      Ownership
-      Sensitive data
-    Workflows
-      Happy path
-      Failures
-      State transitions
-    Data
-      Entities
-      Relationships
-      Retention
-      Audit
-    Integrations
-      APIs
-      Files
-      Messages
-      Payments
-    Quality
-      Scale
-      Latency
-      Availability
-      Compliance
-    Delivery
-      Environments
-      CI/CD
-      Monitoring
-      Recovery
-```
-
-Turn each answer into an explicit API, data, security, test, or operational decision.
+**Next:** Return to [Workflow Gate 8](00-project-workflow.md#gate-8--add-optional-capabilities-only-when-required) and run its verification.

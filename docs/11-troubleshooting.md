@@ -2,6 +2,15 @@
 
 [← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Official references](official-references.md)
 
+| Before you act | Details |
+|---|---|
+| What | Isolate the first meaningful failure and fix the smallest responsible layer. |
+| Where | Build output, startup logs, HTTP response, failing test, or database logs. |
+| Input | Exact command, first cause, environment/profile, and expected behavior. |
+| Finish when | The smallest reproduction and the full verification both pass. |
+
+> **Terms:** A **stack trace** lists the calls active when an exception occurred. The **root cause** is the earliest useful reason for the failure. A **classpath** is the set of compiled classes and dependencies available to Java.
+
 ## Diagnose by phase
 
 ```mermaid
@@ -112,3 +121,5 @@ Active profile:
 Relevant controller/service/config:
 What you already tested:
 ```
+
+**Next:** Re-run the smallest failing verification. When it passes, return to the workflow gate where the failure occurred and complete that gate’s full verification.

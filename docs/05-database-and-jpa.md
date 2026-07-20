@@ -2,7 +2,16 @@
 
 [← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [API and data gate](00-project-workflow.md#gate-3--design-the-api-and-data)
 
-## From Java to SQL
+| Before you act | Details |
+|---|---|
+| What | Define stored data, mappings, queries, relationships, and schema changes. |
+| Where | Entity/repository classes and `src/main/resources/db/migration/` for migrations. |
+| Input | Fields and relationships required by the current operation. |
+| Finish when | Mapping tests pass and the intended schema change is repeatable. |
+
+> **Terms:** **JPA** is Java’s persistence specification. **Hibernate** is the implementation that maps entities to SQL. A **migration** is a versioned database change. **Lazy loading** delays related-data queries until accessed. **N+1** means one main query unexpectedly causes one extra query per result.
+
+## Connect Java persistence to SQL
 
 ```mermaid
 flowchart LR
@@ -21,7 +30,7 @@ flowchart LR
 | JDBC driver | Database-specific wire protocol |
 | Database | Durable source of truth |
 
-## Entity ↔ table
+## Create the entity-to-table mapping
 
 ```mermaid
 erDiagram
@@ -47,7 +56,7 @@ flowchart LR
 
 Prefer `EnumType.STRING`; ordinal numbers become dangerous when enum order changes.
 
-## Entity lifecycle
+## Change managed entities inside a transaction
 
 ```mermaid
 stateDiagram-v2
@@ -61,7 +70,7 @@ stateDiagram-v2
 
 Hibernate can detect changes to managed entities and write them at flush/commit. This is called dirty checking.
 
-## Relationships
+## Add only required relationships
 
 ```mermaid
 erDiagram
@@ -78,7 +87,7 @@ erDiagram
 
 Start unidirectional. Add the reverse collection only when a use case needs navigation from that side.
 
-## Lazy loading and N+1
+## Prevent accidental extra queries
 
 ```mermaid
 sequenceDiagram
@@ -93,7 +102,7 @@ sequenceDiagram
 
 Use fetch joins, entity graphs, DTO projections, or purpose-built queries after confirming the access pattern. Do not make every relationship eager.
 
-## Schema strategy
+## Choose and apply one schema strategy
 
 ```mermaid
 flowchart LR
@@ -106,7 +115,7 @@ flowchart LR
 
 Use one schema-generation mechanism. The Spring Boot documentation recommends avoiding a mix of basic SQL initialization with Flyway or Liquibase.
 
-## Transactions
+## Put the transaction on the service operation
 
 ```mermaid
 flowchart TD
@@ -122,7 +131,7 @@ flowchart TD
 
 Default Spring rollback behavior targets unchecked exceptions and errors. Be explicit when checked exceptions require rollback.
 
-## Query choices
+## Choose the smallest suitable query
 
 ```mermaid
 flowchart TD
@@ -137,7 +146,7 @@ flowchart TD
 
 Always paginate unbounded collections exposed by APIs.
 
-## Local → production database
+## Replace the local database for shared environments
 
 ```mermaid
 flowchart LR
@@ -150,3 +159,5 @@ flowchart LR
 ```
 
 H2 is useful for disposable local development, but database differences mean important integration tests should run against the same database engine used in production—often through Testcontainers.
+
+**Next:** Return to [Workflow Gate 5](00-project-workflow.md#gate-5--implement-one-vertical-slice) and connect the mapping through repository, service, and API layers.

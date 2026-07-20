@@ -2,7 +2,16 @@
 
 [← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Validation gate](00-project-workflow.md#gate-6--add-validation-and-error-handling)
 
-## Three validation levels
+| Before you act | Details |
+|---|---|
+| What | Reject invalid input and translate expected failures into stable HTTP responses. |
+| Where | Request DTOs, service rules, domain exceptions, and `common/error/ApiExceptionHandler.java`. |
+| Input | Contract error cases and business rules. |
+| Finish when | Valid, invalid, missing, conflicting, and unauthorized cases return intended statuses. |
+
+> **Terms:** **Request validation** checks input shape and limits. A **domain rule** is a business condition checked by the service. `ProblemDetail` is Spring’s structured HTTP error body. `@RestControllerAdvice` is a central exception-to-response handler.
+
+## Place each rule at the correct boundary
 
 ```mermaid
 flowchart LR
@@ -20,7 +29,7 @@ flowchart LR
 
 Use all three. A database constraint is the final concurrency-safe guard.
 
-## Request validation
+## Add constraints to the request DTO
 
 ```java
 public record UpdateTaskRequest(
@@ -41,7 +50,7 @@ TaskResponse update(
 }
 ```
 
-## Error flow
+## Route each failure to one response
 
 ```mermaid
 flowchart TD
@@ -57,7 +66,7 @@ flowchart TD
     Advice --> Problem["ProblemDetail JSON"]
 ```
 
-## Stable problem response
+## Return one stable problem shape
 
 ```json
 {
@@ -86,7 +95,7 @@ flowchart LR
 
 Do not return stack traces, SQL strings, secret values, or internal class names to clients.
 
-## Status map
+## Select the HTTP status
 
 | Situation | Status |
 |---|---:|
@@ -100,7 +109,7 @@ Do not return stack traces, SQL strings, secret values, or internal class names 
 | State/uniqueness conflict | `409` |
 | Unexpected server failure | `500` |
 
-## Exception design
+## Create specific expected exceptions
 
 ```mermaid
 flowchart TB
@@ -112,7 +121,7 @@ flowchart TB
 
 Use exceptions for exceptional paths, not ordinary branching. Keep messages useful to developers but prevent sensitive leakage at the HTTP boundary.
 
-## Validation checklist
+## Verify validation and errors
 
 - [ ] DTOs reject missing, oversized, malformed, and out-of-range input.
 - [ ] Nested DTOs use `@Valid`.
@@ -121,3 +130,5 @@ Use exceptions for exceptional paths, not ordinary branching. Keep messages usef
 - [ ] Error body has one predictable format.
 - [ ] Logs contain the original exception and request correlation ID.
 - [ ] Client response does not expose internals.
+
+**Next:** Continue with [Workflow Gate 7](00-project-workflow.md#gate-7--test-the-slice) and test every intended success and error result.

@@ -2,7 +2,16 @@
 
 [← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [File skeleton gate](00-project-workflow.md#gate-4--create-the-package-and-file-skeleton)
 
-## Complete request lifecycle
+| Before you act | Details |
+|---|---|
+| What | Decide which class owns each responsibility and which direction dependencies point. |
+| Where | Feature package under `src/main/java/<base-package>/<feature>/`. |
+| Input | One written API operation and its data needs. |
+| Finish when | Every required class has one role and dependencies point controller → service → repository. |
+
+> **Terms:** A Spring **bean** is an object created and connected by Spring. **Dependency injection** means a class receives the collaborators it needs through its constructor. `ApplicationContext` is Spring’s container of beans. A **transaction** groups database work so it commits together or rolls back together.
+
+## Trace the request before creating classes
 
 ```mermaid
 sequenceDiagram
@@ -31,7 +40,7 @@ sequenceDiagram
     C-->>Client: 201 Created + JSON
 ```
 
-## Who may call whom?
+## Set the dependency direction
 
 ```mermaid
 flowchart TB
@@ -47,7 +56,7 @@ flowchart TB
 
 Keep dependency arrows pointing inward. A repository should not call a controller; an entity should not build an HTTP response.
 
-## Spring bean graph
+## Connect classes through constructors
 
 ```mermaid
 flowchart LR
@@ -69,7 +78,7 @@ flowchart LR
 | DataSource | Boot auto-configures it from driver + properties |
 | Entity manager | Boot/JPA auto-configuration creates it |
 
-## MVC routing
+## Map HTTP to the controller
 
 ```mermaid
 flowchart TD
@@ -83,7 +92,7 @@ flowchart TD
 
 You do not call the controller yourself. Spring MVC finds the matching method and prepares its arguments.
 
-## Repository implementation
+## Declare the repository interface
 
 You write:
 
@@ -106,7 +115,7 @@ flowchart LR
 
 No handwritten implementation is needed for standard CRUD or supported derived queries.
 
-## Transaction boundary
+## Place the transaction around the use case
 
 ```mermaid
 sequenceDiagram
@@ -130,29 +139,4 @@ sequenceDiagram
 
 Place `@Transactional` around a business use case, usually on a public service method. It is proxy-driven; casually calling a transactional method from another method in the same object can bypass the proxy.
 
-## Cross-cutting concerns
-
-```mermaid
-flowchart LR
-    Request["Request"] --> Filters["Filters<br/>security, correlation"]
-    Filters --> Controller["Controller"]
-    Controller --> Interceptor["MVC interceptor<br/>web concerns"]
-    Controller --> Advice["Controller advice<br/>errors"]
-    Controller --> Service["Service"]
-    Service --> AOP["AOP proxy<br/>transactions, metrics"]
-```
-
-Use the boundary designed for the concern; do not duplicate logging, error conversion, or authorization in every controller method.
-
-## Connecting external services
-
-```mermaid
-flowchart LR
-    Controller --> Service
-    Service --> Port["Interface<br/>NotificationSender"]
-    Port --> Email["Email adapter"]
-    Port --> Fake["Test fake"]
-    Email --> Provider["External provider"]
-```
-
-Hide provider-specific code behind an application-owned interface. The service knows the capability it needs, not the vendor SDK details.
+**Next:** Return to [Workflow Gate 5](00-project-workflow.md#gate-5--implement-one-vertical-slice). Add external providers only through [Gate 8](00-project-workflow.md#gate-8--add-optional-capabilities-only-when-required).

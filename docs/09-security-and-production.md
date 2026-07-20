@@ -2,6 +2,15 @@
 
 [← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Environment gate](00-project-workflow.md#gate-9--prepare-shared-environments)
 
+| Before you act | Details |
+|---|---|
+| What | Protect data and make the built application safe to operate. |
+| Where | Security configuration, service authorization rules, runtime configuration, and deployment pipeline. |
+| Input | User roles, ownership rules, sensitive data, environments, and availability needs. |
+| Finish when | Allowed requests work, denied requests fail correctly, and runtime health is observable. |
+
+> **Terms:** **Authentication** establishes identity. **Authorization** decides what that identity may do. **Actuator** provides operational endpoints such as health and metrics. **CI/CD** automatically builds, tests, and delivers changes. **Observability** means using logs, metrics, and traces to understand a running system.
+
 Adding Spring Security changes the request path before the controller.
 
 ```mermaid
@@ -14,7 +23,7 @@ flowchart LR
     AuthZ -- Yes --> Controller["Controller"]
 ```
 
-## Authentication vs authorization
+## Define identity and permission separately
 
 | Question | Concept | Example |
 |---|---|---|
@@ -32,7 +41,7 @@ flowchart LR
 
 Spring Security is filter-based for servlet applications. Roles and authorities are read from the authenticated identity when authorization decisions are made.
 
-## Pick an authentication model
+## Select the authentication model
 
 ```mermaid
 flowchart TD
@@ -45,7 +54,7 @@ flowchart TD
 
 Do not invent a custom password or token protocol. Store passwords through a `PasswordEncoder`, never as plaintext.
 
-## Security checklist by boundary
+## Apply controls at each boundary
 
 ```mermaid
 flowchart TB
@@ -59,7 +68,7 @@ flowchart TB
     S --> Ops["Operations<br/>logs, alerts, backups"]
 ```
 
-## Production runtime
+## Configure the production runtime
 
 ```mermaid
 flowchart LR
@@ -73,7 +82,7 @@ flowchart LR
     App --> Traces["Distributed traces"]
 ```
 
-## Actuator
+## Expose only required Actuator endpoints
 
 ```mermaid
 flowchart LR
@@ -86,7 +95,7 @@ flowchart LR
 
 Expose only required endpoints. Health is conventionally available at `/actuator/health`; detailed health, configuration, environment, mappings, and heap data may reveal sensitive information and need protection.
 
-## Deployment pipeline
+## Create the deployment pipeline
 
 ```mermaid
 flowchart LR
@@ -100,7 +109,7 @@ flowchart LR
     Observe --> Rollback["Rollback plan"]
 ```
 
-## Before production
+## Verify before production
 
 - [ ] Authentication mechanism matches the client and threat model.
 - [ ] Every resource checks authorization/ownership.
@@ -115,3 +124,5 @@ flowchart LR
 - [ ] Backups and restore procedures are tested.
 - [ ] Dependency and container scanning runs in CI.
 - [ ] Rollback or roll-forward procedure exists.
+
+**Next:** Review the [project checklist](../PROJECT-CHECKLIST.md), then use [Workflow Gate 10](00-project-workflow.md#gate-10--repeat-for-the-next-feature) for the next prioritized feature.

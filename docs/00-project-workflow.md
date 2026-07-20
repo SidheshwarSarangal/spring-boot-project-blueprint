@@ -36,7 +36,18 @@ flowchart TB
 
 ## Gate 0 — Define the first useful feature
 
-### Write this before creating code
+### Before you start
+
+| Item | Value |
+|---|---|
+| What | Select one user action to implement first. |
+| Where | Project notes, issue, or copied planning block below—not Java code. |
+| Input | User, problem, required data, access rule, and external systems. |
+| Output | One small feature with a clear success result. |
+
+> **Terms:** A **feature** is a user-visible capability. A **use case** is one action the application performs for a user or another system. A **business rule** is a condition the application must enforce regardless of UI or database choice.
+
+### Do
 
 ```text
 Project:
@@ -61,7 +72,7 @@ Persist: task record
 Access: authenticated team member
 ```
 
-### Output required
+Required output:
 
 - One user action, not the entire future system.
 - Its input, output, saved data, and access rule.
@@ -71,11 +82,26 @@ Access: authenticated team member
 
 Can you describe success in one sentence? If not, reduce the feature.
 
+Use [Project decisions](01-project-decisions.md) when roles, scope, integrations, or acceptance criteria are not yet clear.
+
 **Next:** Generate the project in Gate 1.
 
 ---
 
 ## Gate 1 — Generate the project
+
+### Before you start
+
+| Item | Value |
+|---|---|
+| What | Generate a minimal Spring Boot foundation. |
+| Where | [Spring Initializr](https://start.spring.io/), then the extracted project root. |
+| Input | Project name, base package, supported Java version, and required capabilities. |
+| Output | A Maven project whose clean build passes. |
+
+> **Terms:** **Spring Boot** configures a Spring application from its dependencies and settings. **Spring Initializr** generates the initial files. **JDK** is the Java compiler and runtime. **Maven** builds and tests the project using `pom.xml`. A **dependency** is external code the project uses; a Spring **starter** bundles dependencies for one capability. A **REST API** exposes resource operations through HTTP methods and paths.
+
+### Do
 
 Open [Spring Initializr](https://start.spring.io/) and select:
 
@@ -125,6 +151,19 @@ The last command must end with `BUILD SUCCESS`.
 
 ## Gate 2 — Run the empty application
 
+### Before you start
+
+| Item | Value |
+|---|---|
+| What | Prove the untouched generated application can start. |
+| Where | Project root and the generated `*Application.java` file. |
+| Input | Successful Gate 1 build. |
+| Output | Running application and healthy startup check. |
+
+> **Terms:** The **application class** contains `main` and starts Spring Boot. The **application context** is the container holding objects managed by Spring. Those managed objects are **beans**. An **embedded server** is the HTTP server packaged inside the application. **Actuator** supplies operational endpoints such as health.
+
+### Do
+
 Keep the generated application class at the top of your package tree:
 
 ```text
@@ -158,6 +197,17 @@ Do not add feature code until the generated foundation runs.
 ---
 
 ## Gate 3 — Design the API and data
+
+### Before you start
+
+| Item | Value |
+|---|---|
+| What | Define the API boundary and persistent data before implementing classes. |
+| Where | Project notes/API specification and database migration design. |
+| Input | First use case from Gate 0. |
+| Output | Method, path, input, output, errors, fields, and schema strategy. |
+
+> **Terms:** **HTTP** is the request/response protocol used by the API. An **endpoint** is one HTTP method and path. An API **contract** defines accepted input and promised output. **JSON** is the common text format for request and response data. A **DTO** (data transfer object) is the Java shape crossing an API boundary. An **entity** is the Java shape mapped to persistent database state. A **migration** is a versioned database schema change.
 
 ### 3A. Define the HTTP contract
 
@@ -216,6 +266,19 @@ The request, response, errors, table fields, and ownership rules are written dow
 
 ## Gate 4 — Create the package and file skeleton
 
+### Before you start
+
+| Item | Value |
+|---|---|
+| What | Create the files required for one feature and establish dependency direction. |
+| Where | `src/main/java/<base-package>/<feature>/` and `common/error/`. |
+| Input | API and data design from Gate 3. |
+| Output | Compiling feature skeleton with constructor dependencies. |
+
+> **Terms:** A **package** groups related Java types. A **controller** translates HTTP. A **service** performs the use case. A **repository** accesses stored data. A **mapper** converts entity and DTO shapes. **Dependency injection** means Spring supplies constructor dependencies instead of classes constructing them directly.
+
+### Do
+
 Create a package named after the feature, not one global package per layer:
 
 ```text
@@ -264,6 +327,19 @@ Dependencies move inward. The entity and repository must not depend on the contr
 
 ## Gate 5 — Implement one vertical slice
 
+### Before you start
+
+| Item | Value |
+|---|---|
+| What | Fill the feature files in dependency order and run one request end to end. |
+| Where | Feature package created in Gate 4. |
+| Input | Compiling skeleton, API contract, and data design. |
+| Output | One working API operation connected to persistence. |
+
+> **Terms:** A **vertical slice** is one user action completed through all necessary layers. **JPA** is Java’s persistence specification; **Hibernate** commonly implements it. A **transaction** makes a group of database operations commit or roll back together. **JSON binding** converts request JSON into Java data and response Java data back into JSON.
+
+### Do
+
 Use this order because every new file then depends on something already defined:
 
 ```mermaid
@@ -276,84 +352,39 @@ flowchart LR
     Controller --> Request["7. Run request"]
 ```
 
-### 5.1 Entity — persistent state
+| Order | Create here | Do | Connect to | Working example |
+|---|---|---|---|---|
+| 1. Entity | `feature/Order.java` | Map ID, fields, enums, timestamps, and required relationships. | Repository persistent type | [`Task.java`](../taskboard-api/src/main/java/com/example/taskboard/task/Task.java) |
+| 2. Repository | `feature/OrderRepository.java` | Extend `JpaRepository`; add only required bounded queries. | Service constructor | [`TaskRepository.java`](../taskboard-api/src/main/java/com/example/taskboard/task/TaskRepository.java) |
+| 3. DTOs | `feature/dto/` | Define client-writable request fields and client-visible response fields. | Controller input and service output | [`CreateTaskRequest.java`](../taskboard-api/src/main/java/com/example/taskboard/task/dto/CreateTaskRequest.java) |
+| 4. Mapper | `feature/OrderMapper.java` | Convert entity state to response DTO without business decisions. | Service constructor | [`TaskMapper.java`](../taskboard-api/src/main/java/com/example/taskboard/task/TaskMapper.java) |
+| 5. Service | `feature/OrderService.java` | Load data, apply rules, change state, transact, and return response DTO. | Controller constructor | [`TaskService.java`](../taskboard-api/src/main/java/com/example/taskboard/task/TaskService.java) |
+| 6. Controller | `feature/OrderController.java` | Bind/validate input, call one service method, and return HTTP status/body. | Spring MVC route | [`TaskController.java`](../taskboard-api/src/main/java/com/example/taskboard/task/TaskController.java) |
 
-Location: `feature/Order.java`
-
-- Add `@Entity` and `@Table`.
-- Define the primary key.
-- Map columns, enums, timestamps, and relationships.
-- Keep API-specific response formatting out of the entity.
-
-Working example: [`Task.java`](../taskboard-api/src/main/java/com/example/taskboard/task/Task.java).
-
-### 5.2 Repository — database access
-
-Location: `feature/OrderRepository.java`
-
-```java
-public interface OrderRepository extends JpaRepository<Order, Long> {
-}
-```
-
-Add custom queries only when a use case needs them.
-
-Working example: [`TaskRepository.java`](../taskboard-api/src/main/java/com/example/taskboard/task/TaskRepository.java).
-
-### 5.3 DTOs — API boundary
-
-Location: `feature/dto/`
-
-- Request DTO: only client-writable fields.
-- Response DTO: only client-visible fields.
-- Update DTO: fields the update operation accepts.
-- Never accept database IDs, audit fields, roles, prices, or ownership values merely because they exist on the entity.
-
-Working examples: [`CreateTaskRequest.java`](../taskboard-api/src/main/java/com/example/taskboard/task/dto/CreateTaskRequest.java) and [`TaskResponse.java`](../taskboard-api/src/main/java/com/example/taskboard/task/dto/TaskResponse.java).
-
-### 5.4 Mapper — shape conversion
-
-Location: `feature/OrderMapper.java`
-
-Convert entity data into response DTOs. Mapping code must not decide permissions or business outcomes.
-
-Working example: [`TaskMapper.java`](../taskboard-api/src/main/java/com/example/taskboard/task/TaskMapper.java).
-
-### 5.5 Service — use case and transaction
-
-Location: `feature/OrderService.java`
-
-- Load required records.
-- Enforce business rules and permissions.
-- Change state.
-- Call repositories and integrations.
-- Place `@Transactional` around the complete use case.
-- Return a response DTO.
-
-Working example: [`TaskService.java`](../taskboard-api/src/main/java/com/example/taskboard/task/TaskService.java).
-
-### 5.6 Controller — HTTP translation
-
-Location: `feature/OrderController.java`
-
-- Map method and path.
-- Accept and validate the request DTO.
-- Call one service use case.
-- Return the correct status, headers, and response DTO.
-- Do not place SQL or business decisions here.
-
-Working example: [`TaskController.java`](../taskboard-api/src/main/java/com/example/taskboard/task/TaskController.java).
+Use [Build a feature](04-build-a-feature.md) for the code and annotation meanings. Do not expose entities directly or place SQL/business rules in controllers.
 
 ### Verify
 
 Start the application and run the new request. Confirm both the HTTP response and stored database row.
 
-**Need complete snippets:** open [Build a feature](04-build-a-feature.md).  
 **Next:** Make failure behavior predictable in Gate 6.
 
 ---
 
 ## Gate 6 — Add validation and error handling
+
+### Before you start
+
+| Item | Value |
+|---|---|
+| What | Define predictable results for bad input and expected failures. |
+| Where | Request DTOs, services, domain exceptions, and `common/error/`. |
+| Input | Error cases written in Gate 3. |
+| Output | Stable 4xx responses and safe unexpected-error handling. |
+
+> **Terms:** **Validation** checks input constraints. A **domain exception** names an expected business failure. `ProblemDetail` is Spring’s structured HTTP error body. `@RestControllerAdvice` catches selected exceptions across controllers and converts them into responses.
+
+### Do
 
 ```mermaid
 flowchart TD
@@ -386,6 +417,19 @@ Send valid JSON, invalid fields, malformed JSON, a missing ID, and an invalid en
 ---
 
 ## Gate 7 — Test the slice
+
+### Before you start
+
+| Item | Value |
+|---|---|
+| What | Prove the contract, rules, mappings, and critical full flow. |
+| Where | Matching packages under `src/test/java`; test configuration under `src/test/resources`. |
+| Input | Working feature and its success/failure matrix. |
+| Output | Repeatable clean build with focused tests. |
+
+> **Terms:** A **unit test** checks one class. A **mock** replaces a collaborator with controlled behavior. A **slice test** loads one framework layer. An **integration test** checks several real components together. **MockMvc** tests MVC requests without opening a server port.
+
+### Do
 
 Create matching test packages under `src/test/java`.
 
@@ -423,6 +467,19 @@ The build passes from a clean checkout without the IDE.
 
 ## Gate 8 — Add optional capabilities only when required
 
+### Before you start
+
+| Item | Value |
+|---|---|
+| What | Add one capability demanded by a written requirement. |
+| Where | Dedicated adapter/configuration package connected through the service. |
+| Input | Required behavior, provider/system, limits, and failure expectations. |
+| Output | Isolated, configured, and tested capability. |
+
+> **Terms:** An **adapter** isolates an external provider behind application-owned code. A **queue** stores background work. A **cache** holds temporary copies for faster reads. A **scheduled job** starts work at configured times. A **timeout** limits how long an external call may block.
+
+### Do
+
 ```mermaid
 flowchart TD
     Requirement["New requirement"] --> Type{"What kind?"}
@@ -443,12 +500,29 @@ For every capability:
 4. Put URLs, credentials, and timeouts in configuration.
 5. Test success, failure, and timeout behavior.
 
+### Verify
+
+The main use case depends on an application-owned interface, provider settings are externalized, and tests cover provider failure without contacting the real provider.
+
 **Selection guide:** use [Real-project toolbox](10-real-project-toolbox.md).  
 **Next:** Prepare configuration and operations in Gate 9.
 
 ---
 
 ## Gate 9 — Prepare shared environments
+
+### Before you start
+
+| Item | Value |
+|---|---|
+| What | Make one tested JAR configurable, secure, observable, and deployable. |
+| Where | Resources, security/configuration packages, CI configuration, and deployment platform. |
+| Input | Completed features and target environment requirements. |
+| Output | Repeatable build, migration, startup, health check, and delivery process. |
+
+> **Terms:** A **JAR** is the packaged Java application file. A **profile** activates a named configuration group. A **secret** is sensitive configuration stored outside Git. **Authentication** establishes identity; **authorization** decides allowed actions. **Observability** uses logs, metrics, and traces to explain runtime behavior. **CI/CD** automates build, test, and delivery.
+
+### Do
 
 ```mermaid
 flowchart TB
@@ -480,6 +554,33 @@ A clean environment can receive configuration, build the project, apply migratio
 **Configuration details:** [Configuration and profiles](07-configuration-and-profiles.md).  
 **Production controls:** [Security and production](09-security-and-production.md).  
 **Next:** Review the [project checklist](../PROJECT-CHECKLIST.md), then repeat Gate 3 onward for the next feature.
+
+---
+
+## Gate 10 — Repeat for the next feature
+
+### Before you start
+
+| Item | Value |
+|---|---|
+| What | Select the next smallest feature without weakening completed behavior. |
+| Where | Return to the project requirements, then create or extend one feature package. |
+| Input | Passing build, current user feedback, and next prioritized use case. |
+| Output | Updated contract and another verified vertical slice. |
+
+### Do
+
+1. Choose the next required use case.
+2. Return to Gate 3 and define its contract and data changes.
+3. Use the change map below to identify every affected boundary.
+4. Implement through Gate 9 only where the feature requires changes.
+5. Keep all previously passing tests green.
+
+### Verify
+
+The new behavior works, existing behavior remains intact, and the clean build passes.
+
+**Next:** Repeat Gate 10 until the agreed release scope is complete, then use the [project checklist](../PROJECT-CHECKLIST.md).
 
 ---
 

@@ -2,7 +2,16 @@
 
 [← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Testing gate](00-project-workflow.md#gate-7--test-the-slice)
 
-## Test the smallest useful scope
+| Before you act | Details |
+|---|---|
+| What | Add the smallest test that proves each required behavior. |
+| Where | Matching packages under `src/test/java`; test settings under `src/test/resources`. |
+| Input | Success and failure cases from the endpoint contract. |
+| Finish when | `mvn clean verify` passes from the command line. |
+
+> **Terms:** A **unit test** runs one class with collaborators replaced. A **mock** is a controlled replacement for a collaborator. A **slice test** loads one Spring layer such as MVC or JPA. An **integration test** checks multiple real components together. **MockMvc** calls MVC controllers without opening a network port.
+
+## Choose the smallest useful test scope
 
 ```mermaid
 flowchart TB
@@ -22,7 +31,7 @@ flowchart TB
 | Production-like data | Testcontainers | Real database behavior |
 | End to end | External client/browser | Running system and dependencies |
 
-## Service unit test
+## Add a service unit test
 
 ```mermaid
 flowchart LR
@@ -48,7 +57,7 @@ class TaskServiceTest {
 
 No Spring context is needed to test plain business logic.
 
-## MVC slice
+## Add an MVC slice test
 
 ```mermaid
 flowchart LR
@@ -60,7 +69,7 @@ flowchart LR
 
 Use `@WebMvcTest` for the HTTP boundary. Mock the service because repository/database behavior is outside this slice.
 
-## JPA slice
+## Add a JPA slice test
 
 ```mermaid
 flowchart LR
@@ -72,7 +81,7 @@ flowchart LR
 
 Spring Boot’s JPA slice configures entities and repositories, uses an embedded database when available, and rolls each test back by default.
 
-## Full integration
+## Add a full integration test only for critical flows
 
 ```mermaid
 sequenceDiagram
@@ -89,7 +98,7 @@ sequenceDiagram
 
 Use `@SpringBootTest` when the connection between layers is the thing being tested. Do not use it for every small branch.
 
-## Arrange → Act → Assert
+## Structure every test as arrange, act, assert
 
 ```mermaid
 flowchart LR
@@ -97,7 +106,7 @@ flowchart LR
     B --> C["Assert<br/>result + important side effects"]
 ```
 
-## High-value test matrix
+## Cover the high-value cases
 
 | Feature | Success | Boundary | Failure |
 |---|---|---|---|
@@ -107,7 +116,7 @@ flowchart LR
 | Update task | Fields changed | No-op/same values | Missing task, invalid state |
 | Delete task | Row removed | Repeated call policy | Missing task |
 
-## Test quality rules
+## Verify test quality
 
 - Assert behavior, not private implementation.
 - Give each test isolated data.
@@ -116,3 +125,5 @@ flowchart LR
 - Use production database containers for database-specific queries.
 - Keep fixtures small and readable.
 - A failing test should explain what behavior broke.
+
+**Next:** If the feature needs another capability, continue with [Workflow Gate 8](00-project-workflow.md#gate-8--add-optional-capabilities-only-when-required); otherwise move to [Gate 9](00-project-workflow.md#gate-9--prepare-shared-environments).

@@ -2,7 +2,16 @@
 
 [← Project workflow](00-project-workflow.md) · [Repository home](../README.md) · [Environment gate](00-project-workflow.md#gate-9--prepare-shared-environments)
 
-## One artifact, many environments
+| Before you act | Details |
+|---|---|
+| What | Move environment-dependent values out of Java code and validate required settings. |
+| Where | `src/main/resources/application.yml`, profile files, environment variables, and configuration records. |
+| Input | Database URLs, ports, provider URLs, limits, timeouts, and credentials. |
+| Finish when | The same JAR runs in each environment without source changes. |
+
+> **Terms:** **Configuration** is a runtime value that may vary by environment. A **profile** activates a named configuration group such as `local` or `prod`. A **secret** is sensitive configuration such as a password or API key. `@ConfigurationProperties` binds related settings into a typed Java object.
+
+## Build one artifact for every environment
 
 ```mermaid
 flowchart TB
@@ -14,7 +23,7 @@ flowchart TB
 
 Code should not be rebuilt just to change a database URL, port, timeout, or provider key.
 
-## Configuration sources
+## Choose configuration sources
 
 ```mermaid
 flowchart LR
@@ -26,7 +35,7 @@ flowchart LR
 
 Later/higher-precedence sources override earlier values. Spring Boot supports properties/YAML, environment variables, command-line arguments, and more.
 
-## Base configuration
+## Create the base configuration
 
 ```yaml
 spring:
@@ -45,7 +54,7 @@ management:
         include: health,info
 ```
 
-## Environment override
+## Override values from the environment
 
 ```bash
 export SPRING_DATASOURCE_URL='jdbc:postgresql://localhost:5432/taskboard'
@@ -60,7 +69,7 @@ flowchart LR
     Rule --> Env["SPRING_DATASOURCE_URL"]
 ```
 
-## Group custom settings
+## Group application-owned settings
 
 Prefer typed settings over scattered `@Value` strings:
 
@@ -83,7 +92,7 @@ flowchart LR
 
 Invalid required configuration should fail at startup, not during the first customer request.
 
-## Profiles
+## Add profiles only for grouped differences
 
 ```mermaid
 flowchart TD
@@ -95,7 +104,7 @@ flowchart TD
 
 Use profiles for groups of environment-specific settings or beans. Avoid dozens of fine-grained profiles that create untestable combinations.
 
-## Secret flow
+## Keep secrets outside the repository
 
 ```mermaid
 flowchart LR
@@ -107,7 +116,7 @@ flowchart LR
 
 Never commit passwords, API keys, private keys, production JWT secrets, or cloud credentials.
 
-## Configuration checklist
+## Verify configuration
 
 - [ ] Defaults are safe for local development.
 - [ ] Production values come from the deployment environment.
@@ -116,3 +125,5 @@ Never commit passwords, API keys, private keys, production JWT secrets, or cloud
 - [ ] Required settings are validated at startup.
 - [ ] Production schema handling uses migrations rather than `ddl-auto: update`.
 - [ ] Only safe Actuator endpoints are exposed publicly.
+
+**Next:** Return to [Workflow Gate 9](00-project-workflow.md#gate-9--prepare-shared-environments) and verify the same JAR in each target environment.
