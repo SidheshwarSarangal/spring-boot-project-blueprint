@@ -8,11 +8,9 @@ Use this process when a frontend, mobile app, or another service sends HTTP requ
 
 ## Step 1 · Define one endpoint
 
-**What:** Produce a testable HTTP contract for one user action.
+Create `<project-root>/PROJECT.md`. Copy the feature-sheet headings from [project-workbook.md](../docs/project-workbook.md) into it.
 
-**Where:** Create `<project-root>/PROJECT.md`. Copy the feature-sheet headings from [project-workbook.md](../docs/project-workbook.md) into it.
-
-**Do now:** Record method, path, input, success response/status, errors, access, and stored data.
+Record method, path, input, success response/status, errors, access, and stored data.
 
 ```text
 POST /api/tasks
@@ -21,17 +19,15 @@ Success:  201 Created + TaskResponse + Location: /api/tasks/{id}
 Errors:   400 invalid, 401 unauthenticated, 403 forbidden, 409 conflict
 ```
 
-**Finish this step when:** Another person can write success and failure tests from the contract without asking what the endpoint should do.
+Before continuing, check: Another person can write success and failure tests from the contract without asking what the endpoint should do.
 
-**Go next:** Step 2.
+Continue to Step 2.
 
 ## Step 2 · Generate and run the foundation
 
-**What:** Create an untouched application that builds and starts.
+Use [Spring Initializr](https://start.spring.io/) in the browser. Run every command below in `<project-root>/`, the directory containing `pom.xml` and `mvnw`.
 
-**Where:** Use [Spring Initializr](https://start.spring.io/) in the browser. Run every command below in `<project-root>/`, the directory containing `pom.xml` and `mvnw`.
-
-**Do now:** Select Maven, Java, Jar, Spring Web, Validation, and Actuator. Add only currently required [capabilities](../README.md#add-capabilities-only-when-the-selected-path-asks-for-them).
+Select Maven, Java, Jar, Spring Web, Validation, and Actuator. Add only currently required [capabilities](../README.md#add-capabilities-only-when-the-selected-path-asks-for-them).
 
 ```bash
 ./mvnw clean verify
@@ -39,17 +35,15 @@ Errors:   400 invalid, 401 unauthenticated, 403 forbidden, 409 conflict
 curl http://localhost:8080/actuator/health
 ```
 
-**Finish this step when:** Build ends with `BUILD SUCCESS`; application starts; health returns `UP`.
+Before continuing, check: Build ends with `BUILD SUCCESS`; application starts; health returns `UP`.
 
-**Go next:** Stop the application and continue to Step 3.
+Stop the application and continue to Step 3.
 
 ## Step 3 · Create the feature files
 
-**What:** Create the package structure and dependency direction for one endpoint.
+Create `src/main/java/com/company/project/task/`, `src/main/java/com/company/project/task/dto/`, and `src/test/java/com/company/project/task/`. Replace `com/company/project` with the package selected in Initializr.
 
-**Where:** Create `src/main/java/com/company/project/task/`, `src/main/java/com/company/project/task/dto/`, and `src/test/java/com/company/project/task/`. Replace `com/company/project` with the package selected in Initializr.
-
-**Do now:** For a database-backed feature create:
+For a database-backed feature create:
 
 ```text
 task/
@@ -73,17 +67,15 @@ public record CreateTaskRequest(
 ) {}
 ```
 
-**Finish this step when:** Package declarations match directories and `./mvnw compile` passes.
+Before continuing, check: Package declarations match directories and `./mvnw compile` passes.
 
-**Go next:** Step 4.
+Continue to Step 4.
 
 ## Step 4 · Implement the vertical slice
 
-**What:** Make the endpoint work through every required layer.
+Edit `src/main/java/com/company/project/task/Task.java`, `TaskRepository.java`, `TaskMapper.java`, `TaskService.java`, `TaskController.java`, and the files under `task/dto/`. Run commands in `<project-root>/`.
 
-**Where:** Edit `src/main/java/com/company/project/task/Task.java`, `TaskRepository.java`, `TaskMapper.java`, `TaskService.java`, `TaskController.java`, and the files under `task/dto/`. Run commands in `<project-root>/`.
-
-**Do now:** Implement in dependency order:
+Implement in dependency order:
 
 ```text
 entity → repository → DTOs → mapper → service → controller
@@ -132,7 +124,7 @@ public class TaskController {
 }
 ```
 
-**Finish this step when:** Start the application and call the endpoint:
+Before continuing, check: Start the application and call the endpoint:
 
 ```bash
 curl -i -X POST http://localhost:8080/api/tasks \
@@ -142,15 +134,13 @@ curl -i -X POST http://localhost:8080/api/tasks \
 
 Confirm `201`, `Location`, response JSON, and stored/observable result.
 
-**Go next:** Step 5.
+Continue to Step 5.
 
 ## Step 5 · Make errors and optional capabilities explicit
 
-**What:** Complete failure behavior and attach only required infrastructure.
+Edit `src/main/java/com/company/project/task/dto/CreateTaskRequest.java` and exceptions in `task/`. Create `src/main/java/com/company/project/common/error/ApiExceptionHandler.java`. Add a capability only in the folder named by its linked guide.
 
-**Where:** Edit `src/main/java/com/company/project/task/dto/CreateTaskRequest.java` and exceptions in `task/`. Create `src/main/java/com/company/project/common/error/ApiExceptionHandler.java`. Add a capability only in the folder named by its linked guide.
-
-**Do now:** Map validation to `400`, missing data to `404`, permission to `401/403`, and conflict to `409` using `ProblemDetail` and `@RestControllerAdvice`. Then attach one required module:
+Map validation to `400`, missing data to `404`, permission to `401/403`, and conflict to `409` using `ProblemDetail` and `@RestControllerAdvice`. Then attach one required module:
 
 - [Data storage](../capabilities/data-storage.md)
 - [Security](../capabilities/security.md)
@@ -159,34 +149,30 @@ Confirm `201`, `Location`, response JSON, and stored/observable result.
 - [File storage](../capabilities/file-storage.md)
 - [Caching](../capabilities/caching.md)
 
-**Finish this step when:** Valid JSON succeeds; blank/malformed input and every written expected failure return the contract status and safe body.
+Before continuing, check: Valid JSON succeeds; blank/malformed input and every written expected failure return the contract status and safe body.
 
-**Go next:** Step 6.
+Continue to Step 6.
 
 ## Step 6 · Test and document
 
-**What:** Create repeatable proof of the contract.
+Create tests in `src/test/java/com/company/project/task/`. Put manual HTTP calls in `<project-root>/requests.http`, and run the build in `<project-root>/`.
 
-**Where:** Create tests in `src/test/java/com/company/project/task/`. Put manual HTTP calls in `<project-root>/requests.http`, and run the build in `<project-root>/`.
-
-**Do now:** Follow the [testing guide](../docs/testing-guide.md). Add service unit tests, MVC tests, repository tests when persistence exists, and one critical integration test.
+Follow the [testing guide](../docs/testing-guide.md). Add service unit tests, MVC tests, repository tests when persistence exists, and one critical integration test.
 
 ```bash
 ./mvnw clean verify
 ```
 
-**Finish this step when:** Clean build passes outside the IDE and manual happy/failure calls match the workbook.
+Before continuing, check: Clean build passes outside the IDE and manual happy/failure calls match the workbook.
 
-**Go next:** Return to Step 1 for another required endpoint, or Step 7 when requirements are complete.
+Return to Step 1 for another required endpoint, or Step 7 when requirements are complete.
 
 ## Step 7 · Configure and deliver
 
-**What:** Produce a configurable, observable, deployable artifact.
+Edit `src/main/resources/application.yml`, `<project-root>/README.md`, and the deployment/CI file required by the chosen platform. Run packaging and smoke-test commands in `<project-root>/`.
 
-**Where:** Edit `src/main/resources/application.yml`, `<project-root>/README.md`, and the deployment/CI file required by the chosen platform. Run packaging and smoke-test commands in `<project-root>/`.
+Follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), then the [production checklist](../docs/production-checklist.md).
 
-**Do now:** Follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), then the [production checklist](../docs/production-checklist.md).
+Before continuing, check: A clean environment can configure, migrate, start, health-check, and smoke-test the same artifact without source edits.
 
-**Finish this step when:** A clean environment can configure, migrate, start, health-check, and smoke-test the same artifact without source edits.
-
-**Go next:** Release and monitor the application.
+Release and monitor the application.

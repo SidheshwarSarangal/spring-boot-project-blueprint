@@ -8,38 +8,32 @@ Use this for large, finite, restartable imports, exports, reports, migrations, o
 
 ## Step 1 · Define one job and restart rule
 
-**What:** Specify input, transformation, output, chunk/failure behavior, and completion report.
+Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
 
-**Where:** Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
+Record source, expected volume, item shape, validation, output, job parameters, chunk/transaction boundary, retry/skip/fail rules, restart rule, and audit counts.
 
-**Do now:** Record source, expected volume, item shape, validation, output, job parameters, chunk/transaction boundary, retry/skip/fail rules, restart rule, and audit counts.
+Before continuing, check: You can state what happens to a bad record and how a failed job resumes without duplicating completed work.
 
-**Finish this step when:** You can state what happens to a bad record and how a failed job resumes without duplicating completed work.
-
-**Go next:** Step 2.
+Continue to Step 2.
 
 ## Step 2 · Generate and run foundation
 
-**What:** Start Spring Batch with required metadata/output infrastructure.
+Open [Spring Initializr](https://start.spring.io/) in the browser. After extracting the project, open a terminal in `<project-root>/`. Put local input in `src/main/resources/input/` and local database settings in `src/main/resources/application-local.yml`.
 
-**Where:** Browser at `https://start.spring.io`; terminal at `<project-root>`; local input under `src/main/resources/input/`; database settings in `src/main/resources/application-local.yml`.
-
-**Do now:** Select Spring Batch, Actuator, and required database driver. Add Validation when item constraints use it.
+Select Spring Batch, Actuator, and required database driver. Add Validation when item constraints use it.
 
 ```bash
 ./mvnw clean verify
 ./mvnw spring-boot:run
 ```
 
-**Finish this step when:** Application starts and batch metadata storage initializes. Do not add `@EnableBatchProcessing` casually; Spring Boot auto-configuration should remain active unless intentionally replaced.
+Before continuing, check: Application starts and batch metadata storage initializes. Do not add `@EnableBatchProcessing` casually; Spring Boot auto-configuration should remain active unless intentionally replaced.
 
-**Go next:** Step 3.
+Continue to Step 3.
 
 ## Step 3 · Create reader, processor, writer, step, and job
 
-**What:** Execute one small input through chunk processing.
-
-**Where:**
+Under `src/main/java/com/company/project/`, create the `importjob/` folder and these files. Create the sample input file under `src/main/resources/input/`. Replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/importjob/
@@ -50,7 +44,7 @@ src/main/java/com/company/project/importjob/
 src/main/resources/input/sample.csv
 ```
 
-**Do now:** Define reader/processor/writer beans appropriate to the source/target. Spring Batch 6 step skeleton:
+Define reader/processor/writer beans appropriate to the source/target. Spring Batch 6 step skeleton:
 
 ```java
 @Configuration
@@ -79,17 +73,15 @@ class ImportJobConfiguration {
 
 Use the builder API matching the Spring Batch version selected by Spring Boot; do not mix examples from an older major version.
 
-**Finish this step when:** Tiny valid input completes and reported read/write counts match expected output.
+Before continuing, check: Tiny valid input completes and reported read/write counts match expected output.
 
-**Go next:** Step 4.
+Continue to Step 4.
 
 ## Step 4 · Add validation, retry, skip, and restart
 
-**What:** Make partial failure behavior explicit and recoverable.
+Edit `src/main/java/com/company/project/importjob/ImportItemProcessor.java`, `ImportJobConfiguration.java`, and `ImportJobListener.java`. Write rejected-item output to the location recorded in `<project-root>/PROJECT.md`.
 
-**Where:** Edit `src/main/java/com/company/project/importjob/ImportItemProcessor.java` and `ImportJobConfiguration.java`; create/edit `ImportJobListener.java` and the error-output location documented in `PROJECT.md`.
-
-**Do now:** Validate/transform in processor; retry only transient failures; skip only explicitly acceptable bad items with a limit; fail on unknown/systemic errors; use identifying job parameters; keep reader/writer state restartable.
+Validate/transform in processor; retry only transient failures; skip only explicitly acceptable bad items with a limit; fail on unknown/systemic errors; use identifying job parameters; keep reader/writer state restartable.
 
 ```java
 @Component
@@ -103,29 +95,25 @@ class ImportItemProcessor implements ItemProcessor<ImportItem, ImportItem> {
 }
 ```
 
-**Finish this step when:** One invalid input follows the chosen fail/skip rule; restart resumes correctly; repeating completed parameters does not duplicate output.
+Before continuing, check: One invalid input follows the chosen fail/skip rule; restart resumes correctly; repeating completed parameters does not duplicate output.
 
-**Go next:** Step 5.
+Continue to Step 5.
 
 ## Step 5 · Attach required capabilities and measure volume
 
-**What:** Connect real source/target and confirm bounded performance.
+Edit `src/main/java/com/company/project/importjob/ImportJobConfiguration.java`. Then create only the required linked package under `src/main/java/com/company/project/`: feature persistence files, `provider/`, `file/`, or `messaging/`.
 
-**Where:** Edit `importjob/ImportJobConfiguration.java`; then create only the required linked folder: `data`/feature persistence files, `provider/`, `file/`, or `messaging/`.
+Add only required capabilities. Avoid unbounded per-record provider calls. Test realistic volume before adding concurrency; size database/HTTP pools consistently with any parallelism.
 
-**Do now:** Add only required capabilities. Avoid unbounded per-record provider calls. Test realistic volume before adding concurrency; size database/HTTP pools consistently with any parallelism.
+Before continuing, check: Realistic sample completes inside expected time/memory and produces auditable read/process/write/skip/fail counts.
 
-**Finish this step when:** Realistic sample completes inside expected time/memory and produces auditable read/process/write/skip/fail counts.
-
-**Go next:** Step 6.
+Continue to Step 6.
 
 ## Step 6 · Test, operate, and deliver
 
-**What:** Prove restart/failure behavior and provide an operator runbook.
+Create tests under `src/test/java/com/company/project/importjob/`. Edit `src/main/resources/application.yml`, the CI/deployment files in `<project-root>/`, and `<project-root>/README.md`. Run commands in `<project-root>/`.
 
-**Where:** Create tests under `src/test/java/com/company/project/importjob/`; edit `application.yml`, root CI/deployment files, and `<project-root>/README.md`; run commands at `<project-root>`.
-
-**Do now:** Test empty/valid/malformed input, partial failure, retry/skip limit, restart, duplicate parameters, and realistic volume using the [testing guide](../docs/testing-guide.md). Document parameters, launch, duration, output, recovery, and monitoring.
+Test empty/valid/malformed input, partial failure, retry/skip limit, restart, duplicate parameters, and realistic volume using the [testing guide](../docs/testing-guide.md). Document parameters, launch, duration, output, recovery, and monitoring.
 
 ```bash
 ./mvnw clean verify
@@ -133,6 +121,6 @@ class ImportItemProcessor implements ItemProcessor<ImportItem, ImportItem> {
 
 Follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), and [production](../docs/production-checklist.md).
 
-**Finish this step when:** Clean build passes; failed execution is restartable; operators can launch, observe, and recover the job.
+Before continuing, check: Clean build passes; failed execution is restartable; operators can launch, observe, and recover the job.
 
-**Go next:** Release, or return to Step 1 for another batch job.
+Release, or return to Step 1 for another batch job.

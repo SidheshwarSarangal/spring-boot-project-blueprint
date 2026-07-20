@@ -6,23 +6,19 @@ Insert this process when state must survive application restart.
 
 ## Step 1 · Choose and design the data model
 
-**What:** Select one source-of-truth database and write its fields/constraints/access patterns.
+Add a `Data model` section under the current feature in `<project-root>/PROJECT.md`; do this before creating entity/document classes.
 
-**Where:** Add a `Data model` section under the current feature in `<project-root>/PROJECT.md`; do this before creating entity/document classes.
+Prefer SQL for transactions, relationships, constraints, and reporting. Choose MongoDB when document-shaped data/access requirements justify it. For every field record type, nullability, length, unique/default, ownership, index/query, retention, and growth.
 
-**Do now:** Prefer SQL for transactions, relationships, constraints, and reporting. Choose MongoDB when document-shaped data/access requirements justify it. For every field record type, nullability, length, unique/default, ownership, index/query, retention, and growth.
+Before continuing, check: Every stored field/query supports a written feature; no database is selected only “for later.”
 
-**Finish this step when:** Every stored field/query supports a written feature; no database is selected only “for later.”
-
-**Go next:** Step 2.
+Continue to Step 2.
 
 ## Step 2 · Add dependency and local configuration
 
-**What:** Connect the chosen local database and start successfully.
+Edit `<project-root>/pom.xml` and `src/main/resources/application-local.yml`. Set credentials in the terminal/IDE run configuration or deployment secret store, never in Git.
 
-**Where:** Edit `<project-root>/pom.xml` and `src/main/resources/application-local.yml`. Set credentials in the terminal/IDE run configuration or deployment secret store, never in Git.
-
-**Do now:** For SQL add Spring Data JPA, one driver, and Flyway or Liquibase. For MongoDB add Spring Data MongoDB. Example SQL config:
+For SQL add Spring Data JPA, one driver, and Flyway or Liquibase. For MongoDB add Spring Data MongoDB. Example SQL config:
 
 ```yaml
 spring:
@@ -38,15 +34,13 @@ spring:
 
 Use H2 only for disposable local examples; use the production database type for important integration tests.
 
-**Finish this step when:** Application starts and connects with local settings; invalid credentials fail clearly.
+Before continuing, check: Application starts and connects with local settings; invalid credentials fail clearly.
 
-**Go next:** Step 3.
+Continue to Step 3.
 
 ## Step 3 · Create migration, entity/document, and repository
 
-**What:** Make one repeatable schema/mapping and one bounded query.
-
-**Where:**
+Create these files. Replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/resources/db/migration/V1__create_tasks.sql
@@ -55,7 +49,7 @@ src/main/java/com/company/project/task/TaskRepository.java
 src/test/java/com/company/project/task/TaskRepositoryTest.java
 ```
 
-**Do now:** Migration:
+Migration:
 
 ```sql
 CREATE TABLE tasks (
@@ -92,17 +86,13 @@ interface TaskRepository extends JpaRepository<Task, Long> {
 
 For MongoDB, replace migration/entity with intentional document/index design and a Mongo repository.
 
-**Finish this step when:** Migration applies to empty DB; repository saves/reads one record; bounded query test passes.
+Before continuing, check: Migration applies to empty DB; repository saves/reads one record; bounded query test passes.
 
-**Go next:** Step 4.
+Continue to Step 4.
 
 ## Step 4 · Put persistence inside the service transaction
 
-**What:** Make complete business state changes commit or roll back together.
-
-**Where:** Edit `src/main/java/com/company/project/task/TaskService.java` and `TaskMapper.java`, plus DTOs in `task/dto/`. Do not add database calls to controllers, templates, or listeners.
-
-**Do now:**
+Edit `src/main/java/com/company/project/task/TaskService.java` and `TaskMapper.java`, plus DTOs in `task/dto/`. Do not add database calls to controllers, templates, or listeners.
 
 ```java
 @Transactional
@@ -119,22 +109,20 @@ public Page<TaskResponse> list(TaskStatus status, Pageable page) {
 
 Do not expose persistence objects directly. Use `@Version`/locking when a written concurrency rule requires it.
 
-**Finish this step when:** Forced exception rolls back intended changes; API/job returns DTO/result, not entity internals.
+Before continuing, check: Forced exception rolls back intended changes; API/job returns DTO/result, not entity internals.
 
-**Go next:** Step 5.
+Continue to Step 5.
 
 ## Step 5 · Test and prepare shared environments
 
-**What:** Prove mappings/migrations/queries and production safety.
+Add tests in `src/test/java/com/company/project/task/`; edit `src/main/resources/application.yml`; create `<project-root>/docs/database-runbook.md`; run commands in `<project-root>/`.
 
-**Where:** Add tests in `src/test/java/com/company/project/task/`; edit `src/main/resources/application.yml`; create `<project-root>/docs/database-runbook.md`; run commands in `<project-root>/`.
-
-**Do now:** Test constraints, custom queries, pagination, concurrency, rollback, migrations from supported versions, and production database behavior using the [testing guide](../docs/testing-guide.md). Externalize credentials, set pool/query limits, and plan backup/restore.
+Test constraints, custom queries, pagination, concurrency, rollback, migrations from supported versions, and production database behavior using the [testing guide](../docs/testing-guide.md). Externalize credentials, set pool/query limits, and plan backup/restore.
 
 ```bash
 ./mvnw clean verify
 ```
 
-**Finish this step when:** Clean build passes; migrations work on empty/prior schema; queries are bounded; recovery owner is known.
+Before continuing, check: Clean build passes; migrations work on empty/prior schema; queries are bounded; recovery owner is known.
 
-**Go next:** Return to the application path’s next step.
+Return to the application path’s next step.

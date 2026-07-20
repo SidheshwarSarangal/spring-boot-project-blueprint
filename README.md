@@ -55,19 +55,11 @@ flowchart TD
 
 Do not read or add every capability. Complete the primary path, attach one required capability at its stated step, verify it, and continue.
 
-## Follow only the current step
+## Build it one step at a time
 
-After selecting a path, start at Step 1. Each step tells you:
+Open the selected path and begin with Step 1. Read only the current step. It starts by telling you which file, folder, browser page, or terminal to open. Perform the instructions in order, use the code or command shown there, and check the stated result before continuing.
 
-```text
-What        result to produce now
-Where       exact browser, file, folder, or terminal directory
-Do now      physical actions in order, with code/commands at that location
-Finish when observable result that must pass
-Go next     one next step
-```
-
-Do not read ahead or add optional capabilities until the current step directs you there. Do not continue while **Finish this step when** is false. Replace example names/fields with the current feature from `PROJECT.md`; add the package declaration and IDE imports described by the step.
+When a step links a capability such as database, security, or messaging, open only the capability you need. Complete it, return to the application path, and continue. Replace the example feature and package names with the names written in your `PROJECT.md`.
 
 ## Shared resources
 

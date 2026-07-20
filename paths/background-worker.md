@@ -8,11 +8,9 @@ Use this when work runs on a timer or outside the original HTTP request.
 
 ## Step 1 · Define one job
 
-**What:** Produce the trigger, result, failure, and duplicate-execution contract.
+Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
 
-**Where:** Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
-
-**Do now:** Record trigger, input/job ID, output/state change, maximum duration, duplicate rule, retry rule, and recovery owner.
+Record trigger, input/job ID, output/state change, maximum duration, duplicate rule, retry rule, and recovery owner.
 
 ```text
 Trigger: every 15 minutes
@@ -22,32 +20,28 @@ Duplicate behavior: safe; already-expired orders are skipped
 Failure: record failure and retry on next schedule
 ```
 
-**Finish this step when:** Success and safe rerun can be tested without waiting for production time.
+Before continuing, check: Success and safe rerun can be tested without waiting for production time.
 
-**Go next:** Step 2.
+Continue to Step 2.
 
 ## Step 2 · Choose mechanism and create foundation
 
-**What:** Select the smallest execution mechanism and run an empty application.
+Open [Spring Initializr](https://start.spring.io/) in the browser. After extracting the project, open a terminal in `<project-root>/`, the folder containing `pom.xml` and `mvnw`.
 
-**Where:** Browser at `https://start.spring.io`; then terminal at `<project-root>` containing `pom.xml`.
-
-**Do now:** Use `@Scheduled` for simple timed work, `@Async` only for non-durable in-process work, [messaging](../capabilities/messaging.md) when required work must survive restart, or the [batch process](batch-application.md) for large restartable datasets. Select Actuator plus required dependencies.
+Use `@Scheduled` for simple timed work, `@Async` only for non-durable in-process work, [messaging](../capabilities/messaging.md) when required work must survive restart, or the [batch process](batch-application.md) for large restartable datasets. Select Actuator plus required dependencies.
 
 ```bash
 ./mvnw clean verify
 ./mvnw spring-boot:run
 ```
 
-**Finish this step when:** Untouched application starts and selected local dependencies are reachable.
+Before continuing, check: Untouched application starts and selected local dependencies are reachable.
 
-**Go next:** Step 3.
+Continue to Step 3.
 
 ## Step 3 · Create trigger, service, and configuration
 
-**What:** Separate timing from the complete business operation.
-
-**Where:**
+Under `src/main/java/com/company/project/`, create the `cleanup/` folder and these files. Replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/cleanup/
@@ -57,7 +51,7 @@ src/main/java/com/company/project/cleanup/
 └── JobExecutionRecord.java   optional durable state
 ```
 
-**Do now:** Enable scheduling in a configuration class and create a thin trigger:
+Enable scheduling in a configuration class and create a thin trigger:
 
 ```java
 @Configuration
@@ -85,17 +79,15 @@ jobs:
     cron: "0 */15 * * * *"
 ```
 
-**Finish this step when:** `./mvnw compile` passes and application starts with the property present.
+Before continuing, check: `./mvnw compile` passes and application starts with the property present.
 
-**Go next:** Step 4.
+Continue to Step 4.
 
 ## Step 4 · Implement bounded, repeatable work
 
-**What:** Complete the job safely inside the service.
+Edit `src/main/java/com/company/project/cleanup/CleanupService.java`. Create the feature entity and repository in the same `cleanup/` package. Create `src/main/java/com/company/project/cleanup/JobExecutionRecord.java` only when durable execution history is required.
 
-**Where:** Edit `src/main/java/com/company/project/cleanup/CleanupService.java`; create/edit the feature repository/entity under its feature package; create `cleanup/JobExecutionRecord.java` only when durable execution history is required.
-
-**Do now:** Query a bounded work set, make each state transition idempotent, transact database changes, record outcome, and set concurrency limits. For multiple instances, add a distributed scheduling lock or move required work to a broker.
+Query a bounded work set, make each state transition idempotent, transact database changes, record outcome, and set concurrency limits. For multiple instances, add a distributed scheduling lock or move required work to a broker.
 
 ```java
 @Service
@@ -119,29 +111,25 @@ class CleanupService {
 
 Inject a `Clock` instead of calling current time directly when the time rule requires deterministic testing.
 
-**Finish this step when:** Call the service in a test; run the trigger once locally; run it again and confirm state is not corrupted or duplicated.
+Before continuing, check: Call the service in a test; run the trigger once locally; run it again and confirm state is not corrupted or duplicated.
 
-**Go next:** Step 5.
+Continue to Step 5.
 
 ## Step 5 · Add recovery, observability, and required capabilities
 
-**What:** Make slow/failing jobs bounded and diagnosable.
+Edit `src/main/java/com/company/project/cleanup/CleanupJob.java`, `CleanupService.java`, and `src/main/resources/application.yml`. Create only the capability folder linked by this step.
 
-**Where:** Edit `cleanup/CleanupJob.java`, `cleanup/CleanupService.java`, and `src/main/resources/application.yml`; create only the capability folder linked by this step.
+Add [data storage](../capabilities/data-storage.md), [external API](../capabilities/external-api.md), [messaging](../capabilities/messaging.md), or [file storage](../capabilities/file-storage.md) only when required. Record start/end, count, duration, outcome, and safe correlation ID. Retry only transient operations with a limit/backoff.
 
-**Do now:** Add [data storage](../capabilities/data-storage.md), [external API](../capabilities/external-api.md), [messaging](../capabilities/messaging.md), or [file storage](../capabilities/file-storage.md) only when required. Record start/end, count, duration, outcome, and safe correlation ID. Retry only transient operations with a limit/backoff.
+Before continuing, check: Forced timeout/permanent failure becomes a visible recorded/alertable outcome and cannot loop indefinitely.
 
-**Finish this step when:** Forced timeout/permanent failure becomes a visible recorded/alertable outcome and cannot loop indefinitely.
-
-**Go next:** Step 6.
+Continue to Step 6.
 
 ## Step 6 · Test, configure, and deliver
 
-**What:** Prove job behavior across success, duplication, failure, and restart.
+Create tests under `src/test/java/com/company/project/cleanup/`; edit `src/main/resources/application.yml`, root CI/deployment files, and `<project-root>/README.md`; run commands at `<project-root>`.
 
-**Where:** Create tests under `src/test/java/com/company/project/cleanup/`; edit `src/main/resources/application.yml`, root CI/deployment files, and `<project-root>/README.md`; run commands at `<project-root>`.
-
-**Do now:** Test service rules, thin trigger delegation, duplicate execution, retry exhaustion, restart/recovery, and concurrency using the [testing guide](../docs/testing-guide.md).
+Test service rules, thin trigger delegation, duplicate execution, retry exhaustion, restart/recovery, and concurrency using the [testing guide](../docs/testing-guide.md).
 
 ```bash
 ./mvnw clean verify
@@ -149,6 +137,6 @@ Inject a `Clock` instead of calling current time directly when the time rule req
 
 Follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), and [production](../docs/production-checklist.md).
 
-**Finish this step when:** Clean build passes; required work is not silently lost; operations expose job age/success/failure.
+Before continuing, check: Clean build passes; required work is not silently lost; operations expose job age/success/failure.
 
-**Go next:** Release, or return to Step 1 for another job.
+Release, or return to Step 1 for another job.

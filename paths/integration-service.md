@@ -8,38 +8,32 @@ Use this when the main purpose is coordinating a payment, email, maps, AI, ident
 
 ## Step 1 · Define one integration action
 
-**What:** Specify application behavior independently from the provider API.
+Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
 
-**Where:** Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
+Record caller/trigger, application input/output, provider operation, credential source, timeout, rate limit, retry safety, idempotency, and outage behavior.
 
-**Do now:** Record caller/trigger, application input/output, provider operation, credential source, timeout, rate limit, retry safety, idempotency, and outage behavior.
+Before continuing, check: The application result remains understandable without provider-specific field names.
 
-**Finish this step when:** The application result remains understandable without provider-specific field names.
-
-**Go next:** Step 2.
+Continue to Step 2.
 
 ## Step 2 · Choose entry point and generate foundation
 
-**What:** Select how work starts and produce a running project.
+Work in the files/terminal named by the chosen [REST](rest-api.md), [event](event-driven-service.md), or [background](background-worker.md) entry path; return here after its foundation step passes.
 
-**Where:** Work in the files/terminal named by the chosen [REST](rest-api.md), [event](event-driven-service.md), or [background](background-worker.md) entry path; return here after its foundation step passes.
-
-**Do now:** Generate that path’s minimum dependencies plus Actuator. Do not add a second web/reactive stack without a requirement.
+Generate that path’s minimum dependencies plus Actuator. Do not add a second web/reactive stack without a requirement.
 
 ```bash
 ./mvnw clean verify
 ./mvnw spring-boot:run
 ```
 
-**Finish this step when:** Entry-point foundation starts before provider code exists.
+Before continuing, check: Entry-point foundation starts before provider code exists.
 
-**Go next:** Step 3.
+Continue to Step 3.
 
 ## Step 3 · Create provider boundary and adapter
 
-**What:** Isolate provider-specific HTTP behavior from the service.
-
-**Where:**
+Under `src/main/java/com/company/project/`, create the `payment/` folder and these files. Replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/payment/
@@ -52,7 +46,7 @@ src/main/java/com/company/project/payment/
 └── ProviderProperties.java
 ```
 
-**Do now:** Define an application-owned interface and adapter:
+Define an application-owned interface and adapter:
 
 ```java
 public interface PaymentProvider {
@@ -80,41 +74,35 @@ class ProviderPaymentAdapter implements PaymentProvider {
 
 Follow the [external API capability](../capabilities/external-api.md) for client configuration/timeouts.
 
-**Finish this step when:** `./mvnw compile` passes and service depends on `PaymentProvider`, not the concrete adapter/provider DTO.
+Before continuing, check: `./mvnw compile` passes and service depends on `PaymentProvider`, not the concrete adapter/provider DTO.
 
-**Go next:** Step 4.
+Continue to Step 4.
 
 ## Step 4 · Handle provider outcomes safely
 
-**What:** Bound calls and translate every expected provider outcome.
+Edit `src/main/java/com/company/project/payment/ProviderConfiguration.java`, `ProviderPaymentAdapter.java`, and `PaymentService.java`. Create or edit `src/main/java/com/company/project/common/error/ApiExceptionHandler.java`.
 
-**Where:** Edit `payment/ProviderConfiguration.java`, `payment/ProviderPaymentAdapter.java`, `payment/PaymentService.java`, and `common/error/ApiExceptionHandler.java`.
+Configure connection/response timeouts; translate success/decline/rate-limit/auth/outage; retry only transient safe requests; use idempotency keys for retryable side effects; record safe correlation/provider IDs.
 
-**Do now:** Configure connection/response timeouts; translate success/decline/rate-limit/auth/outage; retry only transient safe requests; use idempotency keys for retryable side effects; record safe correlation/provider IDs.
+Before continuing, check: A stubbed timeout finishes within the configured bound and a decline becomes the intended application result—not a generic `500`.
 
-**Finish this step when:** A stubbed timeout finishes within the configured bound and a decline becomes the intended application result—not a generic `500`.
-
-**Go next:** Step 5.
+Continue to Step 5.
 
 ## Step 5 · Add required durability/security
 
-**What:** Attach only state, security, asynchronous work, or caching required by the contract.
+Create only the linked required folder under `src/main/java/com/company/project/`: `security/`, feature persistence files, `messaging/`, or `cache/`. Edit `src/main/java/com/company/project/payment/PaymentService.java` to use it.
 
-**Where:** Create only the linked required folder under `src/main/java/com/company/project/`: `security/`, feature persistence files, `messaging/`, or `cache/`; edit `payment/PaymentService.java` to use it.
+Choose [security](../capabilities/security.md), [data storage](../capabilities/data-storage.md), [messaging](../capabilities/messaging.md), or [caching](../capabilities/caching.md). Persist audit/idempotency state when required; never store/log provider credentials or full sensitive payloads.
 
-**Do now:** Choose [security](../capabilities/security.md), [data storage](../capabilities/data-storage.md), [messaging](../capabilities/messaging.md), or [caching](../capabilities/caching.md). Persist audit/idempotency state when required; never store/log provider credentials or full sensitive payloads.
+Before continuing, check: Duplicate requests, cross-user access, and provider failure cannot produce an uncontrolled side effect or secret leak.
 
-**Finish this step when:** Duplicate requests, cross-user access, and provider failure cannot produce an uncontrolled side effect or secret leak.
-
-**Go next:** Step 6.
+Continue to Step 6.
 
 ## Step 6 · Test and deliver
 
-**What:** Prove the service without depending on the real provider.
+Create tests under `src/test/java/com/company/project/payment/`. Edit `src/main/resources/application.yml`, the CI/deployment files in `<project-root>/`, and `<project-root>/README.md`. Run commands in `<project-root>/`.
 
-**Where:** Create tests under `src/test/java/com/company/project/payment/`; edit `application.yml`, root CI/deployment files, and `<project-root>/README.md`; run commands at `<project-root>`.
-
-**Do now:** Test success, malformed response, validation rejection, timeout, rate limit, authentication failure, retry exhaustion, duplicate request, and outage using the [testing guide](../docs/testing-guide.md).
+Test success, malformed response, validation rejection, timeout, rate limit, authentication failure, retry exhaustion, duplicate request, and outage using the [testing guide](../docs/testing-guide.md).
 
 ```bash
 ./mvnw clean verify
@@ -122,6 +110,6 @@ Follow the [external API capability](../capabilities/external-api.md) for client
 
 Follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), and [production](../docs/production-checklist.md).
 
-**Finish this step when:** Tests run offline; failures cannot block forever; duplicate effects are controlled; a clean environment can deploy the adapter settings externally.
+Before continuing, check: Tests run offline; failures cannot block forever; duplicate effects are controlled; a clean environment can deploy the adapter settings externally.
 
-**Go next:** Release, or return to Step 1 for another provider operation.
+Release, or return to Step 1 for another provider operation.

@@ -6,23 +6,19 @@ Insert this process when work/events must be asynchronous, durable, buffered, re
 
 ## Step 1 · Define message and delivery behavior
 
-**What:** Produce the message/event contract and recovery rules.
+Add an `Event contract` section under the current feature in `<project-root>/PROJECT.md`.
 
-**Where:** Add an `Event contract` section under the current feature in `<project-root>/PROJECT.md`.
+Record name/version, producer, consumer, key, payload, ordering, expected delivery, acknowledgement, duplicate, retry, dead-letter, retention, and replay.
 
-**Do now:** Record name/version, producer, consumer, key, payload, ordering, expected delivery, acknowledgement, duplicate, retry, dead-letter, retention, and replay.
+Before continuing, check: Duplicate and failure behavior are explicit; “exactly once” is not assumed casually.
 
-**Finish this step when:** Duplicate and failure behavior are explicit; “exactly once” is not assumed casually.
-
-**Go next:** Step 2.
+Continue to Step 2.
 
 ## Step 2 · Choose broker, dependency, and local connection
 
-**What:** Run the same broker type used by the target environment.
+Edit `<project-root>/pom.xml` and `src/main/resources/application-local.yml`; start the local broker from its project/container directory and keep credentials outside Git.
 
-**Where:** Edit `<project-root>/pom.xml` and `src/main/resources/application-local.yml`; start the local broker from its project/container directory and keep credentials outside Git.
-
-**Do now:** Choose Kafka for retained ordered streams/replay/high throughput; RabbitMQ for routed work queues/acknowledgement delivery; prefer the organization-operated broker when suitable. Add Spring for Apache Kafka or Spring for RabbitMQ.
+Choose Kafka for retained ordered streams/replay/high throughput; RabbitMQ for routed work queues/acknowledgement delivery; prefer the organization-operated broker when suitable. Add Spring for Apache Kafka or Spring for RabbitMQ.
 
 Kafka example:
 
@@ -34,15 +30,13 @@ spring:
       group-id: ${KAFKA_GROUP_ID:orders-local}
 ```
 
-**Finish this step when:** Application connects and broker health/metadata succeeds before listener/publisher code.
+Before continuing, check: Application connects and broker health/metadata succeeds before listener/publisher code.
 
-**Go next:** Step 3.
+Continue to Step 3.
 
 ## Step 3 · Create typed publisher/listener adapters
 
-**What:** Send/receive one typed event without broker types in business services.
-
-**Where:** Create these paths; replace `com/company/project` with the package selected in Initializr.
+Create these paths; replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/messaging/
@@ -52,7 +46,7 @@ src/main/java/com/company/project/messaging/
 └── MessagingConfiguration.java
 ```
 
-**Do now:** Kafka example:
+Kafka example:
 
 ```java
 public record OrderCreatedEvent(UUID eventId, Long orderId, Instant occurredAt) {}
@@ -73,34 +67,30 @@ class OrderEventPublisher {
 
 Use `@KafkaListener`/`@RabbitListener` only in adapter classes, then delegate to a service.
 
-**Finish this step when:** Publish and consume one local message; payload converts to the expected application event.
+Before continuing, check: Publish and consume one local message; payload converts to the expected application event.
 
-**Go next:** Step 4.
+Continue to Step 4.
 
 ## Step 4 · Add idempotency, acknowledgement, retry, and dead letter
 
-**What:** Make duplicate and failure handling safe and bounded.
+Edit `src/main/java/com/company/project/messaging/OrderEventListener.java` and `MessagingConfiguration.java`; put business work in the feature service; add inbox/outbox entities and repositories under `messaging/` only when required.
 
-**Where:** Edit `src/main/java/com/company/project/messaging/OrderEventListener.java` and `MessagingConfiguration.java`; put business work in the feature service; add inbox/outbox entities and repositories under `messaging/` only when required.
+Include operation/event ID; make consumer idempotent; acknowledge after intended durable work; retry transient failures with limit/backoff; route invalid/permanent/exhausted messages to recovery; use outbox when DB state and publication must be consistent. Bound size, concurrency, and processing time.
 
-**Do now:** Include operation/event ID; make consumer idempotent; acknowledge after intended durable work; retry transient failures with limit/backoff; route invalid/permanent/exhausted messages to recovery; use outbox when DB state and publication must be consistent. Bound size, concurrency, and processing time.
+Before continuing, check: Duplicate produces one effect; transient error retries; permanent error reaches recovery; broker restart does not silently lose required work.
 
-**Finish this step when:** Duplicate produces one effect; transient error retries; permanent error reaches recovery; broker restart does not silently lose required work.
-
-**Go next:** Step 5.
+Continue to Step 5.
 
 ## Step 5 · Integration-test the real broker type
 
-**What:** Prove protocol/configuration assumptions and scale behavior.
+Create `src/test/java/com/company/project/messaging/MessagingIntegrationTest.java`; configure metrics/logging in `src/main/resources/application.yml`; run tests in `<project-root>/` and the same command in CI.
 
-**Where:** Create `src/test/java/com/company/project/messaging/MessagingIntegrationTest.java`; configure metrics/logging in `src/main/resources/application.yml`; run tests in `<project-root>/` and the same command in CI.
-
-**Do now:** Test publish/consume, invalid message, duplicate, ordering, retry, dead letter, broker outage, consumer restart, and multiple consumers. Observe lag/queue depth, outcome, retry, and dead-letter counts.
+Test publish/consume, invalid message, duplicate, ordering, retry, dead letter, broker outage, consumer restart, and multiple consumers. Observe lag/queue depth, outcome, retry, and dead-letter counts.
 
 ```bash
 ./mvnw clean verify
 ```
 
-**Finish this step when:** Critical tests use the selected broker type; duplicates/failures are visible and recoverable.
+Before continuing, check: Critical tests use the selected broker type; duplicates/failures are visible and recoverable.
 
-**Go next:** Return to the application path’s next step.
+Return to the application path’s next step.

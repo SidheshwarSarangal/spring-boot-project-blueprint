@@ -8,40 +8,34 @@ Use this when the application is a controlled entry point to downstream services
 
 ## Step 1 · Define one route and policy
 
-**What:** Produce an incoming → downstream routing contract.
+Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
 
-**Where:** Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
+Record method/path, downstream URI, path rewrite, allowed/removed headers, authentication, rate/body limits, timeout, retry safety, and failure response.
 
-**Do now:** Record method/path, downstream URI, path rewrite, allowed/removed headers, authentication, rate/body limits, timeout, retry safety, and failure response.
+Before continuing, check: Trust boundaries and downstream ownership are explicit.
 
-**Finish this step when:** Trust boundaries and downstream ownership are explicit.
-
-**Go next:** Step 2.
+Continue to Step 2.
 
 ## Step 2 · Generate and run gateway foundation
 
-**What:** Start a gateway without business persistence.
+Open [Spring Initializr](https://start.spring.io/) in the browser. After downloading and extracting the project, open a terminal in `<project-root>/`, the folder containing `pom.xml` and `mvnw`.
 
-**Where:** Browser at `https://start.spring.io`; then terminal with working directory `<project-root>` (the folder containing `pom.xml`).
-
-**Do now:** Select Spring Cloud Gateway Server WebFlux and Actuator for the examples below; add security when required. If the organization selects the Web MVC variant, use its variant-specific configuration/API from the official reference. Do not add JPA/entities without a gateway-owned requirement.
+Select Spring Cloud Gateway Server WebFlux and Actuator for the examples below; add security when required. If the organization selects the Web MVC variant, use its variant-specific configuration/API from the official reference. Do not add JPA/entities without a gateway-owned requirement.
 
 ```bash
 ./mvnw clean verify
 ./mvnw spring-boot:run
 ```
 
-**Finish this step when:** Gateway starts and health returns `UP` before routes are added.
+Before continuing, check: Gateway starts and health returns `UP` before routes are added.
 
-**Go next:** Step 3.
+Continue to Step 3.
 
 ## Step 3 · Configure one route
 
-**What:** Route a bounded request to a local downstream stub.
+Edit `<project-root>/src/main/resources/application.yml`; run the gateway in a terminal at `<project-root>` and the downstream stub in a second terminal.
 
-**Where:** Edit `<project-root>/src/main/resources/application.yml`; run the gateway in a terminal at `<project-root>` and the downstream stub in a second terminal.
-
-**Do now:** Server WebFlux route:
+Server WebFlux route:
 
 ```yaml
 spring:
@@ -60,17 +54,15 @@ spring:
 
 Start a local stub on the target URI.
 
-**Finish this step when:** Allowed request reaches the stub with intended downstream path; unmatched route returns the intended not-found response.
+Before continuing, check: Allowed request reaches the stub with intended downstream path; unmatched route returns the intended not-found response.
 
-**Go next:** Step 4.
+Continue to Step 4.
 
 ## Step 4 · Add trust, limits, and failure controls
 
-**What:** Enforce cross-cutting policies without hiding business logic.
+Create `src/main/java/com/company/gateway/CorrelationIdFilter.java` and `src/main/java/com/company/gateway/security/SecurityConfiguration.java`. Edit `src/main/resources/application.yml` for timeout, body-size, and rate settings.
 
-**Where:** Create `src/main/java/com/company/gateway/CorrelationIdFilter.java`; create/edit `security/SecurityConfiguration.java`; edit `src/main/resources/application.yml` for timeout/body/rate settings.
-
-**Do now:** Authenticate; remove spoofable identity headers; add only approved internal identity context; set connection/response/body limits; rate-limit where required; retry only idempotent safe requests; propagate correlation/trace ID.
+Authenticate; remove spoofable identity headers; add only approved internal identity context; set connection/response/body limits; rate-limit where required; retry only idempotent safe requests; propagate correlation/trace ID.
 
 ```java
 @Component
@@ -87,17 +79,15 @@ class CorrelationIdFilter implements GlobalFilter {
 }
 ```
 
-**Finish this step when:** Spoofed internal header is removed/replaced; timeout/outage is bounded; rate/body limits reject excess input; correlation ID reaches stub.
+Before continuing, check: Spoofed internal header is removed/replaced; timeout/outage is bounded; rate/body limits reject excess input; correlation ID reaches stub.
 
-**Go next:** Step 5.
+Continue to Step 5.
 
 ## Step 5 · Test and deliver
 
-**What:** Prove every route/policy and deliver the gateway.
+Create tests under `src/test/java/com/company/gateway/`. Edit `src/main/resources/application.yml`, the CI/deployment files in `<project-root>/`, and `<project-root>/README.md`.
 
-**Where:** Create tests under `src/test/java/com/company/gateway/`; edit `application.yml`; create/edit root CI/deployment files and `<project-root>/README.md`.
-
-**Do now:** Test routing, unknown route, auth, header stripping/propagation, rewrite, timeout, outage, body limit, rate limit, and retry safety. Add only [security](../capabilities/security.md), downstream [external-call safety](../capabilities/external-api.md), or carefully measured [caching](../capabilities/caching.md).
+Test routing, unknown route, auth, header stripping/propagation, rewrite, timeout, outage, body limit, rate limit, and retry safety. Add only [security](../capabilities/security.md), downstream [external-call safety](../capabilities/external-api.md), or carefully measured [caching](../capabilities/caching.md).
 
 ```bash
 ./mvnw clean verify
@@ -105,6 +95,6 @@ class CorrelationIdFilter implements GlobalFilter {
 
 Follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), and [production](../docs/production-checklist.md).
 
-**Finish this step when:** Clean build passes; all routes have owners/policies; clean deployment routes and fails safely.
+Before continuing, check: Clean build passes; all routes have owners/policies; clean deployment routes and fails safely.
 
-**Go next:** Release, or return to Step 1 for another route.
+Release, or return to Step 1 for another route.
