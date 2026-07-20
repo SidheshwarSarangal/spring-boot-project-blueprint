@@ -6,7 +6,7 @@ Insert this only after measurement shows repeated read/computation latency is a 
 
 ## Step 1 · Measure and define correctness
 
-Add a `Caching decision` section to `<project-root>/PROJECT.md`. Put the repeatable baseline test in `src/test/java/com/company/project/task/TaskPerformanceTest.java` or record the production metric/query used.
+> 📍 Add a `Caching decision` section to `<project-root>/PROJECT.md`. Put the repeatable baseline test in `src/test/java/com/company/project/task/TaskPerformanceTest.java` or record the production metric/query used.
 
 Record cached value/key, source of truth, acceptable staleness, TTL, invalidation event, maximum size, tenant/user isolation, and unavailable-cache behavior.
 
@@ -16,7 +16,7 @@ Continue to Step 2.
 
 ## Step 2 · Choose provider and enable caching
 
-Edit `<project-root>/pom.xml` and `src/main/resources/application.yml`. Create `src/main/java/com/company/project/cache/CacheConfiguration.java`.
+> 📍 Edit `<project-root>/pom.xml` and `src/main/resources/application.yml`. Create `src/main/java/com/company/project/cache/CacheConfiguration.java`.
 
 Add Spring Cache plus Caffeine for per-instance cache or Redis for shared multi-instance cache. Keep enablement in dedicated configuration:
 
@@ -42,7 +42,7 @@ Continue to Step 3.
 
 ## Step 3 · Add read and invalidation at service boundary
 
-Edit `src/main/java/com/company/project/task/TaskService.java`. Create `src/test/java/com/company/project/task/TaskCacheTest.java`.
+> 📍 Edit `src/main/java/com/company/project/task/TaskService.java`. Create `src/test/java/com/company/project/task/TaskCacheTest.java`.
 
 ```java
 @Cacheable(cacheNames = "tasks", key = "#id")
@@ -66,7 +66,7 @@ Continue to Step 4.
 
 ## Step 4 · Test failure and prove benefit
 
-Add failure/expiry cases to `src/test/java/com/company/project/task/TaskCacheTest.java`, expose only approved metrics through `src/main/resources/application.yml`, and run commands in `<project-root>/`.
+> 📍 Add failure/expiry cases to `src/test/java/com/company/project/task/TaskCacheTest.java`, expose only approved metrics through `src/main/resources/application.yml`, and run commands in `<project-root>/`.
 
 Test miss, hit, expiry, invalidation, cross-user isolation, unavailable cache, concurrent misses, and stale limit. Measure hit rate, latency, evictions, memory/key growth, and source load.
 

@@ -8,7 +8,7 @@ Use this process when Spring returns HTML pages and processes browser forms, com
 
 ## Step 1 · Define one page flow
 
-Create `<project-root>/PROJECT.md`. Copy one feature sheet from the [workbook](../docs/project-workbook.md) into it.
+> 📍 Create `<project-root>/PROJECT.md`. Copy one feature sheet from the [workbook](../docs/project-workbook.md) into it.
 
 Record:
 
@@ -26,7 +26,7 @@ Continue to Step 2.
 
 ## Step 2 · Generate and run the foundation
 
-Use [Spring Initializr](https://start.spring.io/) in the browser. Run every command below in `<project-root>/`, the directory containing `pom.xml` and `mvnw`.
+> 📍 Use [Spring Initializr](https://start.spring.io/) in the browser. Run every command below in `<project-root>/`, the directory containing `pom.xml` and `mvnw`.
 
 Select Spring Web, Thymeleaf, Validation, and Actuator; add only required capabilities.
 
@@ -41,7 +41,7 @@ Continue to Step 3.
 
 ## Step 3 · Create the page-flow files
 
-Create these paths; replace `com/company/project` with the package selected in Initializr.
+> 📍 Create these paths; replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/task/
@@ -69,7 +69,7 @@ Continue to Step 4.
 
 ## Step 4 · Implement GET, POST, and template
 
-Edit `src/main/java/com/company/project/task/TaskController.java`, `TaskService.java`, and `src/main/resources/templates/tasks/form.html`.
+> 📍 Edit `src/main/java/com/company/project/task/TaskController.java`, `TaskService.java`, and `src/main/resources/templates/tasks/form.html`.
 
 ```java
 @Controller
@@ -114,7 +114,7 @@ Continue to Step 5.
 
 ## Step 5 · Add required capabilities and secure rendering
 
-Add capability files only in the paths named by the selected capability guide. Apply access rules in `src/main/java/com/company/project/security/SecurityConfiguration.java`; keep feature logic in `task/` and HTML in `src/main/resources/templates/tasks/`.
+> 📍 Add capability files only in the paths named by the selected capability guide. Apply access rules in `src/main/java/com/company/project/security/SecurityConfiguration.java`; keep feature logic in `task/` and HTML in `src/main/resources/templates/tasks/`.
 
 Choose only required modules: [data storage](../capabilities/data-storage.md), [security](../capabilities/security.md), [external API](../capabilities/external-api.md), [file storage](../capabilities/file-storage.md), or [caching](../capabilities/caching.md). Retain CSRF protection for authenticated browser forms and let Thymeleaf escape user content.
 
@@ -124,7 +124,7 @@ Continue to Step 6.
 
 ## Step 6 · Test and deliver
 
-Create tests in `src/test/java/com/company/project/task/`. Edit `src/main/resources/application.yml`, `<project-root>/README.md`, and the CI/deployment file required by the chosen platform. Run commands in `<project-root>/`.
+> 📍 Create tests in `src/test/java/com/company/project/task/`. Edit `src/main/resources/application.yml`, `<project-root>/README.md`, and the CI/deployment file required by the chosen platform. Run commands in `<project-root>/`.
 
 Test view name/model, form binding, validation, redirect, CSRF, allowed/forbidden access, and service rules using the [testing guide](../docs/testing-guide.md).
 

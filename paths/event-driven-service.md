@@ -8,7 +8,7 @@ Use this when a broker message/event starts the main work or the service publish
 
 ## Step 1 · Define one event contract
 
-Edit `<project-root>/PROJECT.md`, section **5. Feature sheet**; create/edit the producer-owned event contract file under `<project-root>/docs/events/`.
+> 📍 Edit `<project-root>/PROJECT.md`, section **5. Feature sheet**; create/edit the producer-owned event contract file under `<project-root>/docs/events/`.
 
 Record event name/version, producer, consumers, key, payload, ordering, duplicate handling, acknowledgement, retry, dead-letter, and compatibility.
 
@@ -27,7 +27,7 @@ Continue to Step 2.
 
 ## Step 2 · Generate and connect the broker
 
-Open [Spring Initializr](https://start.spring.io/) in the browser. Edit `src/main/resources/application-local.yml`. Run the application from a terminal in `<project-root>/` and run the broker in its own terminal or container.
+> 📍 Open [Spring Initializr](https://start.spring.io/) in the browser. Edit `src/main/resources/application-local.yml`. Run the application from a terminal in `<project-root>/` and run the broker in its own terminal or container.
 
 Select Actuator plus Spring for Apache Kafka or Spring for RabbitMQ; follow [messaging setup](../capabilities/messaging.md). Supply broker location through configuration.
 
@@ -42,7 +42,7 @@ Continue to Step 3.
 
 ## Step 3 · Create event, listener, and service
 
-Under `src/main/java/com/company/project/`, create the `order/` folder and these files. Replace `com/company/project` with the package selected in Initializr.
+> 📍 Under `src/main/java/com/company/project/`, create the `order/` folder and these files. Replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/order/
@@ -79,7 +79,7 @@ Continue to Step 4.
 
 ## Step 4 · Make processing idempotent and consistent
 
-Edit `src/main/java/com/company/project/order/OrderService.java`. Create `ProcessedEvent.java` and its repository in the same `order/` package. Create `src/main/java/com/company/project/messaging/OutboxEvent.java` and its publisher only when publication consistency is required.
+> 📍 Edit `src/main/java/com/company/project/order/OrderService.java`. Create `ProcessedEvent.java` and its repository in the same `order/` package. Create `src/main/java/com/company/project/messaging/OutboxEvent.java` and its publisher only when publication consistency is required.
 
 Check/record `eventId` in the same transaction as the business change. Acknowledge only after the intended durable point. Use an outbox when database commit and publication must be consistent.
 
@@ -98,7 +98,7 @@ Continue to Step 5.
 
 ## Step 5 · Configure retry, dead letter, and limits
 
-Edit `src/main/java/com/company/project/order/MessagingConfiguration.java` and `src/main/resources/application.yml`. Create `src/main/java/com/company/project/order/DeadLetterHandler.java` or the selected broker recovery handler.
+> 📍 Edit `src/main/java/com/company/project/order/MessagingConfiguration.java` and `src/main/resources/application.yml`. Create `src/main/java/com/company/project/order/DeadLetterHandler.java` or the selected broker recovery handler.
 
 Bound message size, concurrency, processing time, and retries. Retry transient failures with backoff; route permanent/exhausted failures to a dead-letter/recovery process. Never retry invalid schema forever.
 
@@ -108,7 +108,7 @@ Continue to Step 6.
 
 ## Step 6 · Test and deliver
 
-Create tests under `src/test/java/com/company/project/order/`. Edit `src/main/resources/application.yml`, the CI/deployment files in `<project-root>/`, and the contract under `<project-root>/docs/events/`. Run commands in `<project-root>/`.
+> 📍 Create tests under `src/test/java/com/company/project/order/`. Edit `src/main/resources/application.yml`, the CI/deployment files in `<project-root>/`, and the contract under `<project-root>/docs/events/`. Run commands in `<project-root>/`.
 
 Test valid/invalid event, duplicate, ordering assumption, retry, dead letter, broker outage, consumer restart, and scale-out using the [testing guide](../docs/testing-guide.md).
 

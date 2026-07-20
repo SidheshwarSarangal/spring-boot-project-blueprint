@@ -2,7 +2,9 @@
 
 [← Application selector](../README.md) · [Core REST implementation](core-guide.md) · [Production checklist](production-checklist.md)
 
-Copy this file into a new project as `PROJECT.md`. Keep it short and update it as decisions change. It is the link between the requirement, code, tests, and delivery.
+> 📍 Copy this file to `<project-root>/PROJECT.md`. Complete its sections in that file as the selected application path asks for them.
+
+Keep it short and update it as decisions change. It is the link between the requirement, code, tests, and delivery.
 
 If copying/placing this file is new, follow [Action A](beginner-execution-guide.md#action-a-create-the-working-repository-and-workbook).
 

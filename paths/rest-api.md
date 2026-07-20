@@ -8,7 +8,7 @@ Use this process when a frontend, mobile app, or another service sends HTTP requ
 
 ## Step 1 · Define one endpoint
 
-Create `<project-root>/PROJECT.md`. Copy the feature-sheet headings from [project-workbook.md](../docs/project-workbook.md) into it.
+> 📍 Create `<project-root>/PROJECT.md`. Copy the feature-sheet headings from [project-workbook.md](../docs/project-workbook.md) into it.
 
 Record method, path, input, success response/status, errors, access, and stored data.
 
@@ -25,7 +25,7 @@ Continue to Step 2.
 
 ## Step 2 · Generate and run the foundation
 
-Use [Spring Initializr](https://start.spring.io/) in the browser. Run every command below in `<project-root>/`, the directory containing `pom.xml` and `mvnw`.
+> 📍 Use [Spring Initializr](https://start.spring.io/) in the browser. Run every command below in `<project-root>/`, the directory containing `pom.xml` and `mvnw`.
 
 Select Maven, Java, Jar, Spring Web, Validation, and Actuator. Add only currently required [capabilities](../README.md#add-capabilities-only-when-the-selected-path-asks-for-them).
 
@@ -41,7 +41,7 @@ Stop the application and continue to Step 3.
 
 ## Step 3 · Create the feature files
 
-Create `src/main/java/com/company/project/task/`, `src/main/java/com/company/project/task/dto/`, and `src/test/java/com/company/project/task/`. Replace `com/company/project` with the package selected in Initializr.
+> 📍 Create `src/main/java/com/company/project/task/`, `src/main/java/com/company/project/task/dto/`, and `src/test/java/com/company/project/task/`. Replace `com/company/project` with the package selected in Initializr.
 
 For a database-backed feature create:
 
@@ -73,7 +73,7 @@ Continue to Step 4.
 
 ## Step 4 · Implement the vertical slice
 
-Edit `src/main/java/com/company/project/task/Task.java`, `TaskRepository.java`, `TaskMapper.java`, `TaskService.java`, `TaskController.java`, and the files under `task/dto/`. Run commands in `<project-root>/`.
+> 📍 Edit `src/main/java/com/company/project/task/Task.java`, `TaskRepository.java`, `TaskMapper.java`, `TaskService.java`, `TaskController.java`, and the files under `task/dto/`. Run commands in `<project-root>/`.
 
 Implement in dependency order:
 
@@ -138,7 +138,7 @@ Continue to Step 5.
 
 ## Step 5 · Make errors and optional capabilities explicit
 
-Edit `src/main/java/com/company/project/task/dto/CreateTaskRequest.java` and exceptions in `task/`. Create `src/main/java/com/company/project/common/error/ApiExceptionHandler.java`. Add a capability only in the folder named by its linked guide.
+> 📍 Edit `src/main/java/com/company/project/task/dto/CreateTaskRequest.java` and exceptions in `task/`. Create `src/main/java/com/company/project/common/error/ApiExceptionHandler.java`. Add a capability only in the folder named by its linked guide.
 
 Map validation to `400`, missing data to `404`, permission to `401/403`, and conflict to `409` using `ProblemDetail` and `@RestControllerAdvice`. Then attach one required module:
 
@@ -155,7 +155,7 @@ Continue to Step 6.
 
 ## Step 6 · Test and document
 
-Create tests in `src/test/java/com/company/project/task/`. Put manual HTTP calls in `<project-root>/requests.http`, and run the build in `<project-root>/`.
+> 📍 Create tests in `src/test/java/com/company/project/task/`. Put manual HTTP calls in `<project-root>/requests.http`, and run the build in `<project-root>/`.
 
 Follow the [testing guide](../docs/testing-guide.md). Add service unit tests, MVC tests, repository tests when persistence exists, and one critical integration test.
 
@@ -169,7 +169,7 @@ Return to Step 1 for another required endpoint, or Step 7 when requirements are 
 
 ## Step 7 · Configure and deliver
 
-Edit `src/main/resources/application.yml`, `<project-root>/README.md`, and the deployment/CI file required by the chosen platform. Run packaging and smoke-test commands in `<project-root>/`.
+> 📍 Edit `src/main/resources/application.yml`, `<project-root>/README.md`, and the deployment/CI file required by the chosen platform. Run packaging and smoke-test commands in `<project-root>/`.
 
 Follow [configuration](../docs/configuration-guide.md), [delivery](../docs/delivery-guide.md), then the [production checklist](../docs/production-checklist.md).
 

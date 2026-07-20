@@ -6,7 +6,7 @@ Insert this process when state must survive application restart.
 
 ## Step 1 · Choose and design the data model
 
-Add a `Data model` section under the current feature in `<project-root>/PROJECT.md`; do this before creating entity/document classes.
+> 📍 Add a `Data model` section under the current feature in `<project-root>/PROJECT.md`; do this before creating entity/document classes.
 
 Prefer SQL for transactions, relationships, constraints, and reporting. Choose MongoDB when document-shaped data/access requirements justify it. For every field record type, nullability, length, unique/default, ownership, index/query, retention, and growth.
 
@@ -16,7 +16,7 @@ Continue to Step 2.
 
 ## Step 2 · Add dependency and local configuration
 
-Edit `<project-root>/pom.xml` and `src/main/resources/application-local.yml`. Set credentials in the terminal/IDE run configuration or deployment secret store, never in Git.
+> 📍 Edit `<project-root>/pom.xml` and `src/main/resources/application-local.yml`. Set credentials in the terminal/IDE run configuration or deployment secret store, never in Git.
 
 For SQL add Spring Data JPA, one driver, and Flyway or Liquibase. For MongoDB add Spring Data MongoDB. Example SQL config:
 
@@ -40,7 +40,7 @@ Continue to Step 3.
 
 ## Step 3 · Create migration, entity/document, and repository
 
-Create these files. Replace `com/company/project` with the package selected in Initializr.
+> 📍 Create these files. Replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/resources/db/migration/V1__create_tasks.sql
@@ -92,7 +92,7 @@ Continue to Step 4.
 
 ## Step 4 · Put persistence inside the service transaction
 
-Edit `src/main/java/com/company/project/task/TaskService.java` and `TaskMapper.java`, plus DTOs in `task/dto/`. Do not add database calls to controllers, templates, or listeners.
+> 📍 Edit `src/main/java/com/company/project/task/TaskService.java` and `TaskMapper.java`, plus DTOs in `task/dto/`. Do not add database calls to controllers, templates, or listeners.
 
 ```java
 @Transactional
@@ -115,7 +115,7 @@ Continue to Step 5.
 
 ## Step 5 · Test and prepare shared environments
 
-Add tests in `src/test/java/com/company/project/task/`; edit `src/main/resources/application.yml`; create `<project-root>/docs/database-runbook.md`; run commands in `<project-root>/`.
+> 📍 Add tests in `src/test/java/com/company/project/task/`; edit `src/main/resources/application.yml`; create `<project-root>/docs/database-runbook.md`; run commands in `<project-root>/`.
 
 Test constraints, custom queries, pagination, concurrency, rollback, migrations from supported versions, and production database behavior using the [testing guide](../docs/testing-guide.md). Externalize credentials, set pool/query limits, and plan backup/restore.
 

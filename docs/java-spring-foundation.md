@@ -8,6 +8,8 @@ Keep the [beginner execution guide](beginner-execution-guide.md) open for physic
 
 ## 1. Install and verify the tools
 
+> 📍 Run the version commands in any terminal. Install missing tools through the operating system or IDE installer.
+
 Required:
 
 - a JDK supported by the chosen Spring Boot release;
@@ -26,6 +28,8 @@ On Linux/macOS use `./mvnw`; on Windows use `mvnw.cmd`.
 
 ## 2. Generate a disposable practice project
 
+> 📍 Use [Spring Initializr](https://start.spring.io/) in the browser, then open a terminal in the extracted project folder containing `pom.xml` and `mvnw`.
+
 At [Spring Initializr](https://start.spring.io/), select Maven, Java, Jar, a supported Java version, and Spring Web. Download, extract, then run:
 
 ```bash
@@ -36,6 +40,8 @@ At [Spring Initializr](https://start.spring.io/), select Maven, Java, Jar, a sup
 Stop the application with `Ctrl+C`. Do not begin real feature work until the generated build passes.
 
 ## 3. Know the project files
+
+> 📍 Open the extracted project as a folder in the IDE; use this tree to locate each generated area.
 
 ```text
 project/
@@ -53,6 +59,8 @@ project/
 Keep the generated `*Application.java` in the root package above controllers, services, repositories, and configuration. `@SpringBootApplication` starts the application and scans its package and children.
 
 ## 4. Read the Java types used here
+
+> 📍 Read Java types under `src/main/java/`; each public type belongs in a same-named `.java` file.
 
 | Java type | Use in these projects |
 |---|---|
@@ -72,6 +80,8 @@ public enum TaskStatus {
 One public top-level type normally lives in a same-named file. `TaskService` belongs in `TaskService.java`. The `package` line must match the directory below `src/main/java`.
 
 ## 5. Understand fields, constructors, and methods
+
+> 📍 Open a service such as `src/main/java/com/company/project/task/TaskService.java` and trace it using the example below.
 
 ```java
 public class TaskService {
@@ -113,6 +123,8 @@ Common types:
 
 ## 6. Understand Spring wiring
 
+> 📍 Look for these annotations in Java files under `src/main/java/`, beginning with the generated application class.
+
 Spring creates and connects application objects called beans.
 
 ```mermaid
@@ -138,6 +150,8 @@ Use constructor injection: a class declares what it needs, and Spring supplies i
 
 ## 7. Trace an HTTP request
 
+> 📍 Start at a controller under `src/main/java/`, then follow its service and repository or adapter calls.
+
 ```text
 HTTP JSON
 → controller route and request binding
@@ -156,6 +170,8 @@ HTTP JSON
 
 ## 8. Use Maven deliberately
 
+> 📍 Run Maven commands in `<project-root>/`, the folder containing `pom.xml` and `mvnw`.
+
 | Command | Purpose |
 |---|---|
 | `./mvnw compile` | Compile main code |
@@ -167,6 +183,8 @@ HTTP JSON
 Read the first meaningful compiler error before later errors; later failures are often consequences.
 
 ## 9. Use the normal work loop
+
+> 📍 Work in one feature package under `src/main/java/` and its matching package under `src/test/java/`; run checks from `<project-root>/`.
 
 ```text
 write one contract
@@ -181,6 +199,8 @@ write one contract
 Change one boundary at a time. Do not add several dependencies or features before the first checkpoint passes.
 
 ## 10. Keep the repository clean
+
+> 📍 Edit `<project-root>/.gitignore`, then run the final commands in `<project-root>/`.
 
 Ignore at least generated build output, IDE metadata, local database files, logs, and environment-secret files. Never commit passwords, tokens, keys, or production connection values.
 

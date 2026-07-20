@@ -6,7 +6,7 @@ Insert this process when a use case calls payments, email, maps, AI, identity, o
 
 ## Step 1 · Define the provider boundary
 
-Add an `External provider` section under the current feature in `<project-root>/PROJECT.md`.
+> 📍 Add an `External provider` section under the current feature in `<project-root>/PROJECT.md`.
 
 Record operation, application input/output, credential source, connect/response timeout, rate limit, retry safety, idempotency support, and outage behavior.
 
@@ -16,7 +16,7 @@ Continue to Step 2.
 
 ## Step 2 · Create interface, DTOs, properties, and adapter
 
-Create these paths; replace `com/company/project` with the package selected in Initializr.
+> 📍 Create these paths; replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/provider/
@@ -48,7 +48,7 @@ Continue to Step 3.
 
 ## Step 3 · Configure a bounded HTTP client
 
-Edit `src/main/java/com/company/project/provider/ProviderConfiguration.java`, `ProviderProperties.java`, and `src/main/resources/application.yml`.
+> 📍 Edit `src/main/java/com/company/project/provider/ProviderConfiguration.java`, `ProviderProperties.java`, and `src/main/resources/application.yml`.
 
 For a synchronous MVC application use `RestClient`; use `WebClient` for selected reactive/streaming flows.
 
@@ -85,7 +85,7 @@ Continue to Step 4.
 
 ## Step 4 · Implement and translate the call
 
-Edit `src/main/java/com/company/project/provider/HttpProviderAdapter.java`, `ProviderRequest.java`, and `ProviderResponse.java`.
+> 📍 Edit `src/main/java/com/company/project/provider/HttpProviderAdapter.java`, `ProviderRequest.java`, and `ProviderResponse.java`.
 
 ```java
 @Component
@@ -116,7 +116,7 @@ Continue to Step 5.
 
 ## Step 5 · Test offline and observe
 
-Create `src/test/java/com/company/project/provider/HttpProviderAdapterTest.java`; configure safe logging/metrics in `src/main/resources/application.yml`; run tests in `<project-root>/` and the same command in CI.
+> 📍 Create `src/test/java/com/company/project/provider/HttpProviderAdapterTest.java`; configure safe logging/metrics in `src/main/resources/application.yml`; run tests in `<project-root>/` and the same command in CI.
 
 Test success, malformed/empty response, timeout, connection failure, auth failure, rate limit, retry exhaustion, duplicate, and outage. Record safe correlation/provider ID, latency, and outcome—not credentials/payload secrets.
 

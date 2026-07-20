@@ -6,6 +6,8 @@ Use this guide when the chosen application path needs a database-backed REST API
 
 ## 1. Write the contract
 
+> 📍 Write this under the current feature in `<project-root>/PROJECT.md`.
+
 Define one operation before writing Java:
 
 ```text
@@ -18,6 +20,8 @@ Invalid:  400 Bad Request
 Decide which fields the client may send, which fields the server owns, what is stored, and which failures are expected.
 
 ## 2. Create the package
+
+> 📍 Create the feature under `src/main/java/com/company/project/task/`. Keep the generated application class at `src/main/java/com/company/project/ProjectApplication.java`.
 
 Keep the generated `*Application.java` above all other packages so component scanning finds them.
 
@@ -38,6 +42,8 @@ com.example.taskboard/
 Group by feature. A controller handles HTTP, a service owns the use case, a repository accesses data, an entity maps stored state, and DTOs define the API boundary.
 
 ## 3. Create the entity
+
+> 📍 Create `src/main/java/com/company/project/task/Task.java`.
 
 ```java
 @Entity
@@ -72,6 +78,8 @@ Use `EnumType.STRING`. Keep a protected no-argument constructor for JPA. Do not 
 
 ## 4. Create the repository
 
+> 📍 Create `src/main/java/com/company/project/task/TaskRepository.java`.
+
 ```java
 public interface TaskRepository extends JpaRepository<Task, Long> {
     Page<Task> findAllByStatus(TaskStatus status, Pageable pageable);
@@ -81,6 +89,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 `JpaRepository` already supplies standard CRUD operations. Add a custom query only for a current use case, and paginate any collection that can grow.
 
 ## 5. Create API DTOs
+
+> 📍 Create `src/main/java/com/company/project/task/dto/CreateTaskRequest.java` and `TaskResponse.java`.
 
 ```java
 public record CreateTaskRequest(
@@ -102,6 +112,8 @@ Request DTOs contain client-writable fields and boundary validation. Response DT
 
 ## 6. Map entity to response
 
+> 📍 Create `src/main/java/com/company/project/task/TaskMapper.java`.
+
 ```java
 @Component
 public class TaskMapper {
@@ -116,6 +128,8 @@ public class TaskMapper {
 Mapping should transform shapes, not make permission or business decisions.
 
 ## 7. Implement the service
+
+> 📍 Create `src/main/java/com/company/project/task/TaskService.java`.
 
 ```java
 @Service
@@ -147,6 +161,8 @@ Use constructor injection. Put the transaction around the complete service opera
 
 ## 8. Expose the controller
 
+> 📍 Create `src/main/java/com/company/project/task/TaskController.java`.
+
 ```java
 @RestController
 @RequestMapping("/api/tasks")
@@ -176,6 +192,8 @@ The controller binds HTTP input, calls the service, and selects HTTP status and 
 
 ## 9. Handle expected errors
 
+> 📍 Create `src/main/java/com/company/project/task/TaskNotFoundException.java` and `src/main/java/com/company/project/common/error/ApiExceptionHandler.java`.
+
 ```java
 public class TaskNotFoundException extends RuntimeException {
     public TaskNotFoundException(Long id) {
@@ -201,6 +219,8 @@ Also translate validation failures into a stable `400` response. Use specific ex
 
 ## 10. Configure the local database
 
+> 📍 Edit `src/main/resources/application-local.yml`.
+
 For a disposable local example:
 
 ```yaml
@@ -219,6 +239,8 @@ For a shared database, use PostgreSQL or the required database, environment-supp
 
 ## 11. Verify the feature
 
+> 📍 Open a terminal in `<project-root>/`, the folder containing `pom.xml` and `mvnw`.
+
 ```bash
 ./mvnw clean verify
 ./mvnw spring-boot:run
@@ -233,6 +255,8 @@ curl -i -X POST http://localhost:8080/api/tasks \
 Confirm the status, JSON, `Location` header, and database row. Then try invalid input and a missing ID.
 
 ## 12. Add focused tests
+
+> 📍 Create tests in the matching package under `src/test/java/com/company/project/task/`.
 
 | What must work | Smallest useful test |
 |---|---|

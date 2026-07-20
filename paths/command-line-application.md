@@ -8,7 +8,7 @@ Use this for terminal tools, administration, and small one-off automation.
 
 ## Step 1 · Define one command
 
-Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
+> 📍 Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
 
 Record command syntax, required/optional values, stdin/file input, stdout result, stderr diagnostics, success/failure exit codes, confirmation, and partial-failure recovery.
 
@@ -25,7 +25,7 @@ Continue to Step 2.
 
 ## Step 2 · Generate and package foundation
 
-Open [Spring Initializr](https://start.spring.io/) in the browser. After extracting the project, open a terminal in `<project-root>/`, the folder containing `pom.xml` and `mvnw`.
+> 📍 Open [Spring Initializr](https://start.spring.io/) in the browser. After extracting the project, open a terminal in `<project-root>/`, the folder containing `pom.xml` and `mvnw`.
 
 Generate minimal Spring Boot; do not add Spring Web unless the command also serves HTTP. Add only required data/provider dependencies.
 
@@ -39,7 +39,7 @@ Continue to Step 3.
 
 ## Step 3 · Create runner, options, and service
 
-Under `src/main/java/com/company/project/`, create the `command/` folder and these files. Replace `com/company/project` with the package selected in Initializr.
+> 📍 Under `src/main/java/com/company/project/`, create the `command/` folder and these files. Replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/command/
@@ -76,7 +76,7 @@ Continue to Step 4.
 
 ## Step 4 · Make exit and rerun behavior reliable
 
-Create `src/main/java/com/company/project/command/CommandExitCodeConfiguration.java`. Edit `src/main/java/com/company/project/command/ImportCommand.java` and `ImportService.java`.
+> 📍 Create `src/main/java/com/company/project/command/CommandExitCodeConfiguration.java`. Edit `src/main/java/com/company/project/command/ImportCommand.java` and `ImportService.java`.
 
 Map known failures to documented non-zero exit codes with `ExitCodeGenerator`/application exit handling; send diagnostics to stderr; add dry-run/confirmation for risky changes; make operations idempotent or checkpointed.
 
@@ -86,7 +86,7 @@ Continue to Step 5.
 
 ## Step 5 · Attach required capabilities
 
-Create only the required linked package under `src/main/java/com/company/project/`: feature persistence files, `provider/`, or `file/`. Edit `src/main/java/com/company/project/command/ImportService.java` to call its interface.
+> 📍 Create only the required linked package under `src/main/java/com/company/project/`: feature persistence files, `provider/`, or `file/`. Edit `src/main/java/com/company/project/command/ImportService.java` to call its interface.
 
 Configure resources externally; validate availability before irreversible work; close/flush resources on exit. For large restartable record processing use the [batch process](batch-application.md).
 
@@ -96,7 +96,7 @@ Continue to Step 6.
 
 ## Step 6 · Test and deliver
 
-Create tests under `src/test/java/com/company/project/command/`; edit `<project-root>/README.md`, `src/main/resources/application.yml`, and root CI/release files; run commands at `<project-root>`.
+> 📍 Create tests under `src/test/java/com/company/project/command/`; edit `<project-root>/README.md`, `src/main/resources/application.yml`, and root CI/release files; run commands at `<project-root>`.
 
 Test argument parsing, stdout/stderr, exit codes, data/provider failure, partial work, interruption, and rerun using the [testing guide](../docs/testing-guide.md).
 

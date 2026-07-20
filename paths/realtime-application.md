@@ -8,7 +8,7 @@ Use this for chat, live tracking, dashboards, or notifications through SSE or We
 
 ## Step 1 · Choose connection and message behavior
 
-Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
+> 📍 Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
 
 Choose SSE for server → client only, WebSocket for two-way messaging, or REST/polling when real-time is unnecessary. Record auth, subscribe/publish, ordering, reconnect, replay, size/rate limits, and disconnect cleanup.
 
@@ -18,7 +18,7 @@ Continue to Step 2.
 
 ## Step 2 · Generate and run foundation
 
-Open [Spring Initializr](https://start.spring.io/) in the browser. After extracting the project, open a terminal in `<project-root>/`, the folder containing `pom.xml` and `mvnw`.
+> 📍 Open [Spring Initializr](https://start.spring.io/) in the browser. After extracting the project, open a terminal in `<project-root>/`, the folder containing `pom.xml` and `mvnw`.
 
 Select Spring Web for MVC/SSE or WebSocket for bidirectional messaging, plus Actuator; add Security for private connections.
 
@@ -33,7 +33,7 @@ Continue to Step 3.
 
 ## Step 3 · Implement one connection and message
 
-Under `src/main/java/com/company/project/`, create the `live/` folder and these files. Replace `com/company/project` with the package selected in Initializr.
+> 📍 Under `src/main/java/com/company/project/`, create the `live/` folder and these files. Replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/live/
@@ -72,7 +72,7 @@ Continue to Step 4.
 
 ## Step 4 · Add authentication, limits, and scale behavior
 
-Edit `src/main/java/com/company/project/live/LiveUpdateService.java` and `WebSocketConfiguration.java` when WebSocket is used. Edit `src/main/java/com/company/project/security/SecurityConfiguration.java`, then add only the linked messaging or persistence files required.
+> 📍 Edit `src/main/java/com/company/project/live/LiveUpdateService.java` and `WebSocketConfiguration.java` when WebSocket is used. Edit `src/main/java/com/company/project/security/SecurityConfiguration.java`, then add only the linked messaging or persistence files required.
 
 Authenticate connection/subscription; authorize topics per user; bound message/rate/buffer/connection count; clean slow clients; define replay or REST recovery; add [messaging](../capabilities/messaging.md) for multi-instance fan-out and [data storage](../capabilities/data-storage.md) for durable history.
 
@@ -82,7 +82,7 @@ Continue to Step 5.
 
 ## Step 5 · Test and deliver
 
-Create tests under `src/test/java/com/company/project/live/`. Edit `src/main/resources/application.yml`, the CI/deployment files in `<project-root>/`, and `<project-root>/docs/live-client.md`. Run commands in `<project-root>/`.
+> 📍 Create tests under `src/test/java/com/company/project/live/`. Edit `src/main/resources/application.yml`, the CI/deployment files in `<project-root>/`, and `<project-root>/docs/live-client.md`. Run commands in `<project-root>/`.
 
 Test connect/auth, forbidden topic, publish/receive, malformed/oversized message, reconnect, slow client, cleanup, restart, and multi-instance fan-out using the [testing guide](../docs/testing-guide.md).
 

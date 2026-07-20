@@ -6,7 +6,7 @@ Insert this process for uploads, downloads, documents, images, exports, or impor
 
 ## Step 1 · Define file and access contract
 
-Add a `File contract` section under the current feature in `<project-root>/PROJECT.md`.
+> 📍 Add a `File contract` section under the current feature in `<project-root>/PROJECT.md`.
 
 Record allowed type/content, max size, filename use, owner, scan rule, storage lifetime, download authorization, processing, and partial-failure cleanup.
 
@@ -16,7 +16,7 @@ Continue to Step 2.
 
 ## Step 2 · Choose durable storage and configure request limits
 
-Configure the provider outside the repository, edit `src/main/resources/application.yml`, and set credentials in the terminal/IDE run configuration or deployment secret store.
+> 📍 Configure the provider outside the repository, edit `src/main/resources/application.yml`, and set credentials in the terminal/IDE run configuration or deployment secret store.
 
 Use object/durable file storage for shared/production use, not the application container filesystem. Store bytes under generated keys and metadata/owner/status in database.
 
@@ -34,7 +34,7 @@ Continue to Step 3.
 
 ## Step 3 · Create storage interface and adapter
 
-Create these paths; replace `com/company/project` with the package selected in Initializr.
+> 📍 Create these paths; replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/file/
@@ -74,7 +74,7 @@ Continue to Step 4.
 
 ## Step 4 · Add HTTP/job entry and authorization
 
-Create `src/main/java/com/company/project/file/FileController.java` (or `FileJob.java`) and `FileValidator.java`; keep ownership checks in `FileService.java`.
+> 📍 Create `src/main/java/com/company/project/file/FileController.java` (or `FileJob.java`) and `FileValidator.java`; keep ownership checks in `FileService.java`.
 
 ```java
 @PostMapping(path = "/api/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -93,7 +93,7 @@ Continue to Step 5.
 
 ## Step 5 · Handle partial failure and test storage outage
 
-Edit `src/main/java/com/company/project/file/FileService.java`; create `FileCleanupJob.java` and `src/test/java/com/company/project/file/FileStorageIntegrationTest.java`; configure metrics in `src/main/resources/application.yml`.
+> 📍 Edit `src/main/java/com/company/project/file/FileService.java`; create `FileCleanupJob.java` and `src/test/java/com/company/project/file/FileStorageIntegrationTest.java`; configure metrics in `src/main/resources/application.yml`.
 
 Delete orphaned bytes when metadata save fails or mark state for reconciliation; handle missing object; record safe storage outcome; test interrupted upload/outage. Do not put remote storage operation inside a database transaction and assume automatic rollback.
 

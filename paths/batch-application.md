@@ -8,7 +8,7 @@ Use this for large, finite, restartable imports, exports, reports, migrations, o
 
 ## Step 1 · Define one job and restart rule
 
-Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
+> 📍 Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
 
 Record source, expected volume, item shape, validation, output, job parameters, chunk/transaction boundary, retry/skip/fail rules, restart rule, and audit counts.
 
@@ -18,7 +18,7 @@ Continue to Step 2.
 
 ## Step 2 · Generate and run foundation
 
-Open [Spring Initializr](https://start.spring.io/) in the browser. After extracting the project, open a terminal in `<project-root>/`. Put local input in `src/main/resources/input/` and local database settings in `src/main/resources/application-local.yml`.
+> 📍 Open [Spring Initializr](https://start.spring.io/) in the browser. After extracting the project, open a terminal in `<project-root>/`. Put local input in `src/main/resources/input/` and local database settings in `src/main/resources/application-local.yml`.
 
 Select Spring Batch, Actuator, and required database driver. Add Validation when item constraints use it.
 
@@ -33,7 +33,7 @@ Continue to Step 3.
 
 ## Step 3 · Create reader, processor, writer, step, and job
 
-Under `src/main/java/com/company/project/`, create the `importjob/` folder and these files. Create the sample input file under `src/main/resources/input/`. Replace `com/company/project` with the package selected in Initializr.
+> 📍 Under `src/main/java/com/company/project/`, create the `importjob/` folder and these files. Create the sample input file under `src/main/resources/input/`. Replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/importjob/
@@ -79,7 +79,7 @@ Continue to Step 4.
 
 ## Step 4 · Add validation, retry, skip, and restart
 
-Edit `src/main/java/com/company/project/importjob/ImportItemProcessor.java`, `ImportJobConfiguration.java`, and `ImportJobListener.java`. Write rejected-item output to the location recorded in `<project-root>/PROJECT.md`.
+> 📍 Edit `src/main/java/com/company/project/importjob/ImportItemProcessor.java`, `ImportJobConfiguration.java`, and `ImportJobListener.java`. Write rejected-item output to the location recorded in `<project-root>/PROJECT.md`.
 
 Validate/transform in processor; retry only transient failures; skip only explicitly acceptable bad items with a limit; fail on unknown/systemic errors; use identifying job parameters; keep reader/writer state restartable.
 
@@ -101,7 +101,7 @@ Continue to Step 5.
 
 ## Step 5 · Attach required capabilities and measure volume
 
-Edit `src/main/java/com/company/project/importjob/ImportJobConfiguration.java`. Then create only the required linked package under `src/main/java/com/company/project/`: feature persistence files, `provider/`, `file/`, or `messaging/`.
+> 📍 Edit `src/main/java/com/company/project/importjob/ImportJobConfiguration.java`. Then create only the required linked package under `src/main/java/com/company/project/`: feature persistence files, `provider/`, `file/`, or `messaging/`.
 
 Add only required capabilities. Avoid unbounded per-record provider calls. Test realistic volume before adding concurrency; size database/HTTP pools consistently with any parallelism.
 
@@ -111,7 +111,7 @@ Continue to Step 6.
 
 ## Step 6 · Test, operate, and deliver
 
-Create tests under `src/test/java/com/company/project/importjob/`. Edit `src/main/resources/application.yml`, the CI/deployment files in `<project-root>/`, and `<project-root>/README.md`. Run commands in `<project-root>/`.
+> 📍 Create tests under `src/test/java/com/company/project/importjob/`. Edit `src/main/resources/application.yml`, the CI/deployment files in `<project-root>/`, and `<project-root>/README.md`. Run commands in `<project-root>/`.
 
 Test empty/valid/malformed input, partial failure, retry/skip limit, restart, duplicate parameters, and realistic volume using the [testing guide](../docs/testing-guide.md). Document parameters, launch, duration, output, recovery, and monitoring.
 

@@ -8,7 +8,7 @@ If editing configuration/code is new, use [Action H for YAML](beginner-execution
 
 ## 1. Put normal defaults in the base file
 
-Use `src/main/resources/application.yml`:
+> 📍 Edit `src/main/resources/application.yml`.
 
 ```yaml
 spring:
@@ -29,6 +29,8 @@ Keep the file small. Use Spring Boot’s documented property names rather than c
 
 ## 2. Externalize environment values
 
+> 📍 Keep variable placeholders in `src/main/resources/application.yml`; supply their values from the terminal, IDE run configuration, CI, or deployment platform.
+
 ```yaml
 spring:
   datasource:
@@ -45,6 +47,8 @@ provider:
 `${NAME}` requires a value. `${NAME:default}` supplies a safe non-secret default.
 
 ## 3. Group application-owned settings
+
+> 📍 Create `src/main/java/com/company/project/config/ProviderProperties.java` and edit the generated `ProjectApplication.java` under the base package.
 
 ```java
 @Validated
@@ -70,6 +74,8 @@ public class OrdersApplication {
 
 ## 4. Use profiles narrowly
 
+> 📍 Create only the required files under `src/main/resources/`: `application-local.yml` and `application-test.yml`; keep shared settings in `application.yml`.
+
 Profiles are useful for grouped environment differences, not secret storage.
 
 ```text
@@ -88,9 +94,13 @@ Avoid a profile for every developer or scattered `@Profile` annotations that cha
 
 ## 5. Keep secrets outside Git
 
+> 📍 Store secret values in the terminal, IDE run configuration, CI secret store, or deployment platform—not in repository files.
+
 Use environment/deployment secret storage. Do not commit `.env`, real tokens, passwords, keys, certificates, or production URLs containing credentials. Provide variable names and examples without values in the project README.
 
 ## 6. Configure external resources explicitly
+
+> 📍 Put application settings in `src/main/resources/application.yml`, typed settings under `src/main/java/com/company/project/config/`, and secret values outside the repository.
 
 For every database, HTTP provider, broker, cache, or file store document:
 
@@ -102,6 +112,8 @@ For every database, HTTP provider, broker, cache, or file store document:
 - health behavior when it is unavailable.
 
 ## 7. Verify each environment
+
+> 📍 Run the commands in `<project-root>/`; change environment values outside the source tree between runs.
 
 ```bash
 ./mvnw clean verify

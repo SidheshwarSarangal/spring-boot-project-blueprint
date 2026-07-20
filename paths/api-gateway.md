@@ -8,7 +8,7 @@ Use this when the application is a controlled entry point to downstream services
 
 ## Step 1 · Define one route and policy
 
-Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
+> 📍 Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
 
 Record method/path, downstream URI, path rewrite, allowed/removed headers, authentication, rate/body limits, timeout, retry safety, and failure response.
 
@@ -18,7 +18,7 @@ Continue to Step 2.
 
 ## Step 2 · Generate and run gateway foundation
 
-Open [Spring Initializr](https://start.spring.io/) in the browser. After downloading and extracting the project, open a terminal in `<project-root>/`, the folder containing `pom.xml` and `mvnw`.
+> 📍 Open [Spring Initializr](https://start.spring.io/) in the browser. After downloading and extracting the project, open a terminal in `<project-root>/`, the folder containing `pom.xml` and `mvnw`.
 
 Select Spring Cloud Gateway Server WebFlux and Actuator for the examples below; add security when required. If the organization selects the Web MVC variant, use its variant-specific configuration/API from the official reference. Do not add JPA/entities without a gateway-owned requirement.
 
@@ -33,7 +33,7 @@ Continue to Step 3.
 
 ## Step 3 · Configure one route
 
-Edit `<project-root>/src/main/resources/application.yml`; run the gateway in a terminal at `<project-root>` and the downstream stub in a second terminal.
+> 📍 Edit `<project-root>/src/main/resources/application.yml`; run the gateway in a terminal at `<project-root>` and the downstream stub in a second terminal.
 
 Server WebFlux route:
 
@@ -60,7 +60,7 @@ Continue to Step 4.
 
 ## Step 4 · Add trust, limits, and failure controls
 
-Create `src/main/java/com/company/gateway/CorrelationIdFilter.java` and `src/main/java/com/company/gateway/security/SecurityConfiguration.java`. Edit `src/main/resources/application.yml` for timeout, body-size, and rate settings.
+> 📍 Create `src/main/java/com/company/gateway/CorrelationIdFilter.java` and `src/main/java/com/company/gateway/security/SecurityConfiguration.java`. Edit `src/main/resources/application.yml` for timeout, body-size, and rate settings.
 
 Authenticate; remove spoofable identity headers; add only approved internal identity context; set connection/response/body limits; rate-limit where required; retry only idempotent safe requests; propagate correlation/trace ID.
 
@@ -85,7 +85,7 @@ Continue to Step 5.
 
 ## Step 5 · Test and deliver
 
-Create tests under `src/test/java/com/company/gateway/`. Edit `src/main/resources/application.yml`, the CI/deployment files in `<project-root>/`, and `<project-root>/README.md`.
+> 📍 Create tests under `src/test/java/com/company/gateway/`. Edit `src/main/resources/application.yml`, the CI/deployment files in `<project-root>/`, and `<project-root>/README.md`.
 
 Test routing, unknown route, auth, header stripping/propagation, rewrite, timeout, outage, body limit, rate limit, and retry safety. Add only [security](../capabilities/security.md), downstream [external-call safety](../capabilities/external-api.md), or carefully measured [caching](../capabilities/caching.md).
 

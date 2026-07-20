@@ -8,7 +8,7 @@ Use this when work runs on a timer or outside the original HTTP request.
 
 ## Step 1 · Define one job
 
-Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
+> 📍 Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
 
 Record trigger, input/job ID, output/state change, maximum duration, duplicate rule, retry rule, and recovery owner.
 
@@ -26,7 +26,7 @@ Continue to Step 2.
 
 ## Step 2 · Choose mechanism and create foundation
 
-Open [Spring Initializr](https://start.spring.io/) in the browser. After extracting the project, open a terminal in `<project-root>/`, the folder containing `pom.xml` and `mvnw`.
+> 📍 Open [Spring Initializr](https://start.spring.io/) in the browser. After extracting the project, open a terminal in `<project-root>/`, the folder containing `pom.xml` and `mvnw`.
 
 Use `@Scheduled` for simple timed work, `@Async` only for non-durable in-process work, [messaging](../capabilities/messaging.md) when required work must survive restart, or the [batch process](batch-application.md) for large restartable datasets. Select Actuator plus required dependencies.
 
@@ -41,7 +41,7 @@ Continue to Step 3.
 
 ## Step 3 · Create trigger, service, and configuration
 
-Under `src/main/java/com/company/project/`, create the `cleanup/` folder and these files. Replace `com/company/project` with the package selected in Initializr.
+> 📍 Under `src/main/java/com/company/project/`, create the `cleanup/` folder and these files. Replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/cleanup/
@@ -85,7 +85,7 @@ Continue to Step 4.
 
 ## Step 4 · Implement bounded, repeatable work
 
-Edit `src/main/java/com/company/project/cleanup/CleanupService.java`. Create the feature entity and repository in the same `cleanup/` package. Create `src/main/java/com/company/project/cleanup/JobExecutionRecord.java` only when durable execution history is required.
+> 📍 Edit `src/main/java/com/company/project/cleanup/CleanupService.java`. Create the feature entity and repository in the same `cleanup/` package. Create `src/main/java/com/company/project/cleanup/JobExecutionRecord.java` only when durable execution history is required.
 
 Query a bounded work set, make each state transition idempotent, transact database changes, record outcome, and set concurrency limits. For multiple instances, add a distributed scheduling lock or move required work to a broker.
 
@@ -117,7 +117,7 @@ Continue to Step 5.
 
 ## Step 5 · Add recovery, observability, and required capabilities
 
-Edit `src/main/java/com/company/project/cleanup/CleanupJob.java`, `CleanupService.java`, and `src/main/resources/application.yml`. Create only the capability folder linked by this step.
+> 📍 Edit `src/main/java/com/company/project/cleanup/CleanupJob.java`, `CleanupService.java`, and `src/main/resources/application.yml`. Create only the capability folder linked by this step.
 
 Add [data storage](../capabilities/data-storage.md), [external API](../capabilities/external-api.md), [messaging](../capabilities/messaging.md), or [file storage](../capabilities/file-storage.md) only when required. Record start/end, count, duration, outcome, and safe correlation ID. Retry only transient operations with a limit/backoff.
 
@@ -127,7 +127,7 @@ Continue to Step 6.
 
 ## Step 6 · Test, configure, and deliver
 
-Create tests under `src/test/java/com/company/project/cleanup/`; edit `src/main/resources/application.yml`, root CI/deployment files, and `<project-root>/README.md`; run commands at `<project-root>`.
+> 📍 Create tests under `src/test/java/com/company/project/cleanup/`; edit `src/main/resources/application.yml`, root CI/deployment files, and `<project-root>/README.md`; run commands at `<project-root>`.
 
 Test service rules, thin trigger delegation, duplicate execution, retry exhaustion, restart/recovery, and concurrency using the [testing guide](../docs/testing-guide.md).
 

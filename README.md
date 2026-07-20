@@ -57,7 +57,7 @@ Do not read or add every capability. Complete the primary path, attach one requi
 
 ## Build it one step at a time
 
-Open the selected path and begin with Step 1. Read only the current step. It starts by telling you which file, folder, browser page, or terminal to open. Perform the instructions in order, use the code or command shown there, and check the stated result before continuing.
+Open the selected path and begin with Step 1. Read only the current step. The `📍` callout shows the exact file, folder, browser page, or terminal to use. Perform the instructions beneath it in order, use the code or command shown there, and check the stated result before continuing.
 
 When a step links a capability such as database, security, or messaging, open only the capability you need. Complete it, return to the application path, and continue. Replace the example feature and package names with the names written in your `PROJECT.md`.
 

@@ -6,7 +6,7 @@ Insert this process when the application must identify callers or protect action
 
 ## Step 1 · Define identity, permission, and ownership
 
-Add an `Identity and access` section under the current feature in `<project-root>/PROJECT.md`.
+> 📍 Add an `Identity and access` section under the current feature in `<project-root>/PROJECT.md`.
 
 Record public operations, caller identity source, role/authority, record owner, cross-user rule, and sensitive data.
 
@@ -16,7 +16,7 @@ Continue to Step 2.
 
 ## Step 2 · Choose authentication and add dependencies
 
-Edit `<project-root>/pom.xml` and `src/main/resources/application.yml`; configure the identity provider in its admin console; set client secrets in the terminal/IDE run configuration or deployment secret store.
+> 📍 Edit `<project-root>/pom.xml` and `src/main/resources/application.yml`; configure the identity provider in its admin console; set client secrets in the terminal/IDE run configuration or deployment secret store.
 
 | Client | Add/use |
 |---|---|
@@ -32,7 +32,7 @@ Continue to Step 3.
 
 ## Step 3 · Create security configuration
 
-Create these paths; replace `com/company/project` with the package selected in Initializr.
+> 📍 Create these paths; replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/security/
@@ -72,7 +72,7 @@ Continue to Step 4.
 
 ## Step 4 · Enforce business permission and ownership
 
-Put reusable checks in `src/main/java/com/company/project/security/AuthorizationService.java` and call them from `src/main/java/com/company/project/task/TaskService.java`; do not rely only on URL rules.
+> 📍 Put reusable checks in `src/main/java/com/company/project/security/AuthorizationService.java` and call them from `src/main/java/com/company/project/task/TaskService.java`; do not rely only on URL rules.
 
 ```java
 @Transactional(readOnly = true)
@@ -94,7 +94,7 @@ Continue to Step 5.
 
 ## Step 5 · Protect secrets/data and test the boundary
 
-Create `src/test/java/com/company/project/security/SecurityIntegrationTest.java`; inspect application logs; keep secret values in the terminal/IDE run configuration or deployment secret store.
+> 📍 Create `src/test/java/com/company/project/security/SecurityIntegrationTest.java`; inspect application logs; keep secret values in the terminal/IDE run configuration or deployment secret store.
 
 Test public, unauthenticated, invalid/expired identity, forbidden role, allowed role, cross-owner, CSRF (browser), and CORS. Never log passwords, tokens, cookies, session IDs, keys, or sensitive bodies.
 

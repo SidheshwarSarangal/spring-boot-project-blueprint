@@ -6,7 +6,7 @@ Insert this process when work/events must be asynchronous, durable, buffered, re
 
 ## Step 1 · Define message and delivery behavior
 
-Add an `Event contract` section under the current feature in `<project-root>/PROJECT.md`.
+> 📍 Add an `Event contract` section under the current feature in `<project-root>/PROJECT.md`.
 
 Record name/version, producer, consumer, key, payload, ordering, expected delivery, acknowledgement, duplicate, retry, dead-letter, retention, and replay.
 
@@ -16,7 +16,7 @@ Continue to Step 2.
 
 ## Step 2 · Choose broker, dependency, and local connection
 
-Edit `<project-root>/pom.xml` and `src/main/resources/application-local.yml`; start the local broker from its project/container directory and keep credentials outside Git.
+> 📍 Edit `<project-root>/pom.xml` and `src/main/resources/application-local.yml`; start the local broker from its project/container directory and keep credentials outside Git.
 
 Choose Kafka for retained ordered streams/replay/high throughput; RabbitMQ for routed work queues/acknowledgement delivery; prefer the organization-operated broker when suitable. Add Spring for Apache Kafka or Spring for RabbitMQ.
 
@@ -36,7 +36,7 @@ Continue to Step 3.
 
 ## Step 3 · Create typed publisher/listener adapters
 
-Create these paths; replace `com/company/project` with the package selected in Initializr.
+> 📍 Create these paths; replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/messaging/
@@ -73,7 +73,7 @@ Continue to Step 4.
 
 ## Step 4 · Add idempotency, acknowledgement, retry, and dead letter
 
-Edit `src/main/java/com/company/project/messaging/OrderEventListener.java` and `MessagingConfiguration.java`; put business work in the feature service; add inbox/outbox entities and repositories under `messaging/` only when required.
+> 📍 Edit `src/main/java/com/company/project/messaging/OrderEventListener.java` and `MessagingConfiguration.java`; put business work in the feature service; add inbox/outbox entities and repositories under `messaging/` only when required.
 
 Include operation/event ID; make consumer idempotent; acknowledge after intended durable work; retry transient failures with limit/backoff; route invalid/permanent/exhausted messages to recovery; use outbox when DB state and publication must be consistent. Bound size, concurrency, and processing time.
 
@@ -83,7 +83,7 @@ Continue to Step 5.
 
 ## Step 5 · Integration-test the real broker type
 
-Create `src/test/java/com/company/project/messaging/MessagingIntegrationTest.java`; configure metrics/logging in `src/main/resources/application.yml`; run tests in `<project-root>/` and the same command in CI.
+> 📍 Create `src/test/java/com/company/project/messaging/MessagingIntegrationTest.java`; configure metrics/logging in `src/main/resources/application.yml`; run tests in `<project-root>/` and the same command in CI.
 
 Test publish/consume, invalid message, duplicate, ordering, retry, dead letter, broker outage, consumer restart, and multiple consumers. Observe lag/queue depth, outcome, retry, and dead-letter counts.
 

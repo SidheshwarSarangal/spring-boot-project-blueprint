@@ -8,7 +8,7 @@ Use this when the main purpose is coordinating a payment, email, maps, AI, ident
 
 ## Step 1 · Define one integration action
 
-Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
+> 📍 Create or edit `<project-root>/PROJECT.md`, section **5. Feature sheet**.
 
 Record caller/trigger, application input/output, provider operation, credential source, timeout, rate limit, retry safety, idempotency, and outage behavior.
 
@@ -18,7 +18,7 @@ Continue to Step 2.
 
 ## Step 2 · Choose entry point and generate foundation
 
-Work in the files/terminal named by the chosen [REST](rest-api.md), [event](event-driven-service.md), or [background](background-worker.md) entry path; return here after its foundation step passes.
+> 📍 Work in the files/terminal named by the chosen [REST](rest-api.md), [event](event-driven-service.md), or [background](background-worker.md) entry path; return here after its foundation step passes.
 
 Generate that path’s minimum dependencies plus Actuator. Do not add a second web/reactive stack without a requirement.
 
@@ -33,7 +33,7 @@ Continue to Step 3.
 
 ## Step 3 · Create provider boundary and adapter
 
-Under `src/main/java/com/company/project/`, create the `payment/` folder and these files. Replace `com/company/project` with the package selected in Initializr.
+> 📍 Under `src/main/java/com/company/project/`, create the `payment/` folder and these files. Replace `com/company/project` with the package selected in Initializr.
 
 ```text
 src/main/java/com/company/project/payment/
@@ -80,7 +80,7 @@ Continue to Step 4.
 
 ## Step 4 · Handle provider outcomes safely
 
-Edit `src/main/java/com/company/project/payment/ProviderConfiguration.java`, `ProviderPaymentAdapter.java`, and `PaymentService.java`. Create or edit `src/main/java/com/company/project/common/error/ApiExceptionHandler.java`.
+> 📍 Edit `src/main/java/com/company/project/payment/ProviderConfiguration.java`, `ProviderPaymentAdapter.java`, and `PaymentService.java`. Create or edit `src/main/java/com/company/project/common/error/ApiExceptionHandler.java`.
 
 Configure connection/response timeouts; translate success/decline/rate-limit/auth/outage; retry only transient safe requests; use idempotency keys for retryable side effects; record safe correlation/provider IDs.
 
@@ -90,7 +90,7 @@ Continue to Step 5.
 
 ## Step 5 · Add required durability/security
 
-Create only the linked required folder under `src/main/java/com/company/project/`: `security/`, feature persistence files, `messaging/`, or `cache/`. Edit `src/main/java/com/company/project/payment/PaymentService.java` to use it.
+> 📍 Create only the linked required folder under `src/main/java/com/company/project/`: `security/`, feature persistence files, `messaging/`, or `cache/`. Edit `src/main/java/com/company/project/payment/PaymentService.java` to use it.
 
 Choose [security](../capabilities/security.md), [data storage](../capabilities/data-storage.md), [messaging](../capabilities/messaging.md), or [caching](../capabilities/caching.md). Persist audit/idempotency state when required; never store/log provider credentials or full sensitive payloads.
 
@@ -100,7 +100,7 @@ Continue to Step 6.
 
 ## Step 6 · Test and deliver
 
-Create tests under `src/test/java/com/company/project/payment/`. Edit `src/main/resources/application.yml`, the CI/deployment files in `<project-root>/`, and `<project-root>/README.md`. Run commands in `<project-root>/`.
+> 📍 Create tests under `src/test/java/com/company/project/payment/`. Edit `src/main/resources/application.yml`, the CI/deployment files in `<project-root>/`, and `<project-root>/README.md`. Run commands in `<project-root>/`.
 
 Test success, malformed response, validation rejection, timeout, rate limit, authentication failure, retry exhaustion, duplicate request, and outage using the [testing guide](../docs/testing-guide.md).
 

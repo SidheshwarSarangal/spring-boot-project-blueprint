@@ -8,6 +8,8 @@ Use [Action D](beginner-execution-guide.md#action-d-run-a-command-in-the-correct
 
 ## 1. Produce the verified artifact
 
+> 📍 Run these commands in `<project-root>/`; Maven writes the packaged application to `<project-root>/target/`.
+
 ```bash
 ./mvnw clean verify
 ```
@@ -22,6 +24,8 @@ Call the health endpoint and one safe use case. The JAR that passed tests should
 
 ## 2. Run with production-like configuration
 
+> 📍 Open a terminal in `<project-root>/` and supply values in that terminal or through the deployment platform.
+
 Set required variables outside source control:
 
 ```bash
@@ -34,6 +38,8 @@ java -jar target/orders-api-0.0.1-SNAPSHOT.jar
 Use a local secret value only for local verification. Confirm missing/invalid required configuration fails during startup.
 
 ## 3. Containerize only when the platform uses containers
+
+> 📍 Create `<project-root>/Dockerfile`; run the build commands in `<project-root>/`.
 
 Build the JAR first. Example `Dockerfile` (replace the Java version and artifact name to match the project):
 
@@ -59,6 +65,8 @@ Do not copy `.env`, source secrets, local databases, or build caches into the im
 
 ## 4. Create the CI gate
 
+> 📍 Create the workflow in the CI folder used by the repository, such as `<project-root>/.github/workflows/verify.yml` for GitHub Actions.
+
 Every pushed change should run from a clean checkout with the project wrapper:
 
 ```text
@@ -73,6 +81,8 @@ Pin the JDK major version and CI actions/plugins. Keep deployment credentials in
 
 ## 5. Plan database migration order
 
+> 📍 Put migrations under `src/main/resources/db/migration/` and record the deployment order in `<project-root>/docs/database-runbook.md`.
+
 For a database-backed application:
 
 1. Back up or confirm recovery capability.
@@ -84,6 +94,8 @@ For a database-backed application:
 Never repair production by deleting its database or editing an already-applied migration file.
 
 ## 6. Deploy and verify
+
+> 📍 Perform these actions in the selected deployment platform; run smoke requests from a terminal that can reach the deployed application.
 
 ```text
 publish immutable artifact
@@ -99,6 +111,8 @@ Smoke-test one safe happy path and one authentication/permission boundary where 
 
 ## 7. Roll back or roll forward
 
+> 📍 Record the decision and executable commands in `<project-root>/docs/deployment-runbook.md`.
+
 Before deployment decide:
 
 - how to stop new traffic;
@@ -110,6 +124,8 @@ Before deployment decide:
 Prefer a tested roll-forward when a database migration cannot safely be reversed. Never assume replacing the JAR also reverses data changes.
 
 ## 8. Write the operator handoff
+
+> 📍 Edit `<project-root>/README.md` and link any detailed runbooks stored under `<project-root>/docs/`.
 
 The project README must include:
 

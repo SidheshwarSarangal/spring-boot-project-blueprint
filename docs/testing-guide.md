@@ -8,9 +8,13 @@ If creating/running test files is new, use [Action K](beginner-execution-guide.m
 
 ## 1. Turn the feature sheet into cases
 
+> 📍 Open the current feature in `<project-root>/PROJECT.md` and write the test cases beneath its acceptance criteria.
+
 For each feature copy its success, invalid, missing, forbidden, conflict, external-failure, and retry cases from the [project workbook](project-workbook.md). Each test should prove one behavior.
 
 ## 2. Choose the test scope
+
+> 📍 Record the chosen scope beside each test case in `<project-root>/PROJECT.md`.
 
 | Need to prove | Test scope |
 |---|---|
@@ -22,7 +26,7 @@ For each feature copy its success, invalid, missing, forbidden, conflict, extern
 
 ## 3. Service unit test
 
-Place it in the matching package under `src/test/java`.
+> 📍 Create `src/test/java/com/company/project/task/TaskServiceTest.java`.
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -52,6 +56,8 @@ Mock boundaries, not simple value objects. Assert the returned result/state and 
 
 ## 4. MVC test
 
+> 📍 Create `src/test/java/com/company/project/task/TaskControllerTest.java`.
+
 Use the MVC test annotation supported by the selected Spring Boot version and `MockMvc`. Import the global error handler when the slice does not discover it automatically.
 
 ```java
@@ -73,6 +79,8 @@ class TaskControllerTest {
 Test the public contract, not controller implementation details.
 
 ## 5. Repository test
+
+> 📍 Create `src/test/java/com/company/project/task/TaskRepositoryTest.java`.
 
 ```java
 @DataJpaTest
@@ -96,6 +104,8 @@ Use the production database type through Testcontainers for database-specific qu
 
 ## 6. Integration test
 
+> 📍 Create `src/test/java/com/company/project/TaskApplicationTest.java`; keep it under the application’s base package.
+
 Use `@SpringBootTest` only where the real bean graph matters. Start external dependencies with Testcontainers or a stub and supply their connection settings dynamically. Keep the test isolated and deterministic.
 
 Critical integration tests should prove:
@@ -107,6 +117,8 @@ Critical integration tests should prove:
 - one essential end-to-end business flow.
 
 ## 7. Test non-HTTP paths
+
+> 📍 Put each test in the matching feature package under `src/test/java/`; use the row for the selected application path.
 
 | Path | Important tests |
 |---|---|
@@ -120,6 +132,8 @@ Critical integration tests should prove:
 
 ## 8. Keep tests trustworthy
 
+> 📍 Apply these rules to every file under `src/test/java/`.
+
 - Arrange, act, assert.
 - Give tests behavior names such as `rejectsPastDueDate`.
 - Do not depend on execution order, current time, random ports, or shared leftover data without controlling them.
@@ -128,6 +142,8 @@ Critical integration tests should prove:
 - A test must fail when the behavior it protects is broken.
 
 ## 9. Run the gates
+
+> 📍 Run these commands in `<project-root>/`, the folder containing `pom.xml` and `mvnw`.
 
 During work:
 
