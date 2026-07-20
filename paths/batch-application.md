@@ -1,6 +1,6 @@
 # Process: Build a batch application
 
-[← Choose another type](../README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
+[← Choose another type](../README.md) · [Working starter](../starters/batch-application/README.md) · [Testing](../docs/testing-guide.md) · [Configuration](../docs/configuration-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
 
 > New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once.
 

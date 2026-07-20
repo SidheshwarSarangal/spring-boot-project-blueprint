@@ -1,0 +1,5 @@
+target/*
+!target/taskboard-api-0.0.1-SNAPSHOT.jar
+data/
+*.log
+.env*

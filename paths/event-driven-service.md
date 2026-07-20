@@ -1,6 +1,6 @@
 # Process: Build an event-driven service
 
-[← Choose another type](../README.md) · [Messaging](../capabilities/messaging.md) · [Testing](../docs/testing-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
+[← Choose another type](../README.md) · [Working starter](../starters/event-driven-service/README.md) · [Messaging](../capabilities/messaging.md) · [Testing](../docs/testing-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
 
 > New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once.
 

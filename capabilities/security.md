@@ -4,6 +4,8 @@
 
 Insert this process when the application must identify callers or protect actions/data.
 
+> ↩ Keep the application path open. After Step 5, return to the exact application step that sent you here, finish its check, and continue from there.
+
 ## Step 1 · Define identity, permission, and ownership
 
 > 📍 Add an `Identity and access` section under the current feature in `<project-root>/PROJECT.md`.
@@ -104,4 +106,4 @@ Test public, unauthenticated, invalid/expired identity, forbidden role, allowed 
 
 Before continuing, check: All permission tests pass; responses/logs contain no credentials; secrets remain outside Git.
 
-Return to the application path’s next step.
+Return to the application step that sent you here, finish that step’s remaining instructions and check, then continue from its stated next step.

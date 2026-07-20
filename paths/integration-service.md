@@ -1,6 +1,6 @@
 # Process: Build an external-system integration service
 
-[← Choose another type](../README.md) · [External API](../capabilities/external-api.md) · [Testing](../docs/testing-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
+[← Choose another type](../README.md) · [Working starter](../starters/integration-service/README.md) · [External API](../capabilities/external-api.md) · [Testing](../docs/testing-guide.md) · [Troubleshooting](../docs/troubleshooting.md)
 
 > New to Java or Spring Boot? Complete the [foundation](../docs/java-spring-foundation.md) once.
 

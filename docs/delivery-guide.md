@@ -67,6 +67,8 @@ Do not copy `.env`, source secrets, local databases, or build caches into the im
 
 > 📍 Create the workflow in the CI folder used by the repository, such as `<project-root>/.github/workflows/verify.yml` for GitHub Actions.
 
+Use this repository’s [working GitHub Actions workflow](../.github/workflows/verify.yml) as the concrete example. It validates the handbook and runs `clean verify` independently for every starter. Copy only the job needed by the new project.
+
 Every pushed change should run from a clean checkout with the project wrapper:
 
 ```text

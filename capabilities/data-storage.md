@@ -4,6 +4,8 @@
 
 Insert this process when state must survive application restart.
 
+> ↩ Keep the application path open. After Step 5, return to the exact application step that sent you here, finish its check, and continue from there.
+
 ## Step 1 · Choose and design the data model
 
 > 📍 Add a `Data model` section under the current feature in `<project-root>/PROJECT.md`; do this before creating entity/document classes.
@@ -125,4 +127,4 @@ Test constraints, custom queries, pagination, concurrency, rollback, migrations 
 
 Before continuing, check: Clean build passes; migrations work on empty/prior schema; queries are bounded; recovery owner is known.
 
-Return to the application path’s next step.
+Return to the application step that sent you here, finish that step’s remaining instructions and check, then continue from its stated next step.

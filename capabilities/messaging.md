@@ -4,6 +4,8 @@
 
 Insert this process when work/events must be asynchronous, durable, buffered, replayable, or shared between services.
 
+> ↩ Keep the application path open. After Step 5, return to the exact application step that sent you here, finish its check, and continue from there.
+
 ## Step 1 · Define message and delivery behavior
 
 > 📍 Add an `Event contract` section under the current feature in `<project-root>/PROJECT.md`.
@@ -93,4 +95,4 @@ Test publish/consume, invalid message, duplicate, ordering, retry, dead letter, 
 
 Before continuing, check: Critical tests use the selected broker type; duplicates/failures are visible and recoverable.
 
-Return to the application path’s next step.
+Return to the application step that sent you here, finish that step’s remaining instructions and check, then continue from its stated next step.

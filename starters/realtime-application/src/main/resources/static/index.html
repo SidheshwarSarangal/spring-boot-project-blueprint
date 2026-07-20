@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>WebSocket starter</title></head>
+<body>
+<h1>WebSocket starter</h1>
+<input id="message" value="hello">
+<button id="send">Send</button>
+<pre id="output"></pre>
+<script>
+  const output = document.getElementById('output');
+  const socket = new WebSocket(`ws://${location.host}/ws`);
+  socket.onopen = () => output.textContent += 'connected\n';
+  socket.onmessage = event => output.textContent += `${event.data}\n`;
+  document.getElementById('send').onclick = () =>
+    socket.send(document.getElementById('message').value);
+</script>
+</body>
+</html>

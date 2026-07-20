@@ -4,6 +4,8 @@
 
 Insert this process for uploads, downloads, documents, images, exports, or imports.
 
+> ↩ Keep the application path open. After Step 5, return to the exact application step that sent you here, finish its check, and continue from there.
+
 ## Step 1 · Define file and access contract
 
 > 📍 Add a `File contract` section under the current feature in `<project-root>/PROJECT.md`.
@@ -103,4 +105,4 @@ Delete orphaned bytes when metadata save fails or mark state for reconciliation;
 
 Before continuing, check: Partial upload and storage outage have deterministic cleanup/recovery; no path traversal/unbounded memory/access leak.
 
-Return to the application path’s next step.
+Return to the application step that sent you here, finish that step’s remaining instructions and check, then continue from its stated next step.

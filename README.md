@@ -8,18 +8,18 @@ Choose the result your application must produce. Open only that path; it contain
 
 ## Select one primary application type
 
-| I need to build… | Choose this path |
-|---|---|
-| A JSON backend for a frontend, mobile app, or another service | [REST API](paths/rest-api.md) |
-| A schema-driven API where clients choose fields | [GraphQL API](paths/graphql-api.md) |
-| HTML pages and forms rendered by Spring | [Web application](paths/web-application.md) |
-| Work that runs at a time or outside an HTTP request | [Background worker](paths/background-worker.md) |
-| A service that consumes or publishes events | [Event-driven service](paths/event-driven-service.md) |
-| A service mainly connecting to another API/provider | [Integration service](paths/integration-service.md) |
-| A single entry point that routes and protects downstream services | [API gateway](paths/api-gateway.md) |
-| Large, restartable data import/export or processing | [Batch application](paths/batch-application.md) |
-| Live server-to-client updates, chat, tracking, or notifications | [Real-time application](paths/realtime-application.md) |
-| A terminal command or one-off automation utility | [Command-line application](paths/command-line-application.md) |
+| I need to build… | Follow | Working starter |
+|---|---|---|
+| A JSON backend for a frontend, mobile app, or another service | [REST API](paths/rest-api.md) | [Taskboard API](taskboard-api/README.md) |
+| A schema-driven API where clients choose fields | [GraphQL API](paths/graphql-api.md) | [GraphQL starter](starters/graphql-api/README.md) |
+| HTML pages and forms rendered by Spring | [Web application](paths/web-application.md) | [Web starter](starters/web-application/README.md) |
+| Work that runs at a time or outside an HTTP request | [Background worker](paths/background-worker.md) | [Worker starter](starters/background-worker/README.md) |
+| A service that consumes or publishes events | [Event-driven service](paths/event-driven-service.md) | [Event starter](starters/event-driven-service/README.md) |
+| A service mainly connecting to another API/provider | [Integration service](paths/integration-service.md) | [Integration starter](starters/integration-service/README.md) |
+| A single entry point that routes and protects downstream services | [API gateway](paths/api-gateway.md) | [Gateway starter](starters/api-gateway/README.md) |
+| Large, restartable data import/export or processing | [Batch application](paths/batch-application.md) | [Batch starter](starters/batch-application/README.md) |
+| Live server-to-client updates, chat, tracking, or notifications | [Real-time application](paths/realtime-application.md) | [Real-time starter](starters/realtime-application/README.md) |
+| A terminal command or one-off automation utility | [Command-line application](paths/command-line-application.md) | [CLI starter](starters/command-line-application/README.md) |
 
 > Most business domains—shopping, banking, hospital, booking, learning—use one or more of these technical shapes. Select by how the application runs and delivers results, not by its business name.
 
@@ -71,6 +71,7 @@ When a step links a capability such as database, security, or messaging, open on
 - [Configuration guide](docs/configuration-guide.md) — YAML, environment variables, profiles, validated settings, and secrets.
 - [Delivery guide](docs/delivery-guide.md) — package, run, containerize, verify in CI, migrate, deploy, and roll back.
 - [Taskboard reference API](taskboard-api/README.md) — runnable example for the REST + SQL path.
+- [Runnable starters](starters/README.md) — minimal, tested Maven applications for every other path.
 - [Troubleshooting](docs/troubleshooting.md) — use when a build, startup, HTTP, database, or test step fails.
 - [Production checklist](docs/production-checklist.md) — final gate for every application type.
 - [Official references](docs/official-references.md) — primary Spring documentation used by this repository.

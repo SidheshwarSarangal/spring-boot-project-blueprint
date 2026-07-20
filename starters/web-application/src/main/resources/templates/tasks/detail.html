@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"><title>Task</title></head>
+<body>
+<h1>Task</h1>
+<p th:text="${task.title}"></p>
+<a th:href="@{/tasks/new}">Create another</a>
+</body>
+</html>

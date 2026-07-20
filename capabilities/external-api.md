@@ -4,6 +4,8 @@
 
 Insert this process when a use case calls payments, email, maps, AI, identity, or another HTTP provider.
 
+> ↩ Keep the application path open. After Step 5, return to the exact application step that sent you here, finish its check, and continue from there.
+
 ## Step 1 · Define the provider boundary
 
 > 📍 Add an `External provider` section under the current feature in `<project-root>/PROJECT.md`.
@@ -126,4 +128,4 @@ Test success, malformed/empty response, timeout, connection failure, auth failur
 
 Before continuing, check: Normal automated tests run offline; calls cannot block forever; duplicate side effects are controlled.
 
-Return to the application path’s next step.
+Return to the application step that sent you here, finish that step’s remaining instructions and check, then continue from its stated next step.

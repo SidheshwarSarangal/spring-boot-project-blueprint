@@ -19,10 +19,10 @@ flowchart LR
 
 > 📍 Open a terminal in `<blueprint-root>/taskboard-api/`, the folder containing this example’s `pom.xml`.
 
-Prerequisites: Java 17+ and Maven 3.6.3+. Check them with `java -version` and `mvn -version`.
+Prerequisite: Java 17+. The included Maven wrapper downloads the required Maven version.
 
 ```bash
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 
 Open `http://localhost:8080/actuator/health`.
@@ -98,7 +98,15 @@ The reference uses `ddl-auto: update` because its file-backed database is local 
 > 📍 Run the test command in `<blueprint-root>/taskboard-api/`.
 
 ```bash
-mvn clean verify
+./mvnw clean verify
+```
+
+Build and run the concrete container example:
+
+```bash
+./mvnw clean verify
+docker build -t taskboard-api:local .
+docker run --rm -p 8080:8080 taskboard-api:local
 ```
 
 ```mermaid

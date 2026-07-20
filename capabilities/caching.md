@@ -4,6 +4,8 @@
 
 Insert this only after measurement shows repeated read/computation latency is a problem. Cache is not the source of truth.
 
+> ↩ Keep the application path open. After Step 4, return to the exact application step that sent you here, finish its check, and continue from there.
+
 ## Step 1 · Measure and define correctness
 
 > 📍 Add a `Caching decision` section to `<project-root>/PROJECT.md`. Put the repeatable baseline test in `src/test/java/com/company/project/task/TaskPerformanceTest.java` or record the production metric/query used.
@@ -76,4 +78,4 @@ Test miss, hit, expiry, invalidation, cross-user isolation, unavailable cache, c
 
 Before continuing, check: Source remains correct when cache is unavailable; size is bounded; post-cache measurement is meaningfully better.
 
-Keep the cache and return to the path, or remove it if benefit is not justified.
+Keep the cache only when the measurement justifies it. Return to the application step that sent you here, finish that step’s remaining instructions and check, then continue from its stated next step.

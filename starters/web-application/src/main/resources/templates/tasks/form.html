@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"><title>Create task</title></head>
+<body>
+<h1>Create task</h1>
+<form th:action="@{/tasks}" th:object="${taskForm}" method="post">
+  <label>Title <input th:field="*{title}"></label>
+  <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+  <button type="submit">Create</button>
+</form>
+</body>
+</html>
