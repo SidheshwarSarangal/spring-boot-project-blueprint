@@ -6,6 +6,18 @@
 
 Use this process when a frontend, mobile app, or another service sends HTTP requests and expects JSON.
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Create `<project-root>/PROJECT.md` | Endpoint contract and acceptance cases |
+| 2 | Browser: Initializr; Terminal: generated `<project-root>` | Generate; run `./mvnw ...` and `curl` |
+| 3 | Create `src/main/java/com/company/project/task/` and `task/dto/` | Entity/repository/service/controller/DTO files |
+| 4 | Edit `task/TaskService.java`, `task/TaskController.java`; Terminal: `<project-root>` | Add vertical-slice code; run request |
+| 5 | Edit DTO/service; create `src/main/java/com/company/project/common/error/ApiExceptionHandler.java` | Validation/exception mappings/capability code |
+| 6 | Create matching `src/test/java/com/company/project/task/`; edit `<project-root>/README.md` or `requests.http` | Tests and runnable examples |
+| 7 | Edit `src/main/resources/application.yml`; create CI/deployment files at project root/platform location | Configure, package, deploy |
+
 ## Step 1 · Define one endpoint
 
 **What:** Produce a testable HTTP contract for one user action.

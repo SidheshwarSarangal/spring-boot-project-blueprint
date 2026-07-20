@@ -6,6 +6,16 @@
 
 Use this when the application is a controlled entry point to downstream services. Keep ordinary business workflows out of the gateway.
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Create `<project-root>/PROJECT.md` | Route/trust/limit contract |
+| 2 | Browser: Initializr; Terminal: generated `<project-root>` | Generate/build/start gateway |
+| 3 | Edit `src/main/resources/application.yml`; run local stub separately | Route YAML and route request |
+| 4 | Create `src/main/java/com/company/gateway/CorrelationIdFilter.java`; edit security/route config | Trust, limit, timeout code |
+| 5 | Create `src/test/java/com/company/gateway/`; edit config/CI/route docs | Gateway tests and delivery |
+
 ## Step 1 · Define one route and policy
 
 **What:** Produce an incoming → downstream routing contract.

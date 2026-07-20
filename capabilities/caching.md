@@ -4,6 +4,15 @@
 
 Insert this only after measurement shows repeated read/computation latency is a problem. Cache is not the source of truth.
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Edit performance notes in `<project-root>/PROJECT.md`; run benchmark/metrics from project root | Baseline and correctness contract |
+| 2 | Edit `pom.xml`, create `src/main/java/com/company/project/cache/CacheConfiguration.java`, edit `application.yml` | Provider and bounded cache config |
+| 3 | Edit feature service; create matching cache test | Cache read/eviction/key code |
+| 4 | Run tests/measurements in project root; inspect cache metrics | Failure/correctness/benefit proof |
+
 ## Step 1 · Measure and define correctness
 
 **What:** Prove a cache is needed and specify safe staleness/invalidation.

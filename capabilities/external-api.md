@@ -4,6 +4,16 @@
 
 Insert this process when a use case calls payments, email, maps, AI, identity, or another HTTP provider.
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Edit feature sheet in `<project-root>/PROJECT.md` | Provider-independent boundary/failures |
+| 2 | Create `src/main/java/com/company/project/provider/` | Interface, DTO, properties, adapter files |
+| 3 | Edit `provider/ProviderConfiguration.java`, `src/main/resources/application.yml`, environment | HTTP client, URL, credentials, timeouts |
+| 4 | Edit `provider/HttpProviderAdapter.java` and application error mapping | Call/translation/retry/idempotency |
+| 5 | Create matching `src/test/java/.../provider/`; run terminal in project root | Stub tests, metrics, clean build |
+
 ## Step 1 · Define the provider boundary
 
 **What:** Specify application-owned input/output and provider failure rules.

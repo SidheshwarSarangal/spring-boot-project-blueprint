@@ -6,6 +6,17 @@
 
 Use this when work runs on a timer or outside the original HTTP request.
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Create `<project-root>/PROJECT.md` | Job contract/retry/duplicate rules |
+| 2 | Browser: Initializr; Terminal: generated `<project-root>` | Generate/build/start |
+| 3 | Create `src/main/java/com/company/project/cleanup/`; edit `src/main/resources/application.yml` | Trigger/service/properties/schedule |
+| 4 | Edit `cleanup/CleanupService.java`; create/edit feature repository/entity as required | Bounded idempotent job code |
+| 5 | Edit selected capability/configuration files; add metrics/logs in job/service | Recovery/observability |
+| 6 | Create `src/test/java/com/company/project/cleanup/`; edit config/CI/README | Job tests and delivery |
+
 ## Step 1 · Define one job
 
 **What:** Produce the trigger, result, failure, and duplicate-execution contract.

@@ -6,6 +6,17 @@
 
 Use this for large, finite, restartable imports, exports, reports, migrations, or transformations.
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Create `<project-root>/PROJECT.md` | Job/input/output/restart contract |
+| 2 | Browser: Initializr; Terminal: generated `<project-root>` | Generate/build/start Batch foundation |
+| 3 | Create `src/main/java/com/company/project/importjob/`; add sample under `src/main/resources/input/` | Job/step/reader/processor/writer code |
+| 4 | Edit processor and job/step fault-tolerance configuration | Validation/retry/skip/restart |
+| 5 | Create/edit selected data/provider/file/messaging package | Real source/target and volume limits |
+| 6 | Create matching `src/test/java/.../importjob/`; edit config/CI/operator README | Batch tests and delivery |
+
 ## Step 1 · Define one job and restart rule
 
 **What:** Specify input, transformation, output, chunk/failure behavior, and completion report.

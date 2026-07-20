@@ -4,6 +4,16 @@
 
 Insert this process when work/events must be asynchronous, durable, buffered, replayable, or shared between services.
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Edit feature/event sheet in `<project-root>/PROJECT.md` | Payload/delivery/recovery contract |
+| 2 | Edit `pom.xml`, `application-local.yml`; run broker separately and app terminal at project root | Broker dependency/config/connectivity |
+| 3 | Create `src/main/java/com/company/project/messaging/` | Event/publisher/listener/config code |
+| 4 | Edit consumer service; create inbox/outbox/recovery files and broker config | Idempotency/ack/retry/dead letter |
+| 5 | Create matching broker tests under `src/test/java`; run terminal at project root | Real-broker integration proof |
+
 ## Step 1 · Define message and delivery behavior
 
 **What:** Produce the message/event contract and recovery rules.

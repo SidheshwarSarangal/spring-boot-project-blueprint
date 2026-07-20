@@ -6,6 +6,17 @@
 
 Use this for terminal tools, administration, and small one-off automation.
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Create `<project-root>/PROJECT.md` | Command/options/output/exit contract |
+| 2 | Browser: Initializr; Terminal: generated `<project-root>` | Generate/build JAR |
+| 3 | Create `src/main/java/com/company/project/command/`; Terminal: project root | Runner/options/service code and command run |
+| 4 | Create/edit exception/exit-code config and service transaction | Exit/rerun behavior |
+| 5 | Create/edit selected data/provider/file package | Required resources |
+| 6 | Create matching `src/test/java/.../command/`; edit README/config/CI | CLI tests and delivery |
+
 ## Step 1 · Define one command
 
 **What:** Specify arguments, output, exit codes, side effects, and rerun behavior.

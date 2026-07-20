@@ -4,6 +4,16 @@
 
 Insert this process when state must survive application restart.
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Edit data sketch in `<project-root>/PROJECT.md` | Fields, constraints, relationships, queries |
+| 2 | Edit `<project-root>/pom.xml`, `src/main/resources/application-local.yml`; Terminal: project root | Dependency/configuration/start command |
+| 3 | Create `src/main/resources/db/migration/`; create feature entity/repository + matching test | Migration/mapping/query code |
+| 4 | Edit feature service/mapper/DTO | Transactions and safe returned shape |
+| 5 | Create/edit repository/integration tests, production config, recovery runbook | DB proof and operations |
+
 ## Step 1 · Choose and design the data model
 
 **What:** Select one source-of-truth database and write its fields/constraints/access patterns.

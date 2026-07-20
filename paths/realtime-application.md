@@ -6,6 +6,16 @@
 
 Use this for chat, live tracking, dashboards, or notifications through SSE or WebSocket.
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Create `<project-root>/PROJECT.md` | Connection/message/reconnect contract |
+| 2 | Browser: Initializr; Terminal: generated `<project-root>` | Generate/build/start transport |
+| 3 | Create `src/main/java/com/company/project/live/` | Message/controller/service/WebSocket config |
+| 4 | Edit `live/`, `security/`, and selected messaging/data packages | Auth, limits, fan-out, history |
+| 5 | Create matching `src/test/java/.../live/`; edit client docs/config/CI | Lifecycle tests and delivery |
+
 ## Step 1 · Choose connection and message behavior
 
 **What:** Define transport, connection lifecycle, messages, and missed-update behavior.

@@ -4,6 +4,16 @@
 
 Insert this process when the application must identify callers or protect actions/data.
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Edit users/access + feature in `<project-root>/PROJECT.md` | Identity/role/ownership rules |
+| 2 | Edit `<project-root>/pom.xml` and external identity-provider settings | Security/resource-server/OIDC dependencies |
+| 3 | Create `src/main/java/com/company/project/security/SecurityConfiguration.java` and related types | Filter-chain/authentication code |
+| 4 | Edit protected feature service/authorization service | Record ownership/business permission |
+| 5 | Create `src/test/java/com/company/project/security/`; edit logs/secrets config | Allow/deny/leakage tests |
+
 ## Step 1 · Define identity, permission, and ownership
 
 **What:** Produce explicit allow/deny rules before security configuration.

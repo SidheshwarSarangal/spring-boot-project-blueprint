@@ -6,6 +6,17 @@
 
 Use this when the main purpose is coordinating a payment, email, maps, AI, identity, or another provider.
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Create `<project-root>/PROJECT.md` | Provider-independent operation contract |
+| 2 | Follow chosen entry-path files; Terminal: generated `<project-root>` | Generate/build/start entry point |
+| 3 | Create `src/main/java/com/company/project/payment/` | Provider interface/adapter/DTO/config code |
+| 4 | Edit adapter/configuration and application error handler | Timeouts/outcome translation/retry |
+| 5 | Create/edit selected `security/`, persistence, messaging, or cache package | Required durability/access |
+| 6 | Create matching `src/test/java/.../payment/`; edit config/CI/README | Stub tests and delivery |
+
 ## Step 1 · Define one integration action
 
 **What:** Specify application behavior independently from the provider API.

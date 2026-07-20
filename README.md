@@ -69,6 +69,18 @@ Do not move to **Next** while **Verify** is failing. Replace example package nam
 
 Code blocks show the relevant implementation at that step; add the matching `package` declaration and IDE-generated imports. When an API differs across Spring major versions, keep the version selected by Spring Initializr and confirm the linked official reference rather than mixing examples from another version.
 
+“Where” always uses one of these exact forms:
+
+```text
+Browser: https://start.spring.io
+Terminal (working directory): <project-root>
+Create file: src/main/java/com/company/project/task/TaskService.java
+Edit file: src/main/resources/application.yml
+Create folder: src/main/resources/db/migration/
+```
+
+If a step has several actions, its **Repository action map** states separately where each file is created/edited and where each command is run. The code block immediately following a file instruction belongs in that file.
+
 ## Shared resources
 
 - [Project workbook](docs/project-workbook.md) — copy into your project to track requirements, features, tests, and delivery.

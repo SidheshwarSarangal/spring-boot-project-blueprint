@@ -4,6 +4,16 @@
 
 Insert this process for uploads, downloads, documents, images, exports, or imports.
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Edit feature sheet in `<project-root>/PROJECT.md` | Content/size/access/retention contract |
+| 2 | Edit `src/main/resources/application.yml` and storage provider environment | Multipart/storage settings |
+| 3 | Create `src/main/java/com/company/project/file/` | Storage interface/adapter/entity/service code |
+| 4 | Edit/create `file/FileController.java` or selected job entry; edit security/service | Upload/download/authorization code |
+| 5 | Create matching `src/test/java/.../file/`; create cleanup/reconciliation job if required | Failure/outage/cleanup proof |
+
 ## Step 1 · Define file and access contract
 
 **What:** Specify accepted content, limits, ownership, retention, and cleanup.

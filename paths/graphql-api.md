@@ -6,6 +6,17 @@
 
 Use this when clients query a typed schema and select fields. If fixed resources/status codes are the better contract, use [REST](rest-api.md).
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Create `<project-root>/PROJECT.md`; create `src/main/resources/graphql/schema.graphqls` | Operation/schema contract |
+| 2 | Browser: Initializr; Terminal: generated `<project-root>` | Generate/build/start |
+| 3 | Edit schema; create `src/main/java/com/company/project/task/` GraphQL files | Input/payload/controller/service code |
+| 4 | Create/edit data-loader/query/error/security files in feature/common packages | Bounds, batching, GraphQL errors |
+| 5 | Create/edit selected capability package | Data/security/provider/file/cache |
+| 6 | Create matching `src/test/java/.../task/`; edit schema docs/config/CI | Tests and delivery |
+
 ## Step 1 · Define one query or mutation
 
 **What:** Produce the schema contract, authorization, and error behavior.

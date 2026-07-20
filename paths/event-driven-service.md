@@ -6,6 +6,17 @@
 
 Use this when a broker message/event starts the main work or the service publishes domain events.
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Create `<project-root>/PROJECT.md` and event contract document | Versioned payload/delivery rules |
+| 2 | Browser: Initializr; Terminal: project root + local broker environment | Generate/build/start/connect broker |
+| 3 | Create `src/main/java/com/company/project/order/` | Event/listener/service/configuration files |
+| 4 | Edit `order/OrderService.java`; create processed-event/inbox/outbox files | Idempotency/transaction code |
+| 5 | Edit broker listener-container/recovery configuration | Retry/dead-letter/limits |
+| 6 | Create matching `src/test/java/.../order/`; edit config/CI/event docs | Broker tests and delivery |
+
 ## Step 1 · Define one event contract
 
 **What:** Produce a versioned event and delivery/failure agreement.

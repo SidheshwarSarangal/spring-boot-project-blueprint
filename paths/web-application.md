@@ -6,6 +6,17 @@
 
 Use this process when Spring returns HTML pages and processes browser forms, commonly with Thymeleaf.
 
+## Repository action map
+
+| Step | Exact location | Add or run there |
+|---|---|---|
+| 1 | Create `<project-root>/PROJECT.md` | Page/form contract |
+| 2 | Browser: Initializr; Terminal: generated `<project-root>` | Generate/build/start/health command |
+| 3 | Create `src/main/java/com/company/project/task/`, `src/main/resources/templates/tasks/`, `src/main/resources/static/css/` | Form/controller/service/templates/CSS |
+| 4 | Edit `task/TaskController.java`, `task/TaskService.java`, `templates/tasks/form.html` | GET/POST/service/template code |
+| 5 | Create/edit selected capability package and `security/SecurityConfiguration.java` when required | Persistence/security/provider/file code |
+| 6 | Create matching `src/test/java/com/company/project/task/`; edit config/CI/README | Tests, configuration, delivery |
+
 ## Step 1 · Define one page flow
 
 **What:** Specify one browser journey with success and validation behavior.
