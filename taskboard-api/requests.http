@@ -1,0 +1,42 @@
+@baseUrl = http://localhost:8080
+
+### Health
+GET {{baseUrl}}/actuator/health
+
+### Create a valid task
+POST {{baseUrl}}/api/tasks
+Content-Type: application/json
+
+{
+  "title": "Learn Spring layers",
+  "description": "Trace a request from controller to database",
+  "dueDate": "2030-01-01"
+}
+
+### List and filter tasks
+GET {{baseUrl}}/api/tasks?status=TODO&page=0&size=20
+
+### Read one task
+GET {{baseUrl}}/api/tasks/1
+
+### Update one task
+PUT {{baseUrl}}/api/tasks/1
+Content-Type: application/json
+
+{
+  "title": "Learn Spring layers",
+  "description": "Completed the request trace",
+  "status": "DONE",
+  "dueDate": "2030-01-01"
+}
+
+### See validation errors
+POST {{baseUrl}}/api/tasks
+Content-Type: application/json
+
+{
+  "title": ""
+}
+
+### Delete one task
+DELETE {{baseUrl}}/api/tasks/1
