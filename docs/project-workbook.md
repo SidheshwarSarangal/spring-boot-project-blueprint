@@ -1,6 +1,6 @@
 # Project workbook
 
-[← Start page](../README.md) · [Choose an application type](application-paths.md) · [Core implementation](core-guide.md)
+[← Application selector](../README.md) · [Core REST implementation](core-guide.md) · [Production checklist](production-checklist.md)
 
 Copy this file into a new project as `PROJECT.md`. Keep it short and update it as decisions change. It is the link between the requirement, code, tests, and delivery.
 

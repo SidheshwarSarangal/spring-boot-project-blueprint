@@ -8,15 +8,15 @@
 2. Read the first meaningful exception and its deepest `Caused by` message.
 3. Identify the phase: compile, context startup, HTTP, database, or test.
 4. Change one cause.
-5. Rerun the smallest relevant command, then `mvn clean verify`.
+5. Rerun the smallest relevant command, then `./mvnw clean verify`.
 
 ## Fast checks
 
 ```bash
 java -version
 mvn -version
-mvn clean verify
-mvn spring-boot:run
+./mvnw clean verify
+./mvnw spring-boot:run
 curl -i http://localhost:8080/actuator/health
 ```
 
@@ -35,6 +35,8 @@ curl -i http://localhost:8080/actuator/health
 | Lazy-loading error | map needed data inside the service transaction; query it deliberately |
 | Too many SQL queries | inspect access pattern; use a fetch join, entity graph, or projection |
 | Test passes in IDE only | run Maven from project root and check JDK/test configuration |
+
+On Windows use `mvnw.cmd`. If the project has no Maven wrapper, install Maven and replace `./mvnw` with `mvn`.
 
 ## Bean startup failures
 

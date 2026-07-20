@@ -1,6 +1,6 @@
 # Prepare for production
 
-[← Choose an application type](application-paths.md) · [Troubleshooting](troubleshooting.md) · [Start page](../README.md)
+[← Application selector](../README.md) · [Troubleshooting](troubleshooting.md) · [Project workbook](project-workbook.md)
 
 Complete this when the required features work. Production readiness means the same tested artifact can be safely configured and run in each environment.
 
@@ -64,7 +64,7 @@ The pipeline should:
 checkout → compile → test → package → scan → publish artifact → migrate → deploy → health check
 ```
 
-- Run `mvn clean verify` from a clean checkout.
+- Run `./mvnw clean verify` from a clean checkout.
 - Pin the Java runtime and build reproducibly.
 - Package the JAR or container without source secrets.
 - Run migrations as a controlled deployment step.
@@ -90,7 +90,7 @@ Known operational limitations
 ## Release gate
 
 ```bash
-mvn clean verify
+./mvnw clean verify
 git status --short
 ```
 

@@ -220,8 +220,8 @@ For a shared database, use PostgreSQL or the required database, environment-supp
 ## 11. Verify the feature
 
 ```bash
-mvn clean verify
-mvn spring-boot:run
+./mvnw clean verify
+./mvnw spring-boot:run
 ```
 
 ```bash
