@@ -1,6 +1,6 @@
 # Taskboard reference API
 
-[← Repository home](../README.md) · [Project workflow](../docs/00-project-workflow.md) · [Feature reference](../docs/04-build-a-feature.md)
+[← Start page](../README.md) · [Core guide](../docs/core-guide.md) · [Choose the next application type](../docs/application-paths.md)
 
 This small API is intentionally plain Java. It demonstrates structure and connections without Lombok, authentication, Docker, or a production database obscuring the core flow.
 

@@ -1,6 +1,6 @@
 # Official references
 
-[← Project workflow](00-project-workflow.md) · [Repository home](../README.md)
+[← Start page](../README.md) · [Core guide](core-guide.md)
 
 These are the primary sources used to design this handbook. Version-specific claims were checked on **2026-07-20**.
 
