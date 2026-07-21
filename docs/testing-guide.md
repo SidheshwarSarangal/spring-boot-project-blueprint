@@ -2,7 +2,7 @@
 
 [← Application selector](../README.md) · [Working tests](../taskboard-api/src/test/java/com/example/taskboard) · [Troubleshooting](troubleshooting.md)
 
-Test observable behavior at the smallest useful scope. Do not load the full application for every test.
+Test results that a user or another part of the program can observe. Use the smallest test that proves the result; starting the whole application for every test makes the suite slower and harder to debug.
 
 If creating/running test files is new, use [Action K](beginner-execution-guide.md#action-k-create-and-run-a-test); for failures use [Action L](beginner-execution-guide.md#action-l-fix-the-first-compile-or-startup-error).
 
@@ -18,11 +18,11 @@ For each feature copy its success, invalid, missing, forbidden, conflict, extern
 
 | Need to prove | Test scope |
 |---|---|
-| Business rule in one service | Unit test with mocked collaborators |
+| Business rule in one service | Unit test with fake versions of its dependencies |
 | HTTP path, JSON, validation, status/error | MVC test with MockMvc |
 | Entity mapping or repository query | JPA test |
-| Several real application components | Integration test |
-| Provider/broker/database behavior | Integration test with stub/Testcontainers |
+| Several real application parts working together | Integration test |
+| Real provider, broker, or database behavior | Integration test with a stub or Testcontainers |
 
 ## 3. Service unit test
 
@@ -52,13 +52,13 @@ class TaskServiceTest {
 }
 ```
 
-Mock boundaries, not simple value objects. Assert the returned result/state and verify an important collaborator call only when it is part of the behavior.
+Replace repositories and external services with controlled fakes. Keep simple data objects real. Check the returned result or changed state; check a dependency call only when that call is part of the required behavior.
 
 ## 4. MVC test
 
 > 📍 Create `src/test/java/com/company/project/task/TaskControllerTest.java`.
 
-Use the MVC test annotation supported by the selected Spring Boot version and `MockMvc`. Import the global error handler when the slice does not discover it automatically.
+Use the MVC test annotation supported by your Spring Boot version and `MockMvc`. If expected error responses are missing, include the global error handler in the test configuration.
 
 ```java
 @WebMvcTest(TaskController.class)
@@ -106,7 +106,7 @@ Use the production database type through Testcontainers for database-specific qu
 
 > 📍 Create `src/test/java/com/company/project/TaskApplicationTest.java`; keep it under the application’s base package.
 
-Use `@SpringBootTest` only where the real bean graph matters. Start external dependencies with Testcontainers or a stub and supply their connection settings dynamically. Keep the test isolated and deterministic.
+Use `@SpringBootTest` only when you need to prove that real Spring-managed objects connect correctly. Start external dependencies with Testcontainers or a stub and provide their connection settings to the test. The result must not depend on test order or leftover data.
 
 Critical integration tests should prove:
 
@@ -136,7 +136,7 @@ Critical integration tests should prove:
 
 - Arrange, act, assert.
 - Give tests behavior names such as `rejectsPastDueDate`.
-- Do not depend on execution order, current time, random ports, or shared leftover data without controlling them.
+- Control test order, time, ports, and data instead of depending on whatever happens to be available.
 - Use fixed clocks/IDs where business logic depends on them.
 - Never call production services from normal automated tests.
 - A test must fail when the behavior it protects is broken.

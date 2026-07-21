@@ -8,13 +8,26 @@ For the physical error-reading and rerun procedure, use [Action L](beginner-exec
 
 > 📍 Start in the terminal, test, or client where the failure appears. Open only the first application-owned file or configuration named by the error.
 
-| Step | What | Where | Do | Verify | Next |
-|---|---|---|---|---|---|
-| 1 | Small reproducible failure | Terminal/test/request | Remove unrelated actions | Failure repeats reliably | 2 |
-| 2 | First real cause | First exception + deepest `Caused by` | Ignore consequence noise | Application-owned failing point is known | 3 |
-| 3 | Failure phase | Compile/startup/HTTP/data/test | Select matching section below | Scope is narrowed | 4 |
-| 4 | One correction | Relevant file/config | Change one suspected cause | Small reproduction passes | 5 |
-| 5 | Regression proof | Project root | Run smallest test then clean verify | Clean build passes | Return to path |
+```mermaid
+flowchart TD
+    Failure[Make the failure repeat] --> Cause[Read the first useful error]
+    Cause --> Phase{Where does it fail?}
+    Phase -->|Compile| Fix[Change one likely cause]
+    Phase -->|Startup| Fix
+    Phase -->|HTTP or data| Fix
+    Phase -->|Test| Fix
+    Fix --> Small[Run the smallest check]
+    Small -->|Still fails| Cause
+    Small -->|Passes| Full[Run clean verify]
+    Full -->|Fails| Cause
+    Full -->|Passes| Done[Return to the build path]
+```
+
+1. Remove unrelated actions until the failure repeats with one command or request.
+2. Read the first exception and the deepest useful `Caused by` line. Later errors are often side effects.
+3. Decide whether the problem is compilation, startup, HTTP, data, or a test.
+4. Change one likely cause, then rerun the smallest check.
+5. When that passes, run `./mvnw clean verify`.
 
 If Step 5 fails, return to Step 1 with the new smallest failure.
 
@@ -24,7 +37,7 @@ If Step 5 fails, return to Step 1 with the new smallest failure.
 
 ```bash
 java -version
-mvn -version
+./mvnw -version
 ./mvnw clean verify
 ./mvnw spring-boot:run
 curl -i http://localhost:8080/actuator/health
@@ -34,15 +47,15 @@ curl -i http://localhost:8080/actuator/health
 |---|---|
 | `cannot find symbol` | spelling, import, package, dependency, first compiler error |
 | `package ... does not exist` | package path and dependency in `pom.xml` |
-| Application context fails | first bean named in the dependency chain |
-| No bean found | annotation, package below application class, required dependency |
+| Application context fails | first Spring-managed object (`bean`) named in the error chain |
+| No bean found | missing annotation, wrong package location, or missing dependency |
 | Port already in use | stop the old process or configure another port |
 | `404` | HTTP method, full controller path, application port |
 | `400` | request JSON, content type, DTO types, validation response |
 | `415` | send the supported `Content-Type`, normally `application/json` |
-| `500` | server stack trace and first application-owned frame |
+| `500` | server error and first line that points to your own code |
 | Table/column missing | datasource URL, active migration, schema history |
-| Lazy-loading error | map needed data inside the service transaction; query it deliberately |
+| Lazy-loading error | read and map the needed data while the service transaction is open |
 | Too many SQL queries | inspect access pattern; use a fetch join, entity graph, or projection |
 | Test passes in IDE only | run Maven from project root and check JDK/test configuration |
 
