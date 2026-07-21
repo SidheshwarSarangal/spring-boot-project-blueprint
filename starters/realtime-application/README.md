@@ -1,5 +1,7 @@
 # Real-time application starter
 
+[← Real-time process](../../paths/realtime-application.md) · [Adapt this starter](../../docs/starter-adaptation-guide.md)
+
 Run in this folder:
 
 ```bash

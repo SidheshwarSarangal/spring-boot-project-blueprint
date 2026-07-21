@@ -1,5 +1,7 @@
 # API gateway starter
 
+[← API gateway process](../../paths/api-gateway.md) · [Adapt this starter](../../docs/starter-adaptation-guide.md)
+
 Run in this folder:
 
 ```bash

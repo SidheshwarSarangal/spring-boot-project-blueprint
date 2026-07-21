@@ -1,5 +1,7 @@
 # GraphQL API starter
 
+[← GraphQL process](../../paths/graphql-api.md) · [Adapt this starter](../../docs/starter-adaptation-guide.md)
+
 Run in this folder:
 
 ```bash

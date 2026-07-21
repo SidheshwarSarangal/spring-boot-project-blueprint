@@ -1,5 +1,7 @@
 # Integration service starter
 
+[← Integration process](../../paths/integration-service.md) · [Adapt this starter](../../docs/starter-adaptation-guide.md)
+
 Run the safe local stub mode:
 
 ```bash

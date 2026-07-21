@@ -21,8 +21,11 @@ Generated projects include the Maven wrapper, so a separate Maven install is nor
 
 ```bash
 java -version
+javac -version
 git --version
 ```
+
+`java` runs compiled applications; `javac` compiles source code. If `java` works but `javac` does not, install a full JDK rather than only a runtime. This repository's starters use Java 17, the minimum supported by Spring Boot 4.1.0.
 
 On Linux/macOS use `./mvnw`; on Windows use `mvnw.cmd`.
 

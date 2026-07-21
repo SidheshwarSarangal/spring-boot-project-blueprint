@@ -1,5 +1,7 @@
 # Web application starter
 
+[← Web application process](../../paths/web-application.md) · [Adapt this starter](../../docs/starter-adaptation-guide.md)
+
 Run in this folder:
 
 ```bash

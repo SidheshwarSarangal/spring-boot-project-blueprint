@@ -2,6 +2,8 @@
 
 Choose the starter that matches the application path. Each folder is an independent Maven project generated from Spring Initializr and contains one complete, minimal flow.
 
+New to adapting example code? Follow [Adapt a runnable starter safely](../docs/starter-adaptation-guide.md). Build the unchanged starter first, copy only one starter into a separate project folder, then rename and modify it in small verified steps.
+
 | Application | Starter | First observable result |
 |---|---|---|
 | REST API | [Taskboard API](../taskboard-api/README.md) | JSON CRUD API backed by H2 |
@@ -22,4 +24,4 @@ In a selected folder run:
 ./mvnw spring-boot:run
 ```
 
-Copy one starter into a new repository; do not combine all starters into one application. Rename `com.example.starter`, the artifact, and example feature only after its clean build passes.
+Do not combine all starters into one application. The adaptation guide covers safe package refactoring, project identity, feature replacement, capability selection, and the final documentation gate.

@@ -1,10 +1,19 @@
 # What do you want to build with Spring Boot?
 
-Choose the result your application must produce. Open only that path; it contains the complete order from project setup to delivery.
+This repository is a build guide for common Spring Boot application types. It helps you choose an application shape, build one feature at a time, add only the capabilities that feature needs, test it, and prepare it for delivery.
 
-> **First Java or Spring Boot project?** Complete the [Java and Spring Boot foundation](docs/java-spring-foundation.md) once, then return here and select a path. Experienced readers can select immediately.
+## Choose how you want to begin
 
-> **Not sure how to physically perform a step?** Keep the [beginner execution guide](docs/beginner-execution-guide.md) open. It explains exactly how to create/open files, use the project terminal, paste/adapt Java, add imports/dependencies, edit YAML, compile, test, and fix the first error. Use the [Java syntax primer](docs/java-syntax-primer.md) whenever a code symbol is unfamiliar.
+| Your situation | Start here | Then |
+|---|---|---|
+| Java and Spring Boot are both new to you | Complete the [Java and Spring Boot foundation](docs/java-spring-foundation.md) | Return here and choose an application type below |
+| You want to create a project from Spring Initializr | Choose an application type below | Follow its numbered process from Step 1 |
+| You learn best from working code or need a quick starting point | Choose a [runnable starter](starters/README.md) | Follow the [starter adaptation guide](docs/starter-adaptation-guide.md) |
+| You already have a Spring Boot project | Choose the closest application type below | Use its steps as a gap checklist; do not regenerate the project |
+
+Whichever route you choose, keep the [beginner execution guide](docs/beginner-execution-guide.md) open when you do not know how to create a file, use the terminal, add an import/dependency, edit YAML, run a test, or fix the first error. Use the [Java syntax primer](docs/java-syntax-primer.md) whenever a Java symbol is unfamiliar.
+
+Do not try to read the entire repository before starting. Choose one primary application type and one small, observable feature.
 
 ## Select one primary application type
 
