@@ -6,6 +6,17 @@ cd "$repo_root"
 
 failed=0
 
+markdown_files=(
+  README.md
+  CONTRIBUTING.md
+  paths/*.md
+  capabilities/*.md
+  docs/*.md
+  starters/*.md
+  starters/*/README.md
+  taskboard-api/README.md
+)
+
 for file in paths/*.md capabilities/*.md; do
   steps=$(grep -c '^## Step ' "$file")
   locations=$(grep -c '^> 📍 ' "$file")
@@ -47,7 +58,7 @@ perl -MFile::Basename=dirname -MFile::Spec -e '
     }
   }
   exit $bad;
-' README.md paths/*.md capabilities/*.md docs/*.md starters/*.md starters/*/README.md taskboard-api/README.md || failed=1
+' "${markdown_files[@]}" || failed=1
 
 perl -e '
   $bad = 0;
@@ -61,7 +72,12 @@ perl -e '
     }
   }
   exit $bad;
-' README.md paths/*.md capabilities/*.md docs/*.md starters/*.md starters/*/README.md taskboard-api/README.md || failed=1
+' "${markdown_files[@]}" || failed=1
+
+if grep -nE '!\[\]\(' "${markdown_files[@]}"; then
+  echo "Images must have meaningful alternative text"
+  failed=1
+fi
 
 if grep -RInE '^\*\*(Where|Physically do|Verify|What|Do now|Finish this step when|Go next):' \
     paths capabilities docs; then

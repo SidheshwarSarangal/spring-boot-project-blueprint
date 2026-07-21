@@ -2,7 +2,7 @@
 
 Choose the starter that matches the application path. Each folder is an independent Maven project generated from Spring Initializr and contains one complete, minimal flow.
 
-New to adapting example code? Follow [Adapt a runnable starter safely](../docs/starter-adaptation-guide.md). Build the unchanged starter first, copy only one starter into a separate project folder, then rename and modify it in small verified steps.
+New to adapting example code? First use the [source walkthroughs](../docs/starter-walkthroughs.md) to trace the unchanged example, then follow [Adapt a runnable starter safely](../docs/starter-adaptation-guide.md). Build the unchanged starter first, copy only one starter into a separate project folder, then rename and modify it in small verified steps.
 
 | Application | Starter | First observable result |
 |---|---|---|

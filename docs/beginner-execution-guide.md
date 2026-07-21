@@ -120,23 +120,23 @@ Before continuing, check: Command exit is successful and the last Maven result i
 4. Right-click the package → **New Java Class/Record/Interface/Enum**.
 5. Make the public type name exactly match the filename and capitalization.
 
-```text
-TaskService         → TaskService.java
-CreateTaskRequest   → CreateTaskRequest.java
-TaskRepository      → TaskRepository.java
-```
+   ```text
+   TaskService         → TaskService.java
+   CreateTaskRequest   → CreateTaskRequest.java
+   TaskRepository      → TaskRepository.java
+   ```
 
 6. Confirm the first line matches the folder:
 
-```java
-package com.company.project.task;
-```
+   ```java
+   package com.company.project.task;
+   ```
 
-DTO example:
+   DTO example:
 
-```java
-package com.company.project.task.dto;
-```
+   ```java
+   package com.company.project.task.dto;
+   ```
 
 Before continuing, check: File is under the generated base package and `./mvnw compile` does not report package/type-name mismatch.
 
@@ -289,16 +289,16 @@ Before continuing, check: Actual status/body/state match the current feature con
 4. Arrange input/mocks, call one action, assert result.
 5. Run focused test first:
 
-```bash
-./mvnw -Dtest=TaskServiceTest test
-```
+   ```bash
+   ./mvnw -Dtest=TaskServiceTest test
+   ```
 
 6. After it passes, run all tests and clean verification:
 
-```bash
-./mvnw test
-./mvnw clean verify
-```
+   ```bash
+   ./mvnw test
+   ./mvnw clean verify
+   ```
 
 Use the [testing guide](testing-guide.md) for scope-specific code.
 

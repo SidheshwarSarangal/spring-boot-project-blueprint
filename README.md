@@ -1,12 +1,17 @@
 # What do you want to build with Spring Boot?
 
+[![Verify handbook and starters](https://github.com/SidheshwarSarangal/spring-boot-project-blueprint/actions/workflows/verify.yml/badge.svg)](https://github.com/SidheshwarSarangal/spring-boot-project-blueprint/actions/workflows/verify.yml)
+[![CodeQL](https://github.com/SidheshwarSarangal/spring-boot-project-blueprint/actions/workflows/codeql.yml/badge.svg)](https://github.com/SidheshwarSarangal/spring-boot-project-blueprint/actions/workflows/codeql.yml)
+[![Beginner feedback](https://img.shields.io/badge/feedback-beginner%20experience-blue)](https://github.com/SidheshwarSarangal/spring-boot-project-blueprint/issues/new?template=beginner-feedback.yml)
+
 This repository is a build guide for common Spring Boot application types. It helps you choose an application shape, build one feature at a time, add only the capabilities that feature needs, test it, and prepare it for delivery.
 
 ## Choose how you want to begin
 
 | Your situation | Start here | Then |
 |---|---|---|
-| Java and Spring Boot are both new to you | Complete the [Java and Spring Boot foundation](docs/java-spring-foundation.md) | Return here and choose an application type below |
+| You have not installed Java development tools | Complete the [toolchain setup guide](docs/setup-guide.md) | Follow the [first project tutorial](docs/first-project-tutorial.md) |
+| Java and Spring Boot are both new to you | Complete the [Java and Spring Boot foundation](docs/java-spring-foundation.md) | Follow the [first project tutorial](docs/first-project-tutorial.md), then choose a type below |
 | You want to create a project from Spring Initializr | Choose an application type below | Follow its numbered process from Step 1 |
 | You learn best from working code or need a quick starting point | Choose a [runnable starter](starters/README.md) | Follow the [starter adaptation guide](docs/starter-adaptation-guide.md) |
 | You already have a Spring Boot project | Choose the closest application type below | Use its steps as a gap checklist; do not regenerate the project |
@@ -72,6 +77,8 @@ When a step links a capability such as database, security, or messaging, open on
 
 ## Shared resources
 
+- [Toolchain setup](docs/setup-guide.md) — install and verify a JDK, Git, Maven Wrapper, IntelliJ IDEA, or VS Code on Windows, macOS, and Linux.
+- [First project tutorial](docs/first-project-tutorial.md) — complete one tested Taskboard API change through observable checkpoints.
 - [Project workbook](docs/project-workbook.md) — copy into your project to track requirements, features, tests, and delivery.
 - [Java and Spring Boot foundation](docs/java-spring-foundation.md) — prerequisites, Java syntax, generated files, Spring wiring, and the normal development loop.
 - [Beginner execution guide](docs/beginner-execution-guide.md) — physical IDE/file/terminal actions used by every process step.
@@ -81,9 +88,24 @@ When a step links a capability such as database, security, or messaging, open on
 - [Delivery guide](docs/delivery-guide.md) — package, run, containerize, verify in CI, migrate, deploy, and roll back.
 - [Taskboard reference API](taskboard-api/README.md) — runnable example for the REST + SQL path.
 - [Runnable starters](starters/README.md) — minimal, tested Maven applications for every other path.
+- [Starter source walkthroughs](docs/starter-walkthroughs.md) — trace the entry point, service, boundary, configuration, test, and result in every example.
 - [Troubleshooting](docs/troubleshooting.md) — use when a build, startup, HTTP, database, or test step fails.
 - [Production checklist](docs/production-checklist.md) — final gate for every application type.
 - [Official references](docs/official-references.md) — primary Spring documentation used by this repository.
+- [Quality evidence](docs/quality-evidence.md) — what the automated checks prove, how to reproduce them, and what they do not prove.
+- [Beginner usability testing](docs/usability-testing.md) — a repeatable protocol and feedback channel for improving the human learning experience.
+
+## What makes this repository verifiable?
+
+| Claim | Evidence |
+|---|---|
+| The examples are runnable | CI executes `clean verify` independently for all ten application types |
+| The handbook remains navigable | A repository validator checks local links, code fences, required files, and step completion gates |
+| Documentation follows consistent Markdown | Markdown lint runs on every pull request and main-branch push |
+| Referenced web resources remain reachable | An external-link job checks every Markdown document |
+| New dependency risk is reviewed | Dependabot proposes updates and dependency review rejects newly introduced known vulnerabilities |
+| Java source receives static security analysis | CodeQL compiles and analyzes every runnable application |
+| Beginner-friendliness is tested honestly | The repository provides a usability protocol and structured feedback form; it does not substitute build results for human evidence |
 
 ## The rule for using this repository
 

@@ -1,0 +1,95 @@
+name: Beginner learning feedback
+description: Report where the guide helped or blocked a first-time Java/Spring Boot learner.
+title: "[Beginner feedback]: "
+labels:
+  - documentation
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for testing the guide. Do not include passwords, tokens, private URLs, or proprietary code.
+  - type: dropdown
+    id: experience
+    attributes:
+      label: Experience before using this repository
+      options:
+        - New to programming
+        - Programmed before, but new to Java
+        - Know Java, but new to Spring Boot
+        - Tried Spring Boot, but have not completed a project
+        - Experienced developer reviewing the beginner journey
+    validations:
+      required: true
+  - type: dropdown
+    id: operating-system
+    attributes:
+      label: Operating system
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: Page or tutorial checkpoint
+      description: Link the page and name the heading where you were working.
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: What were you trying to do?
+      placeholder: I was trying to build the Taskboard API for the first time.
+    validations:
+      required: true
+  - type: textarea
+    id: blocker
+    attributes:
+      label: What happened?
+      description: Include the command and a short safe error excerpt when relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: attempted
+    attributes:
+      label: What did you try?
+      description: Mention documentation or troubleshooting sections you used.
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Final outcome
+      options:
+        - Completed without help
+        - Completed after using troubleshooting
+        - Completed with help from another person
+        - Still blocked
+    validations:
+      required: true
+  - type: dropdown
+    id: confidence
+    attributes:
+      label: Confidence that you could repeat the task
+      options:
+        - 1 - Lost
+        - 2 - Mostly unsure
+        - 3 - Could repeat with documentation
+        - 4 - Mostly independent
+        - 5 - Fully independent
+    validations:
+      required: true
+  - type: textarea
+    id: improvement
+    attributes:
+      label: Smallest change that would have helped
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed secrets and private information from this report.
+          required: true
