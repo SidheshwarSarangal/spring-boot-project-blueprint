@@ -27,7 +27,7 @@ Continue to Step 2.
 
 > 📍 Use [Spring Initializr](https://start.spring.io/) in the browser. Run every command below in `<project-root>/`, the directory containing `pom.xml` and `mvnw`.
 
-Select Maven, Java, Jar, Spring Web, Validation, and Actuator. Add only currently required [capabilities](../README.md#add-capabilities-only-when-the-selected-path-asks-for-them).
+Select Maven, Java, Jar, Spring Web, Validation, and Actuator. Add only currently required [capabilities](../README.md#add-extra-capabilities-only-when-needed).
 
 ```bash
 ./mvnw clean verify
