@@ -4,7 +4,7 @@
 [![CodeQL](https://github.com/SidheshwarSarangal/spring-boot-project-blueprint/actions/workflows/codeql.yml/badge.svg)](https://github.com/SidheshwarSarangal/spring-boot-project-blueprint/actions/workflows/codeql.yml)
 [![Beginner feedback](https://img.shields.io/badge/feedback-beginner%20experience-blue)](https://github.com/SidheshwarSarangal/spring-boot-project-blueprint/issues/new?template=beginner-feedback.yml)
 
-This repository is a build guide for common Spring Boot application types. It helps you choose an application shape, build one feature at a time, add only the capabilities that feature needs, test it, and prepare it for delivery.
+This repository helps you build common kinds of Spring Boot applications. You choose what the application must do, build one small feature, add only the extra features it needs, test it, and prepare it to run outside your computer.
 
 ## Choose how you want to begin
 
@@ -18,26 +18,26 @@ This repository is a build guide for common Spring Boot application types. It he
 
 Whichever route you choose, keep the [beginner execution guide](docs/beginner-execution-guide.md) open when you do not know how to create a file, use the terminal, add an import/dependency, edit YAML, run a test, or fix the first error. Use the [Java syntax primer](docs/java-syntax-primer.md) whenever a Java symbol is unfamiliar.
 
-Do not try to read the entire repository before starting. Choose one primary application type and one small, observable feature.
+Do not read the entire repository before starting. Choose one application type and one small result you can see or test.
 
 ## Select one primary application type
 
 | I need to build… | Follow | Working starter |
 |---|---|---|
 | A JSON backend for a frontend, mobile app, or another service | [REST API](paths/rest-api.md) | [Taskboard API](taskboard-api/README.md) |
-| A schema-driven API where clients choose fields | [GraphQL API](paths/graphql-api.md) | [GraphQL starter](starters/graphql-api/README.md) |
+| An API where clients ask for exactly the fields they need | [GraphQL API](paths/graphql-api.md) | [GraphQL starter](starters/graphql-api/README.md) |
 | HTML pages and forms rendered by Spring | [Web application](paths/web-application.md) | [Web starter](starters/web-application/README.md) |
 | Work that runs at a time or outside an HTTP request | [Background worker](paths/background-worker.md) | [Worker starter](starters/background-worker/README.md) |
-| A service that consumes or publishes events | [Event-driven service](paths/event-driven-service.md) | [Event starter](starters/event-driven-service/README.md) |
-| A service mainly connecting to another API/provider | [Integration service](paths/integration-service.md) | [Integration starter](starters/integration-service/README.md) |
-| A single entry point that routes and protects downstream services | [API gateway](paths/api-gateway.md) | [Gateway starter](starters/api-gateway/README.md) |
-| Large, restartable data import/export or processing | [Batch application](paths/batch-application.md) | [Batch starter](starters/batch-application/README.md) |
+| A service that receives or sends messages through Kafka or RabbitMQ | [Event-driven service](paths/event-driven-service.md) | [Event starter](starters/event-driven-service/README.md) |
+| A service whose main job is calling another API or provider | [Integration service](paths/integration-service.md) | [Integration starter](starters/integration-service/README.md) |
+| One public entry point that forwards requests to other services | [API gateway](paths/api-gateway.md) | [Gateway starter](starters/api-gateway/README.md) |
+| A large import, export, or processing job that can restart after failure | [Batch application](paths/batch-application.md) | [Batch starter](starters/batch-application/README.md) |
 | Live server-to-client updates, chat, tracking, or notifications | [Real-time application](paths/realtime-application.md) | [Real-time starter](starters/realtime-application/README.md) |
 | A terminal command or one-off automation utility | [Command-line application](paths/command-line-application.md) | [CLI starter](starters/command-line-application/README.md) |
 
-> Most business domains—shopping, banking, hospital, booking, learning—use one or more of these technical shapes. Select by how the application runs and delivers results, not by its business name.
+> Shopping, banking, hospital, booking, and learning systems can use the same application types. Choose by how the work starts and what result it produces—not by the business name.
 
-“Monolith,” “modular monolith,” “microservice,” and “serverless” describe system boundaries or deployment. They do not replace the choices above. Start with the selected application path; split deployment units only when team, scaling, ownership, or reliability requirements justify it.
+Words such as “monolith,” “microservice,” and “serverless” describe how an application is divided or deployed. They do not describe its main job. Choose the application type first; decide how to split it later, when there is a clear reason.
 
 ## Not sure which one?
 
@@ -56,7 +56,7 @@ flowchart TD
     Start -->|Terminal command| CLI[Command-line application]
 ```
 
-## Add capabilities only when the selected path asks for them
+## Add extra capabilities only when needed
 
 | The application also needs… | Capability module |
 |---|---|
@@ -67,33 +67,25 @@ flowchart TD
 | Uploads, downloads, images, or documents | [File storage](capabilities/file-storage.md) |
 | Faster repeated reads after a measured bottleneck | [Caching](capabilities/caching.md) |
 
-Do not read or add every capability. Complete the primary path, attach one required capability at its stated step, verify it, and continue.
+These capabilities are optional building blocks. Do not add all of them. Finish the main path, add one required capability, test it, and continue.
 
 ## Build it one step at a time
 
-Open the selected path and begin with Step 1. Read only the current step. The `📍` callout shows the exact file, folder, browser page, or terminal to use. Perform the instructions beneath it in order, use the code or command shown there, and check the stated result before continuing.
+Open your selected path and start at Step 1. Read only that step. The `📍` callout tells you exactly where to work. Follow the instructions in order and confirm the expected result before moving on.
 
-When a step links a capability such as database, security, or messaging, open only the capability you need. Complete it, return to the application path, and continue. Replace the example feature and package names with the names written in your `PROJECT.md`.
+When a step links to database, security, messaging, or another capability, open only that guide. Complete it, return to the main path, and continue. Replace example names with the names in your `PROJECT.md`.
 
-## Shared resources
+## Find the right supporting guide
 
-- [Toolchain setup](docs/setup-guide.md) — install and verify a JDK, Git, Maven Wrapper, IntelliJ IDEA, or VS Code on Windows, macOS, and Linux.
-- [First project tutorial](docs/first-project-tutorial.md) — complete one tested Taskboard API change through observable checkpoints.
-- [Project workbook](docs/project-workbook.md) — copy into your project to track requirements, features, tests, and delivery.
-- [Java and Spring Boot foundation](docs/java-spring-foundation.md) — prerequisites, Java syntax, generated files, Spring wiring, and the normal development loop.
-- [Beginner execution guide](docs/beginner-execution-guide.md) — physical IDE/file/terminal actions used by every process step.
-- [Java syntax primer](docs/java-syntax-primer.md) — packages, imports, types, methods, collections, exceptions, annotations, and safe code adaptation.
-- [Testing guide](docs/testing-guide.md) — concrete unit, MVC, persistence, and integration-test patterns.
-- [Configuration guide](docs/configuration-guide.md) — YAML, environment variables, profiles, validated settings, and secrets.
-- [Delivery guide](docs/delivery-guide.md) — package, run, containerize, verify in CI, migrate, deploy, and roll back.
-- [Taskboard reference API](taskboard-api/README.md) — runnable example for the REST + SQL path.
-- [Runnable starters](starters/README.md) — minimal, tested Maven applications for every other path.
-- [Starter source walkthroughs](docs/starter-walkthroughs.md) — trace the entry point, service, boundary, configuration, test, and result in every example.
-- [Troubleshooting](docs/troubleshooting.md) — use when a build, startup, HTTP, database, or test step fails.
-- [Production checklist](docs/production-checklist.md) — final gate for every application type.
-- [Official references](docs/official-references.md) — primary Spring documentation used by this repository.
-- [Quality evidence](docs/quality-evidence.md) — what the automated checks prove, how to reproduce them, and what they do not prove.
-- [Beginner usability testing](docs/usability-testing.md) — a repeatable protocol and feedback channel for improving the human learning experience.
+| Stage | Use these resources |
+|---|---|
+| Set up | [Toolchain setup](docs/setup-guide.md) · [Java and Spring Boot foundation](docs/java-spring-foundation.md) · [Java syntax primer](docs/java-syntax-primer.md) |
+| Practise | [First project tutorial](docs/first-project-tutorial.md) · [Beginner execution guide](docs/beginner-execution-guide.md) |
+| Plan | [Project workbook](docs/project-workbook.md) · choose an application path above |
+| Learn from code | [Taskboard REST API](taskboard-api/README.md) · [Runnable starters](starters/README.md) · [Source walkthroughs](docs/starter-walkthroughs.md) |
+| Build safely | [Testing](docs/testing-guide.md) · [Configuration](docs/configuration-guide.md) · [Troubleshooting](docs/troubleshooting.md) |
+| Release | [Delivery](docs/delivery-guide.md) · [Production checklist](docs/production-checklist.md) |
+| Review the guide | [Official references](docs/official-references.md) · [Quality evidence](docs/quality-evidence.md) · [Usability testing](docs/usability-testing.md) |
 
 ## What makes this repository verifiable?
 

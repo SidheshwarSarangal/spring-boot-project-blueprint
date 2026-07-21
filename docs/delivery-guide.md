@@ -2,7 +2,18 @@
 
 [← Application selector](../README.md) · [Configuration](configuration-guide.md) · [Production checklist](production-checklist.md)
 
-Use this after required features pass. Choose JAR or container delivery according to the target platform; do not create both unless needed.
+Use this after the required features and tests pass. A packaged JAR or container image is called an **artifact**. Choose the format your hosting platform needs; do not create both without a reason.
+
+```mermaid
+flowchart LR
+    Source[Source code] --> Verify[Clean build and tests]
+    Verify --> Artifact[Versioned JAR or image]
+    Artifact --> Configure[Add environment configuration]
+    Configure --> Migrate[Apply safe database migrations]
+    Migrate --> Deploy[Start the application]
+    Deploy --> Check[Readiness and smoke test]
+    Check --> Monitor[Monitor or recover]
+```
 
 Use [Action D](beginner-execution-guide.md#action-d-run-a-command-in-the-correct-terminal) for commands, [Action H](beginner-execution-guide.md#action-h-edit-yaml-configuration) for configuration, and [Action M](beginner-execution-guide.md#action-m-save-a-clean-checkpoint-with-git) before publishing.
 
@@ -14,13 +25,13 @@ Use [Action D](beginner-execution-guide.md#action-d-run-a-command-in-the-correct
 ./mvnw clean verify
 ```
 
-The executable JAR appears under `target/`. Run the exact file:
+The runnable JAR appears under `target/`. Run that exact file:
 
 ```bash
 java -jar target/orders-api-0.0.1-SNAPSHOT.jar
 ```
 
-Call the health endpoint and one safe use case. The JAR that passed tests should be the same artifact promoted to later environments.
+Call the health endpoint and one safe use case. Use this same tested JAR in every later environment. Do not rebuild different code for production.
 
 ## 2. Run with production-like configuration
 
@@ -63,13 +74,13 @@ docker run --rm -p 8080:8080 \
 
 Do not copy `.env`, source secrets, local databases, or build caches into the image. Run as a non-root user and use a small supported runtime image.
 
-## 4. Create the CI gate
+## 4. Make CI reject broken changes
 
 > 📍 Create the workflow in the CI folder used by the repository, such as `<project-root>/.github/workflows/verify.yml` for GitHub Actions.
 
 Use this repository’s [working GitHub Actions workflow](../.github/workflows/verify.yml) as the concrete example. It validates the handbook and runs `clean verify` independently for every starter. Copy only the job needed by the new project.
 
-Every pushed change should run from a clean checkout with the project wrapper:
+Every pushed change should run from a clean checkout with the project wrapper. The automated path is:
 
 ```text
 checkout
@@ -95,21 +106,11 @@ For a database-backed application:
 
 Never repair production by deleting its database or editing an already-applied migration file.
 
-## 6. Deploy and verify
+## 6. Deploy and check the result
 
 > 📍 Perform these actions in the selected deployment platform; run smoke requests from a terminal that can reach the deployed application.
 
-```text
-publish immutable artifact
-→ supply configuration/secrets
-→ apply migrations
-→ start application
-→ readiness succeeds
-→ smoke test
-→ monitor errors/latency/resources
-```
-
-Smoke-test one safe happy path and one authentication/permission boundary where relevant. Verify logs contain correlation context but no secrets.
+A smoke test is a small check that proves the deployed application is usable. Test one safe success path and, when relevant, one login or permission boundary. Check errors, response time, and resource usage. Logs should help trace a request without exposing secrets.
 
 ## 7. Roll back or roll forward
 
@@ -123,7 +124,7 @@ Before deployment decide:
 - whether failed messages/jobs need replay;
 - who decides and performs recovery.
 
-Prefer a tested roll-forward when a database migration cannot safely be reversed. Never assume replacing the JAR also reverses data changes.
+If a database change cannot be safely undone, deploy a tested correction instead. Replacing the JAR does not undo data changes.
 
 ## 8. Write the operator handoff
 

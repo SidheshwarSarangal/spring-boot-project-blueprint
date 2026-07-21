@@ -2,7 +2,19 @@
 
 [← Application selector](../README.md) · [Production checklist](production-checklist.md) · [Troubleshooting](troubleshooting.md)
 
-Build one application artifact and change behavior between environments through configuration—not source edits.
+Build the application once. Use configuration to run that same build locally, in tests, and in production. Do not edit source code for each environment.
+
+```mermaid
+flowchart LR
+    Defaults[Safe defaults in application.yml] --> Config[Final configuration]
+    Profile[Optional local or test profile] --> Config
+    Environment[Environment variables and secrets] --> Config
+    Jar[The same tested JAR] --> Runtime[Running application]
+    Config --> Runtime
+    Runtime --> Local[Local]
+    Runtime --> Test[Test]
+    Runtime --> Production[Production]
+```
 
 If editing configuration/code is new, use [Action H for YAML](beginner-execution-guide.md#action-h-edit-yaml-configuration) and [Action F for the properties Java record](beginner-execution-guide.md#action-f-put-a-provided-java-code-block-into-a-file).
 
@@ -27,7 +39,7 @@ management:
 
 Keep the file small. Use Spring Boot’s documented property names rather than creating duplicates.
 
-## 2. Externalize environment values
+## 2. Keep environment values outside the code
 
 > 📍 Keep variable placeholders in `src/main/resources/application.yml`; supply their values from the terminal, IDE run configuration, CI, or deployment platform.
 
@@ -60,7 +72,7 @@ public record ProviderProperties(
 ) {}
 ```
 
-Enable configuration-property scanning in the application/configuration package. Inject this record into the adapter/configuration that needs it. Validated configuration makes startup fail early instead of failing during a request.
+Enable configuration-property scanning in the application package. Give this record to the adapter or configuration class that needs it. Validation stops the application at startup when required settings are missing. This is easier to diagnose than a later request failure.
 
 ```java
 @SpringBootApplication
@@ -76,7 +88,7 @@ public class OrdersApplication {
 
 > 📍 Create only the required files under `src/main/resources/`: `application-local.yml` and `application-test.yml`; keep shared settings in `application.yml`.
 
-Profiles are useful for grouped environment differences, not secret storage.
+Profiles group a small set of environment differences. They are not a place to store secrets.
 
 ```text
 application.yml          shared defaults
@@ -90,7 +102,7 @@ Activate deliberately:
 SPRING_PROFILES_ACTIVE=local ./mvnw spring-boot:run
 ```
 
-Avoid a profile for every developer or scattered `@Profile` annotations that change business behavior.
+Do not create one profile per developer. Do not use profiles to change business rules.
 
 ## 5. Keep secrets outside Git
 

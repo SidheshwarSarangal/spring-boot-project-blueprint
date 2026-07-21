@@ -155,21 +155,21 @@ Use constructor injection: a class declares what it needs, and Spring supplies i
 
 > 📍 Start at a controller under `src/main/java/`, then follow its service and repository or adapter calls.
 
-```text
-HTTP JSON
-→ controller route and request binding
-→ request validation
-→ service business rules
-→ repository or external adapter
-→ mapper and response DTO
-→ HTTP status + JSON
+```mermaid
+flowchart LR
+    Client[Client sends HTTP + JSON] --> Controller[Controller checks route and input]
+    Controller --> Service[Service applies business rules]
+    Service --> Boundary[Repository or external adapter]
+    Boundary --> Service
+    Service --> Response[Response DTO]
+    Response --> ClientResult[Client receives status + JSON]
 ```
 
-- Controller owns HTTP method, path, headers, and status.
-- Service owns business decisions and transaction boundaries.
-- Repository owns persistence access.
-- Adapter isolates an external provider/broker/storage system.
-- DTO defines input/output; entity defines stored state.
+- **Controller:** receives HTTP and returns an HTTP response.
+- **Service:** makes the business decisions.
+- **Repository:** reads and writes application data.
+- **Adapter:** talks to an outside API, broker, or file store.
+- **DTO:** defines data entering or leaving the API. An entity defines stored data.
 
 ## 8. Use Maven deliberately
 
